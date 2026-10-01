@@ -33,7 +33,6 @@ if sys.stdout.encoding and sys.stdout.encoding.lower() not in ('utf-8', 'utf-8-s
 DATA_DIR = Path(__file__).parent.parent / "data"
 
 WCAG_CSV       = DATA_DIR / "wcag-criteria.csv"
-WCAG3_CSV      = DATA_DIR / "wcag3-draft.csv"
 ARIA_CSV       = DATA_DIR / "aria-patterns.csv"
 TOOLS_CSV      = DATA_DIR / "testing-tools.csv"
 KEYS_CSV       = DATA_DIR / "screen-reader-keys.csv"
@@ -51,7 +50,6 @@ COGNITIVE_CSV  = DATA_DIR / "cognitive-accessibility.csv"
 # All databases for cross-search
 ALL_DATABASES = {
     "wcag":        WCAG_CSV,
-    "wcag3":       WCAG3_CSV,
     "aria":        ARIA_CSV,
     "tools":       TOOLS_CSV,
     "keys":        KEYS_CSV,
@@ -117,7 +115,7 @@ def print_table(rows: list[dict], columns: list[str], export: str | None = None)
         _export_rows(rows, export)
 
 
-def print_json(rows: list[dict], export: str | None = None) -> None:
+def print_json(rows: "list[dict] | dict", export: str | None = None) -> None:
     output = json.dumps(rows, ensure_ascii=False, indent=2)
     print(output)
     if export:
@@ -176,19 +174,41 @@ def cmd_wcag(args: argparse.Namespace) -> None:
             print(f"  {r['id']} → {green(r['url'])}")
 
 
-# ── WCAG 3.0 Draft ────────────────────────────────────────────────────────────
+# ── WCAG 3.0 Draft (status notice only) ──────────────────────────────────────
+
+WCAG3_DRAFT_URL = "https://www.w3.org/TR/wcag-3.0/"
+WCAG3_INTRO_URL = "https://www.w3.org/WAI/standards-guidelines/wcag/wcag3-intro/"
+WCAG3_NOTICE = {
+    "status": "draft-records-retired",
+    "message": (
+        "WCAG 3 is an incomplete W3C Working Draft and not a standard; WCAG 2.x remains "
+        "the compliance target. The retired data file assigned fixed criterion IDs and APCA "
+        "thresholds that the W3C draft does not support (Bronze appears there only as a "
+        "proposed reporting tier), so no criteria are returned."
+    ),
+    "draft_url": WCAG3_DRAFT_URL,
+    "intro_url": WCAG3_INTRO_URL,
+    "records": [],
+}
+
 
 def cmd_wcag3(args: argparse.Namespace) -> None:
-    rows = load_csv(WCAG3_CSV)
-    if args.level:
-        rows = [r for r in rows if r["level"].upper() == args.level.upper()]
-    if args.category:
-        rows = [r for r in rows if args.category.lower() in r["category"].lower()]
-    if args.keyword:
-        rows = [r for r in rows if matches(r, args.keyword)]
-
-    cols = ["id", "level", "category", "criterion", "description", "notes"]
-    render(rows, cols, args.output, args.export)
+    ignored = [f"--{n}" for n in ("level", "category", "keyword") if getattr(args, n)]
+    if args.output == "json":
+        print_json({**WCAG3_NOTICE, "ignored_arguments": ignored}, args.export)
+        return
+    if args.output == "csv":
+        cols = ["status", "message", "draft_url", "intro_url"]
+        print_csv_out([WCAG3_NOTICE], cols, args.export)
+        return
+    print(bold("WCAG 3: draft status (no criteria available)"))
+    print(WCAG3_NOTICE["message"])
+    if ignored:
+        print(f"Ignored arguments: {' '.join(ignored)}")
+    print(f"Draft:        {green(WCAG3_DRAFT_URL)}")
+    print(f"Introduction: {green(WCAG3_INTRO_URL)}")
+    if args.export:
+        _export_text(json.dumps(WCAG3_NOTICE, ensure_ascii=False, indent=2), args.export)
 
 
 # ── ARIA ──────────────────────────────────────────────────────────────────────
@@ -454,10 +474,10 @@ def main() -> None:
     add_common_args(p_wcag)
 
     # wcag3
-    p_wcag3 = sub.add_parser("wcag3", help="Search WCAG 3.0 draft criteria")
-    p_wcag3.add_argument("--level", help="Bronze / Silver / Gold")
-    p_wcag3.add_argument("--category", help="e.g. Visual Contrast, Focus, Keyboard")
-    p_wcag3.add_argument("--keyword", help="Search across all fields")
+    p_wcag3 = sub.add_parser("wcag3", help="WCAG 3.0 draft status and W3C links (no criteria)")
+    p_wcag3.add_argument("--level", help="Deprecated, ignored (draft records were retired)")
+    p_wcag3.add_argument("--category", help="Deprecated, ignored")
+    p_wcag3.add_argument("--keyword", help="Deprecated, ignored")
     add_common_args(p_wcag3)
 
     # aria

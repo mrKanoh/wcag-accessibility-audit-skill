@@ -135,7 +135,6 @@ python scripts/search.py glossary --keyword contrast
 | File | Contents |
 |------|----------|
 | `data/wcag-criteria.csv` | WCAG 2.1 A/AA + **WCAG 2.2** (2.4.11–2.4.13, 2.5.7–2.5.8, 3.2.6, 3.3.7–3.3.9) |
-| `data/wcag3-draft.csv` | Draft WCAG 3.0 Bronze level criteria (APCA, plain language) |
 | `data/aria-patterns.csv` | 25+ component patterns · ARIA · keyboard · focus mgmt |
 | `data/testing-tools.csv` | 30+ tools by type · platform · browser · cost |
 | `data/screen-reader-keys.csv` | Shortcuts for NVDA · JAWS · VoiceOver (macOS/iOS) · TalkBack · Narrator |
@@ -149,7 +148,7 @@ python scripts/search.py glossary --keyword contrast
 | `data/legal-framework.csv` | 25+ jurisdictions: ADA, EAA, Section 508, AODA, LGPD, and more |
 | `data/resources.csv` | 50+ curated books, blogs, research papers, tools, and standards |
 | `data/cognitive-accessibility.csv` | 20 COGA patterns: ADHD, dyslexia, memory, anxiety, autism |
-| `scripts/search.py` | CLI search across all **15 databases** · `--output json/csv` · `--export` · `all` subcommand |
+| `scripts/search.py` | CLI search across all **14 databases** · `wcag3` shows WCAG 3 draft status and W3C links only · `--output json/csv` · `--export` · `all` subcommand |
 | `scripts/mcp-server.py` | Model Context Protocol server exposing all databases to Claude directly |
 | `RESOURCES.md` | Human-readable bibliography — browse by category, W3C standards, academic research, etc. |
 | `templates/audit-report.md` | Fill-in audit report template |
@@ -294,9 +293,8 @@ wcag-accessibility/
   ├─ CHANGELOG.md                      ← Version history
   ├─ CONTRIBUTING.md                   ← Contribution guide
   │
-  ├─ data/                             ← 15 searchable databases
+  ├─ data/                             ← 14 searchable databases
   │  ├─ wcag-criteria.csv              WCAG 2.0/2.1 + WCAG 2.2 (70+ criteria)
-  │  ├─ wcag3-draft.csv                Draft WCAG 3.0 Bronze level criteria
   │  ├─ aria-patterns.csv              25+ component patterns: keyboard, focus, roles
   │  ├─ testing-tools.csv              30+ tools: axe, WAVE, Accessibility Insights, etc.
   │  ├─ screen-reader-keys.csv         Shortcuts for NVDA, JAWS, VoiceOver, TalkBack, Narrator
@@ -314,7 +312,7 @@ wcag-accessibility/
   ├─ RESOURCES.md                      ← Human-readable bibliography by category
   │
   ├─ scripts/
-  │  ├─ search.py                      ← CLI to query all 15 databases
+  │  ├─ search.py                      ← CLI to query all 14 databases
   │  │                                    --output json/csv, --export, 'all' subcommand
   │  ├─ generate-resources-md.py       ← Auto-generate RESOURCES.md from CSV
   │  └─ mcp-server.py                  ← Model Context Protocol server

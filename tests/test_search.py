@@ -49,7 +49,6 @@ class TestCSVIntegrity:
         "legal-framework.csv":         {"jurisdiction", "law"},
         "resources.csv":               {"Title", "URL", "Category"},
         "cognitive-accessibility.csv": {"pattern_id", "pattern_name", "user_group", "wcag_ref"},
-        "wcag3-draft.csv":             {"id", "level", "category", "criterion", "description", "notes"},
     }
 
     @pytest.mark.parametrize("filename,required_cols", EXPECTED_COLS.items())
@@ -113,11 +112,6 @@ class TestTableOutput:
         r = run("cognitive", "--keyword", "memory")
         assert r.returncode == 0
         assert "result(s)" in r.stdout
-
-    def test_wcag3_level(self):
-        r = run("wcag3", "--level", "Bronze")
-        assert r.returncode == 0
-        assert "Bronze" in r.stdout
 
     def test_no_results(self):
         r = run("wcag", "--keyword", "xyznonexistentterm12345")
@@ -246,3 +240,97 @@ class TestEdgeCases:
         r = run("models", "--keyword", "social")
         assert r.returncode == 0
         assert "social" in r.stdout.lower()
+
+
+# ── WCAG 3 draft status notice (draft records retired) ───────────────────────
+
+W3C_DRAFT = "https://www.w3.org/TR/wcag-3.0/"
+W3C_INTRO = "https://www.w3.org/WAI/standards-guidelines/wcag/wcag3-intro/"
+
+
+class TestWcag3Notice:
+    """`wcag3` returns only a draft-status notice; no invented criteria."""
+
+    def test_csv_removed(self):
+        assert not (DATA / "wcag3-draft.csv").exists()
+
+    def test_table_output_is_notice(self):
+        r = run("wcag3")
+        assert r.returncode == 0
+        assert W3C_DRAFT in r.stdout and W3C_INTRO in r.stdout
+        assert "not a standard" in r.stdout
+        assert "result(s)" not in r.stdout
+
+    def test_json_output_is_object_without_records(self):
+        r = run("wcag3", "--output", "json")
+        assert r.returncode == 0
+        data = json.loads(r.stdout)
+        assert isinstance(data, dict)
+        assert data["status"] == "draft-records-retired"
+        assert data["records"] == []
+        assert data["draft_url"] == W3C_DRAFT
+        assert data["intro_url"] == W3C_INTRO
+        assert data["ignored_arguments"] == []
+
+    def test_legacy_level_bronze_ignored_table(self):
+        r = run("wcag3", "--level", "Bronze")
+        assert r.returncode == 0
+        assert "Ignored arguments: --level" in r.stdout
+        assert "Lc " not in r.stdout and "3.1.1" not in r.stdout
+
+    def test_legacy_arguments_ignored_json(self):
+        r = run("wcag3", "--level", "Bronze", "--category", "Focus",
+                "--keyword", "APCA", "--output", "json")
+        assert r.returncode == 0
+        data = json.loads(r.stdout)
+        assert data["records"] == []
+        assert data["ignored_arguments"] == ["--level", "--category", "--keyword"]
+
+    def test_csv_output_is_single_notice_row(self):
+        r = run("wcag3", "--output", "csv")
+        assert r.returncode == 0
+        rows = list(csv.DictReader(r.stdout.splitlines()))
+        assert len(rows) == 1
+        assert rows[0]["status"] == "draft-records-retired"
+
+    def test_all_search_returns_no_wcag3_records(self):
+        # "Bronze" appears in no remaining database: `all` prints its no-results message.
+        r = run("all", "--keyword", "Bronze", "--output", "json")
+        assert r.returncode == 0
+        assert r.stdout.strip() == "No results for 'Bronze' in any database."
+
+        # A common term still hits other databases: non-empty JSON, none from wcag3.
+        r = run("all", "--keyword", "contrast", "--output", "json")
+        assert r.returncode == 0
+        rows = json.loads(r.stdout)
+        assert rows, "expected 'contrast' hits from the remaining databases"
+        assert all(row["_database"] != "wcag3" for row in rows)
+
+    def test_mcp_resource_matches_cli_notice(self, monkeypatch):
+        """Load mcp-server.py with a stubbed `mcp` package (dependency not required)."""
+        import importlib.util
+        import types
+
+        class FakeFastMCP:
+            def __init__(self, *_a, **_k):
+                pass
+
+            def resource(self, _uri):
+                return lambda fn: fn
+
+        pkg = types.ModuleType("mcp")
+        server = types.ModuleType("mcp.server")
+        fast = types.ModuleType("mcp.server.fastmcp")
+        fast.FastMCP = FakeFastMCP
+        for name, mod in (("mcp", pkg), ("mcp.server", server), ("mcp.server.fastmcp", fast)):
+            monkeypatch.setitem(sys.modules, name, mod)
+
+        spec = importlib.util.spec_from_file_location("mcp_server_under_test", ROOT / "scripts" / "mcp-server.py")
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+
+        resource = json.loads(module.get_wcag3_draft())
+        cli = json.loads(run("wcag3", "--output", "json").stdout)
+        cli.pop("ignored_arguments")
+        assert resource == cli
+        assert resource["records"] == []

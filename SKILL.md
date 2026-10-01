@@ -1597,50 +1597,27 @@ Cognitive, language, and learning disabilities affect ~15% of people. WCAG addre
 
 ---
 
-## 28. WCAG 3.0 — What's Coming
+## 28. WCAG 3.0 — Draft status
 
-WCAG 3.0 ("Silver") is under development by the W3C Accessibility Guidelines Working Group. It is **not yet a standard** — WCAG 2.1/2.2 AA remains the compliance target.
+WCAG 3.0 is an **incomplete W3C Working Draft** and **not a standard**. WCAG 2.1/2.2 AA remains the compliance target. The draft says it still has several years of work and that details will change; it also states that WCAG 3 does not replace WCAG 2, which will still be required in many places for a long time.
 
-### Key structural changes
+Sources (check them for the current status; reviewed 2026-10-01 against the 10 September 2026 Working Draft):
+- Draft: https://www.w3.org/TR/wcag-3.0/
+- Introduction: https://www.w3.org/WAI/standards-guidelines/wcag/wcag3-intro/
 
-| WCAG 2.x | WCAG 3.0 |
-|----------|-----------|
-| Success Criteria (pass/fail binary) | **Outcomes** with multiple "Methods" and "Tests" |
-| Level A / AA / AAA | Graduated score (Bronze / Silver / Gold) |
-| Focused on web content | Expanded to apps, emerging tech, XR, AI |
-| Static document | Living standard with modular updates |
-
-### APCA (Advanced Perceptual Contrast Algorithm)
-
-WCAG 3.0 will replace the current contrast ratio (WCAG 1.4.3) with APCA, which accounts for:
-- **Polarity**: light text on dark bg vs dark on light (treated differently)
-- **Font size AND weight together** (not just size threshold)
-- **Spatial frequency**: the visual complexity of the typeface
-
-**APCA key values (Lc = Lightness Contrast):**
-
-| Use case | APCA Lc threshold |
-|----------|------------------|
-| Body text (≥14pt regular) | Lc 75 |
-| Large heading (≥24pt regular) | Lc 60 |
-| Large bold heading (≥18pt bold) | Lc 45 |
-| UI components (borders, icons) | Lc 30 |
-| Decorative / disabled | Lc 0 (exempt) |
+### What not to state as fact
+- No WCAG 3 success criteria with fixed numbers (such as "3.1.1"): requirements in the draft are named (for example "Text contrast sufficient (minimum)") and may change.
+- Bronze, Silver and Gold **do** appear in section 4.1.4 of the draft, as the 4th–6th *reporting tiers* above conformance (the 3rd tier is conformance), but the number of supplemental requirements and assertions for each is still **TBD**. Section 4 is informative and exploratory, and the draft's editor's notes say the model is still under discussion (an alternative proposal uses scoring, with Bronze/Silver/Gold awarded after conformance). Present them as proposed reporting tiers in development, not as a finalized conformance target, and do not say what is required to reach them.
+- The draft does not use A/AA/AAA levels in the way WCAG 2 does; do not map WCAG 2 levels onto WCAG 3 tiers.
+- No contrast algorithm or thresholds: the draft says the contrast algorithm is yet to be determined. APCA is **not** confirmed as the WCAG 3 algorithm, so do not quote APCA Lc values as WCAG 3 requirements.
+- No finalization date.
 
 ### How to prepare now
-1. **Keep targeting WCAG 2.1/2.2 AA** — no migration needed until WCAG 3.0 is finalized (est. 2026–2028).
-2. **Audit with APCA as a supplement**: use the [APCA Contrast Calculator](https://www.myndex.com/APCA/) alongside your WCAG 1.4.3 checks. If something passes 2.x but feels wrong visually, APCA often explains why.
-3. **Modular thinking**: WCAG 3.0 allows teams to achieve "Bronze" quickly on the most impactful criteria before tackling Silver/Gold — plan your roadmap accordingly.
-4. **Track the draft**: https://www.w3.org/TR/wcag-3.0/
+1. **Keep targeting WCAG 2.1/2.2 AA.** Contrast compliance is measured with the WCAG 2.x ratios (1.4.3, 1.4.6, 1.4.11).
+2. **Follow the draft** at the links above before answering any WCAG 3 question, and label anything from it as draft.
+3. If a user asks about APCA, explain that it is a separate contrast model that is not part of WCAG 2.x conformance and not confirmed for WCAG 3.
 
-```js
-// APCA calculation (using the apca-w3 npm package)
-import { calcAPCA } from 'apca-w3';
-
-const lc = calcAPCA('#1a1a1a', '#ffffff'); // text color, bg color
-console.log(`APCA Lc: ${Math.abs(lc).toFixed(1)}`); // e.g. 108.1 (excellent)
-// Target: |Lc| >= 75 for body text
-```
+> The CLI command `python scripts/search.py wcag3` and the MCP resource `wcag://draft-wcag3` return only a draft-status notice with these links; they contain no criteria.
 
 ---
 
@@ -1659,7 +1636,7 @@ console.log(`APCA Lc: ${Math.abs(lc).toFixed(1)}`); // e.g. 108.1 (excellent)
 11. **Stack examples**: section 18 → Next.js, Angular, Svelte, Astro, SolidJS; section 19 → SwiftUI, Jetpack Compose; section 25 → Vue 3; section 26 → React Native.
 12. **Legal questions**: cite `data/legal-framework.csv`; always highlight the **EAA 28 June 2025** deadline for EU-facing products.
 13. **Cognitive accessibility**: when ADHD, dyslexia, memory, or anxiety is mentioned, use section 27 and `data/cognitive-accessibility.csv`.
-14. **WCAG 3.0**: mention only as "in development" — WCAG 2.1/2.2 AA is still the standard. Point to section 28 for APCA details.
+14. **WCAG 3.0**: mention only as an incomplete W3C draft — WCAG 2.1/2.2 AA is still the standard. Do not cite WCAG 3 criteria IDs, APCA thresholds or dates as fact, and treat Bronze/Silver/Gold only as proposed reporting tiers; point to section 28 and the W3C draft.
 15. **User preference media queries**: recommend prefers-reduced-motion, prefers-contrast, forced-colors, prefers-reduced-transparency in every animation/color/theme discussion — see section 20.
 16. **Templates & prompts**: point users to `templates/` and `prompts/` for ready-to-use assets. The 12 prompts in `prompts/` are designed to be pasted into Claude directly.
 17. **External Resources**: refer users to [`RESOURCES.md`](./RESOURCES.md) for comprehensive curated bibliography of books, blogs, research papers, tools, and legal frameworks — updated 2025 with WCAG 2.2, EAA deadline, and peer-reviewed studies.

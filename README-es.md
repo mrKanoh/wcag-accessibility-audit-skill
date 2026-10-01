@@ -40,12 +40,12 @@ claude skill add https://github.com/mrKanoh/claude-wcag-accessibility-skill.git
 
 ## 🗄️ Bases de Datos (Consultables vía CLI)
 
-Además de usar a Claude, puedes buscar en las 15 bases de datos usando el CLI que viene incluido. Si instalas el paquete con `pip install .`, tendrás el comando `wcag-search`.
+Además de usar a Claude, puedes buscar en las 14 bases de datos usando el CLI que viene incluido. Si instalas el paquete con `pip install .`, tendrás el comando `wcag-search`.
 
 | Comando CLI | Contenido |
 |-------------|-----------|
 | `wcag-search wcag` | Criterios WCAG 2.1 A/AA + **WCAG 2.2** |
-| `wcag-search wcag3` | Borrador de criterios WCAG 3.0 (Nivel Bronze) |
+| `wcag-search wcag3` | Estado del borrador WCAG 3 y enlaces al W3C (sin criterios) |
 | `wcag-search aria` | +25 patrones de componentes WAI-ARIA |
 | `wcag-search tools` | Herramientas de pruebas (axe, WAVE, etc.) |
 | `wcag-search keys` | Atajos de teclado para lectores de pantalla |
