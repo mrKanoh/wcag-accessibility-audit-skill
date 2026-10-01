@@ -152,12 +152,12 @@ Design decisions depend on which model of disability you implicitly assume. Pref
 | 1.3.1 | Info and Relationships | Semantic structure preserved programmatically |
 | 1.4.3 | Contrast (Minimum) | 4.5:1 text / 3:1 large (18pt or 14pt bold) |
 | 1.4.10 | Reflow | Usable at 320 CSS px with no horizontal scroll |
-| 1.4.11 | Non-text Contrast | 3:1 for UI components and graphics |
+| 1.4.11 | Non-text Contrast | 3:1 vs adjacent colors for visual info needed to identify UI components and states (e.g. an author-styled focus indicator) and graphics needed to understand content; exceptions: inactive components, user-agent default appearance not modified by the author, essential graphics |
 | 1.4.12 | Text Spacing | Supports line-height 1.5, paragraph 2×, letter 0.12×, word 0.16× |
 | 2.1.1 | Keyboard | All functionality operable by keyboard |
 | 2.1.2 | No Keyboard Trap | Focus must never get stuck |
 | 2.4.3 | Focus Order | Logical focus sequence |
-| 2.4.7 | Focus Visible | Focus indicator must be visible |
+| 2.4.7 | Focus Visible | A keyboard focus indicator must be visible (sets no contrast ratio; see 1.4.11 / 2.4.13) |
 | 3.3.1 | Error Identification | Errors described in text |
 | 4.1.2 | Name, Role, Value | Interactive elements expose name/role/state |
 | 4.1.3 | Status Messages | Dynamic updates announced without focus move |
@@ -166,9 +166,9 @@ Design decisions depend on which model of disability you implicitly assume. Pref
 
 | ID | Level | Criterion | What changed |
 |----|-------|-----------|--------------|
-| 2.4.11 | AA | **Focus Not Obscured (Minimum)** | Focused element can't be entirely hidden by sticky UI |
+| 2.4.11 | AA | **Focus Not Obscured (Minimum)** | Focused element can't be entirely hidden by author-created content such as sticky UI (no contrast requirement) |
 | 2.4.12 | AAA | Focus Not Obscured (Enhanced) | …or *partially* hidden |
-| 2.4.13 | AAA | Focus Appearance | ≥ 2 CSS px perimeter + 3:1 contrast |
+| 2.4.13 | AAA | Focus Appearance | Indicator area ≥ a 2 CSS px perimeter of the unfocused component, and 3:1 between the same pixels focused vs unfocused; exceptions: user-agent indicator, or indicator and its background not modified by the author |
 | 2.5.7 | AA | **Dragging Movements** | Drag operations need a single-pointer alternative |
 | 2.5.8 | AA | **Target Size (Minimum)** | Pointer targets ≥ 24×24 CSS px (exceptions apply) |
 | 3.2.6 | A | **Consistent Help** | Help mechanisms in consistent relative order |
@@ -322,7 +322,7 @@ aria-owns="id"
 </button>
 ```
 - Targets ≥ **24×24 CSS px** (WCAG 2.5.8). 44×44 recommended for touch.
-- Visible focus ring, ≥ 3:1 vs adjacent colors (WCAG 2.4.11).
+- Visible focus ring (WCAG 2.4.7); if you style it, ≥ 3:1 vs adjacent colors (WCAG 1.4.11). 2.4.13 (AAA) adds size and focused-vs-unfocused contrast.
 - Never rely on color alone for state (e.g., disabled, selected).
 
 ### Accessible Drag & Drop (WCAG 2.5.7)
@@ -380,7 +380,8 @@ p { margin-bottom: 2em !important; }
 | Large text (AA) — 18pt / 14pt bold | 3:1 |
 | Body text (AAA) | 7:1 |
 | UI components / icons / borders | 3:1 (1.4.11) |
-| Focus indicator vs adjacent | 3:1 (2.4.11 / 2.4.13) |
+| Author-styled focus indicator vs adjacent colors | 3:1 (1.4.11; 2.4.7 requires it to be visible) |
+| Focus indicator, same pixels focused vs unfocused (AAA) | 3:1 plus size rule (2.4.13) |
 
 ### Palette design workflow
 1. Define semantic tokens: `text`, `text-muted`, `bg`, `surface`, `border`, `primary`, `success`, `warning`, `error`, `focus`.

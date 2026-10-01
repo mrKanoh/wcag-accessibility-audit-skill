@@ -2,7 +2,7 @@ rule,scope,recommendation,wcag_ref,tool
 Body text contrast,Text,4.5:1 minimum between text and background,1.4.3,WebAIM Contrast Checker
 Large text contrast,Text,3:1 minimum for 18pt or 14pt bold,1.4.3,APCA / WebAIM
 UI component contrast,Non-text,3:1 minimum for borders states and icons against adjacent colors,1.4.11,Colour Contrast Analyser
-Focus indicator contrast,Non-text,3:1 against adjacent colors in both states,2.4.11 / 2.4.13,Chrome DevTools
+Focus indicator contrast,Non-text,Author-styled focus indicator needs 3:1 against adjacent colors (1.4.11); AAA 2.4.13 also needs 3:1 between the same pixels focused vs unfocused,1.4.11 / 2.4.13,Chrome DevTools
 Link vs body text,Text,3:1 contrast between link color and surrounding text if not underlined,1.4.1,WebAIM Link Contrast
 Error state,Meaning,Pair red with icon and text label never color alone,1.4.1,-
 Status palette,System,Define semantic colors (success warning error info) with accessible variants,1.4.1,-
