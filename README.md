@@ -42,6 +42,7 @@ This skill gives Claude comprehensive, actionable knowledge to help you:
 
 ```bash
 npx claude-code-templates@latest --skill accessibility/wcag-accessibility
+```
 
 **Or clone the full repository:**
 
