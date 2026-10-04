@@ -1,6 +1,6 @@
 rule,scope,recommendation,wcag_ref,tool
 Body text contrast,Text,4.5:1 minimum between text and background,1.4.3,WebAIM Contrast Checker
-Large text contrast,Text,3:1 minimum for 18pt or 14pt bold,1.4.3,APCA / WebAIM
+Large text contrast,Text,3:1 minimum for 18pt or 14pt bold,1.4.3,WebAIM Contrast Checker
 UI component contrast,Non-text,3:1 minimum for borders states and icons against adjacent colors,1.4.11,Colour Contrast Analyser
 Focus indicator contrast,Non-text,Author-styled focus indicator needs 3:1 against adjacent colors (1.4.11); AAA 2.4.13 also needs 3:1 between the same pixels focused vs unfocused,1.4.11 / 2.4.13,Chrome DevTools
 Link vs body text,Text,3:1 contrast between link color and surrounding text if not underlined,1.4.1,WebAIM Link Contrast
@@ -9,7 +9,7 @@ Status palette,System,Define semantic colors (success warning error info) with a
 Dark mode pairs,Theme,Test all pairings in both light and dark; focus and hover included,1.4.3,Stark / Figma contrast plugin
 Data visualization,Charts,Use patterns shapes and labels in addition to color,1.4.1,Viz Palette
 Brand color safety,Brand,Check brand hues at AA for text; add accessible variant if failing,1.4.3,Leonardo color.adobe.com
-Gradient backgrounds,Backgrounds,Test text contrast against darkest and lightest gradient stop,1.4.3,APCA
+Gradient backgrounds,Backgrounds,WCAG 2.x contrast must hold against the rendered background behind the text across the whole area the text occupies including intermediate colors; checking gradient stops or a few eyedropper samples does not prove the worst case; if the worst case cannot be established the result is unverified (G18),1.4.3,TPGi Colour Contrast Analyser (eyedropper)
 State tokens,Design tokens,Create accessible tokens (default hover active focus disabled) all >= 3:1,1.4.11,Style Dictionary
 Disabled affordance,Disabled,Disabled controls need visual distinction but are exempt from contrast; never rely on low contrast alone for meaning,-,-
 High contrast mode,Windows,Support forced-colors media query; use CanvasText and system colors,-,Windows HCM
