@@ -86,9 +86,14 @@ def load_csv(path: Path) -> list[dict]:
         return list(csv.DictReader(f))
 
 
-def matches(row: dict, keyword: str) -> bool:
+# Metadato de versión del catálogo WCAG (`wcag-criteria.csv`): se expone en JSON, pero no
+# participa en `--keyword` (de lo contrario "2.1" o "2.2" coincidirían con casi todas las filas).
+WCAG_METADATA_FIELDS = ("versions",)
+
+
+def matches(row: dict, keyword: str, ignore: tuple[str, ...] = ()) -> bool:
     keyword = keyword.lower()
-    return any(keyword in str(v).lower() for v in row.values())
+    return any(keyword in str(v).lower() for k, v in row.items() if k not in ignore)
 
 
 # ── Output helpers ────────────────────────────────────────────────────────────
@@ -161,7 +166,7 @@ def cmd_wcag(args: argparse.Namespace) -> None:
     if args.principle:
         rows = [r for r in rows if args.principle.lower() in r["principle"].lower()]
     if args.keyword:
-        rows = [r for r in rows if matches(r, args.keyword)]
+        rows = [r for r in rows if matches(r, args.keyword, ignore=WCAG_METADATA_FIELDS)]
     if args.id:
         rows = [r for r in rows if r["id"].startswith(args.id)]
 
@@ -416,7 +421,8 @@ def cmd_all(args: argparse.Namespace) -> None:
     combined: list[dict] = []
     for db_name, csv_path in ALL_DATABASES.items():
         rows = load_csv(csv_path)
-        hits = [r for r in rows if matches(r, keyword)]
+        ignore = WCAG_METADATA_FIELDS if db_name == "wcag" else ()
+        hits = [r for r in rows if matches(r, keyword, ignore=ignore)]
         for r in hits:
             r["_database"] = db_name
         combined.extend(hits)

@@ -15,7 +15,7 @@ description: >
 
 ## Overview
 
-Comprehensive accessibility knowledge grounded in **WCAG 2.1 AA by default** (with full **WCAG 2.2** coverage), WAI-ARIA 1.2, and real-world audit, remediation, and handoff practice. Spans standards, semantic HTML, ARIA patterns, keyboard, screen readers, mobile (iOS/Android), typography, color, CI testing, KPIs, organizational processes, and disability theory.
+Comprehensive accessibility knowledge grounded in **WCAG 2.1 AA by default** (the criteria added in **WCAG 2.2** are surfaced where relevant; the searchable catalog lists the Level A and AA criteria of 2.1 plus the 9 added in 2.2, not the 2.1 AAA criteria), WAI-ARIA 1.2, and real-world audit, remediation, and handoff practice. Spans standards, semantic HTML, ARIA patterns, keyboard, screen readers, mobile (iOS/Android), typography, color, CI testing, KPIs, organizational processes, and disability theory.
 
 ### 🌍 Multilingual Behavior (CRITICAL)
 You are a **polyglot accessibility expert**. While your underlying databases and CSV files are in English, you must **ALWAYS respond in the exact language the user is speaking**. 
@@ -77,7 +77,7 @@ python scripts/search.py resources --keyword WCAG
 
 | File | Contents |
 |------|----------|
-| `data/wcag-criteria.csv` | WCAG 2.1 A/AA + **WCAG 2.2** additions (2.4.11–2.4.13, 2.5.7–2.5.8, 3.2.6, 3.3.7–3.3.9) |
+| `data/wcag-criteria.csv` | 59 criteria: all Level A and AA of WCAG 2.1 plus the 9 added in **2.2** (2.4.11–2.4.13, 2.5.7–2.5.8, 3.2.6, 3.3.7–3.3.9); the 28 Level AAA criteria of 2.1 are not included; `versions` column; 4.1.1 is a historical 2.1 entry removed in 2.2 |
 | `data/aria-patterns.csv` | 25+ component patterns with required ARIA, keyboard, focus mgmt |
 | `data/testing-tools.csv` | 30+ tools by type, platform, browser, cost |
 | `data/screen-reader-keys.csv` | Shortcuts for NVDA, JAWS, VoiceOver (macOS/iOS), TalkBack, Narrator |
@@ -176,7 +176,7 @@ Design decisions depend on which model of disability you implicitly assume. Pref
 | 3.3.8 | AA | **Accessible Authentication (Minimum)** | No cognitive-function tests (allow paste, password manager, WebAuthn) |
 | 3.3.9 | AAA | Accessible Authentication (Enhanced) | No cognitive-function tests at all |
 
-> Full criteria database: `data/wcag-criteria.csv`
+> Criteria catalog (59 rows, not complete: no 2.1 AAA criteria; `versions` shows 2.1 / 2.2): `data/wcag-criteria.csv`
 
 ---
 

@@ -44,7 +44,7 @@ Además de usar a Claude, puedes buscar en las 14 bases de datos usando el CLI q
 
 | Comando CLI | Contenido |
 |-------------|-----------|
-| `wcag-search wcag` | Criterios WCAG 2.1 A/AA + **WCAG 2.2** |
+| `wcag-search wcag` | 59 criterios WCAG: los A y AA de 2.1 más los 9 añadidos en **2.2**. **Catálogo incompleto:** faltan los 28 AAA de 2.1. 4.1.1 es una entrada histórica de 2.1, retirada en 2.2 |
 | `wcag-search wcag3` | Estado del borrador WCAG 3 y enlaces al W3C (sin criterios) |
 | `wcag-search aria` | +25 patrones de componentes WAI-ARIA |
 | `wcag-search tools` | Herramientas de pruebas (axe, WAVE, etc.) |

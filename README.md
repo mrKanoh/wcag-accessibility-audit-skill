@@ -134,7 +134,7 @@ python scripts/search.py glossary --keyword contrast
 
 | File | Contents |
 |------|----------|
-| `data/wcag-criteria.csv` | WCAG 2.1 A/AA + **WCAG 2.2** (2.4.11–2.4.13, 2.5.7–2.5.8, 3.2.6, 3.3.7–3.3.9) |
+| `data/wcag-criteria.csv` | 59 WCAG criteria: all Level A and AA of 2.1 plus the 9 added in **2.2** (2.4.11–2.4.13, 2.5.7–2.5.8, 3.2.6, 3.3.7–3.3.9). **Not complete:** the 28 Level AAA criteria of 2.1 are missing. `versions` column: `2.1`, `2.2` or `2.1;2.2`; 4.1.1 Parsing is a historical 2.1 entry, removed in 2.2 |
 | `data/aria-patterns.csv` | 25+ component patterns · ARIA · keyboard · focus mgmt |
 | `data/testing-tools.csv` | 30+ tools by type · platform · browser · cost |
 | `data/screen-reader-keys.csv` | Shortcuts for NVDA · JAWS · VoiceOver (macOS/iOS) · TalkBack · Narrator |
@@ -294,7 +294,7 @@ wcag-accessibility/
   ├─ CONTRIBUTING.md                   ← Contribution guide
   │
   ├─ data/                             ← 14 searchable databases
-  │  ├─ wcag-criteria.csv              WCAG 2.0/2.1 + WCAG 2.2 (70+ criteria)
+  │  ├─ wcag-criteria.csv              59 WCAG criteria (2.1 A/AA + 9 added in 2.2; no 2.1 AAA)
   │  ├─ aria-patterns.csv              25+ component patterns: keyboard, focus, roles
   │  ├─ testing-tools.csv              30+ tools: axe, WAVE, Accessibility Insights, etc.
   │  ├─ screen-reader-keys.csv         Shortcuts for NVDA, JAWS, VoiceOver, TalkBack, Narrator

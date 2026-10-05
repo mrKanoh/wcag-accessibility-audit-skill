@@ -35,7 +35,7 @@ class TestCSVIntegrity:
     """Verify every database CSV can be loaded and has expected columns."""
 
     EXPECTED_COLS = {
-        "wcag-criteria.csv":          {"id", "level", "principle", "criterion"},
+        "wcag-criteria.csv":          {"id", "level", "principle", "criterion", "versions"},
         "aria-patterns.csv":           {"component", "role", "keyboard"},
         "testing-tools.csv":           {"tool", "type", "platform", "free"},
         "screen-reader-keys.csv":      {"reader", "platform", "action", "key"},
@@ -334,3 +334,107 @@ class TestWcag3Notice:
         cli.pop("ignored_arguments")
         assert resource == cli
         assert resource["records"] == []
+
+
+# ── Metadatos de versión del catálogo WCAG (D2-1) ─────────────────────────
+
+# Criterios añadidos en WCAG 2.2 (W3C: https://www.w3.org/TR/WCAG22/). 4.1.1 Parsing existe en
+# WCAG 2.1 y está marcado «Obsolete and removed» en 2.2.
+ADDED_IN_22 = {"2.4.11", "2.4.12", "2.4.13", "2.5.7", "2.5.8", "3.2.6", "3.3.7", "3.3.8", "3.3.9"}
+REMOVED_IN_22 = {"4.1.1"}
+
+
+def wcag_rows() -> list[dict]:
+    with open(DATA / "wcag-criteria.csv", newline="", encoding="utf-8") as f:
+        return list(csv.DictReader(f))
+
+
+class TestWcagVersionMetadata:
+    """La columna `versions` clasifica cada fila; no es un catálogo completo de WCAG (faltan los 28 AAA de 2.1)."""
+
+    def test_catalogo_conserva_59_ids_sin_duplicados(self):
+        ids = [r["id"] for r in wcag_rows()]
+        assert len(ids) == 59
+        assert len(set(ids)) == 59
+
+    def test_clasificacion_de_cada_fila(self):
+        for row in wcag_rows():
+            if row["id"] in REMOVED_IN_22:
+                expected = "2.1"
+            elif row["id"] in ADDED_IN_22:
+                expected = "2.2"
+            else:
+                expected = "2.1;2.2"
+            assert row["versions"] == expected, row["id"]
+
+    def test_conteos_por_clasificacion(self):
+        counts: dict[str, int] = {}
+        for row in wcag_rows():
+            counts[row["versions"]] = counts.get(row["versions"], 0) + 1
+        assert counts == {"2.1;2.2": 49, "2.1": 1, "2.2": 9}
+
+    def test_columna_versions_es_la_ultima(self):
+        with open(DATA / "wcag-criteria.csv", newline="", encoding="utf-8") as f:
+            assert (csv.reader(f).__next__())[-1] == "versions"
+
+    @pytest.mark.parametrize("criterion_id,versions", [("4.1.1", "2.1"), ("2.5.8", "2.2"), ("1.4.3", "2.1;2.2")])
+    def test_json_expone_versions(self, criterion_id, versions):
+        r = run("wcag", "--id", criterion_id, "--output", "json")
+        assert r.returncode == 0
+        data = json.loads(r.stdout)
+        assert [(d["id"], d["versions"]) for d in data] == [(criterion_id, versions)]
+
+    def test_csv_conserva_sus_cinco_columnas(self):
+        r = run("wcag", "--level", "A", "--output", "csv")
+        assert r.returncode == 0
+        header = r.stdout.splitlines()[0]
+        assert header == "id,level,principle,criterion,description"
+        assert "versions" not in r.stdout
+
+    def test_tabla_no_muestra_versions(self):
+        r = run("wcag", "--id", "4.1.1")
+        assert r.returncode == 0
+        assert "versions" not in r.stdout
+
+    def test_level_sin_version_no_cambia(self):
+        data = json.loads(run("wcag", "--level", "A", "--output", "json").stdout)
+        assert len(data) == 32
+        assert "4.1.1" in {d["id"] for d in data}  # D2-1 no añade filtros por versión
+
+    def test_exportacion_json_incluye_versions(self, tmp_path):
+        out = tmp_path / "wcag.json"
+        r = run("wcag", "--id", "4.1.1", "--output", "json", "--export", str(out))
+        assert r.returncode == 0
+        assert json.loads(out.read_text(encoding="utf-8"))[0]["versions"] == "2.1"
+
+
+class TestKeywordIgnoresVersions:
+    """`versions` no participa en --keyword (línea base anterior al cambio de columna)."""
+
+    def test_keyword_2_1_en_wcag(self):
+        ids = [d["id"] for d in json.loads(run("wcag", "--keyword", "2.1", "--output", "json").stdout)]
+        assert ids == ["1.2.1", "2.1.1", "2.1.2", "2.1.4", "2.2.1", "3.2.1", "4.1.1"]
+
+    def test_keyword_2_2_en_wcag(self):
+        ids = [d["id"] for d in json.loads(run("wcag", "--keyword", "2.2", "--output", "json").stdout)]
+        assert ids == ["1.2.2", "2.2.1", "2.2.2", "3.2.2", "4.1.1"]
+
+    @pytest.mark.parametrize(
+        "keyword,expected",
+        [
+            ("2.1", {"wcag": 7, "aria": 4, "tools": 1, "glossary": 1, "legal": 17, "resources": 3, "cognitive": 3}),
+            ("2.2", {"wcag": 5, "aria": 1, "handoff": 1, "glossary": 1, "legal": 1, "resources": 7, "cognitive": 7}),
+        ],
+    )
+    def test_all_conserva_los_resultados_por_base(self, keyword, expected):
+        data = json.loads(run("all", "--keyword", keyword, "--output", "json").stdout)
+        by_db: dict[str, int] = {}
+        for row in data:
+            by_db[row["_database"]] = by_db.get(row["_database"], 0) + 1
+        assert by_db == expected
+
+    def test_all_wcag_coincide_solo_por_campos_de_contenido(self):
+        for row in json.loads(run("all", "--keyword", "2.2", "--output", "json").stdout):
+            if row["_database"] == "wcag":
+                content = [str(v) for k, v in row.items() if k not in ("versions", "_database")]
+                assert any("2.2" in v for v in content), row["id"]
