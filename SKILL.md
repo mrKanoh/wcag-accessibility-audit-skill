@@ -108,6 +108,7 @@ python scripts/search.py resources --keyword WCAG
 | `data/resources.csv` | 50+ authoritative books, blogs, research papers, tools, standards |
 | `scripts/search.py` | CLI search across all databases |
 | `references/form-labels-and-names.md` | Reviewing form labels, accessible names and input purpose without over-claiming |
+| `references/authentication-and-modal-focus.md` | What 3.3.8 / 3.3.9 require, and how to choose initial and return focus in modal dialogs |
 | `templates/audit-report.md` | Complete audit report template (fill-in) |
 | `templates/a11y-ci.yml` | GitHub Actions CI pipeline (axe + pa11y + Playwright + Lighthouse) |
 | `prompts/` | Ready-to-use prompts for any assistant (audit, ARIA, alt text, handoff, KPIs) |
@@ -190,8 +191,8 @@ Design decisions depend on which model of disability you implicitly assume. Pref
 | 2.5.8 | AA | **Target Size (Minimum)** | Pointer targets ≥ 24×24 CSS px (exceptions apply) |
 | 3.2.6 | A | **Consistent Help** | Help mechanisms in consistent relative order |
 | 3.3.7 | A | **Redundant Entry** | Don't force re-entry of already-provided info |
-| 3.3.8 | AA | **Accessible Authentication (Minimum)** | No cognitive-function tests (allow paste, password manager, WebAuthn) |
-| 3.3.9 | AAA | Accessible Authentication (Enhanced) | No cognitive-function tests at all |
+| 3.3.8 | AA | **Accessible Authentication (Minimum)** | No step of an authentication process requires a cognitive function test unless that step offers an alternative method, an assisting mechanism (e.g. password manager, paste), object recognition, or identifying the user's own non-text content |
+| 3.3.9 | AAA | Accessible Authentication (Enhanced) | Same as 3.3.8, but only the alternative and the assisting mechanism remain as exceptions (object recognition and personal content are not) |
 
 > Criteria catalog (59 rows, not complete: no 2.1 AAA criteria; `versions` shows 2.1 / 2.2; `--wcag-version 2.1|2.2` filters by it, and `--level AA` means exactly AA, not A+AA): `data/wcag-criteria.csv`
 
@@ -216,7 +217,7 @@ Design decisions depend on which model of disability you implicitly assume. Pref
 <table><caption><thead><th scope="col">
 <label for="id">  <fieldset><legend>
 <details><summary>        <!-- native disclosure -->
-<dialog>                  <!-- with showModal() for focus trap -->
+<dialog>                  <!-- showModal(): page behind becomes inert; check Tab and Escape in your target browsers -->
 ```
 
 **Common mistake**: using `<div onclick>` for a button — breaks keyboard, SR, and focus. Always prefer `<button>`.
@@ -283,10 +284,11 @@ aria-owns="id"
   <button aria-label="Close dialog">×</button>
 </div>
 ```
-- Move focus to first focusable element inside on open
-- Return focus to trigger on close
-- Tab cycles within dialog; Escape closes
+- Initial focus depends on the content and the task (APG guidance; WCAG does not name the element): the first focusable element for a simple dialog; a static title or the start of long or structured content (`tabindex="-1"`, focused by script, not a Tab stop) so reading starts at the top; the least destructive action when the action is hard to reverse
+- On close, focus normally returns to the trigger; if it no longer exists or the flow moves on, to a logical element of the workflow
+- Keyboard (APG): Tab and Shift+Tab stay inside the dialog and Escape closes it. WCAG asks that keyboard users are not trapped (2.1.2) and can operate the dialog (2.1.1)
 - Background: `inert` (or `aria-hidden="true"` with care)
+- `role="dialog"` and `aria-modal="true"` only describe the dialog; an inert background, Tab containment, Escape and focus management must be implemented. Native `<dialog>.showModal()` makes the rest of the document inert, applies the HTML dialog focusing steps and restores focus to the previously focused element on close; an inert background is not the same as a Tab cycle written in JavaScript, so verify Tab, Escape and initial focus in your target browsers. Details: `references/authentication-and-modal-focus.md`
 
 ### Tab Panel
 ```html
@@ -675,7 +677,7 @@ export default { addons: ['@storybook/addon-a11y'] };
 | Missing form labels | `<label for="id">` or `aria-label` / `aria-labelledby` |
 | Bad heading hierarchy | h1→h2→h3 in order |
 | ARIA misuse | Semantic HTML first |
-| Focus trapped in modal | Tab wraps inside; Escape closes; focus returns to trigger |
+| Focus trapped in modal | Tab wraps inside; Escape closes; focus returns to the trigger (or a logical element if it is gone) |
 | Unlabeled icon button | `aria-label` on `<button>` + `aria-hidden="true"` on SVG |
 | Auto-playing media | Pause/stop control within 3s |
 | AJAX content not announced | `aria-live="polite"` region; inject content into it |
@@ -683,7 +685,7 @@ export default { addons: ['@storybook/addon-a11y'] };
 | Sticky header hides focus (2.4.11) | `scroll-padding-top: <header-height>` |
 | Small tap targets (2.5.8) | ≥ 24×24 CSS px; spacing can satisfy |
 | Drag-only reorder (2.5.7) | Provide ↑/↓ buttons or menu |
-| Password paste blocked (3.3.8) | Allow paste; allow password managers |
+| Password or code paste/autofill blocked (3.3.8, F109) | Allow paste; allow password managers and autofill |
 
 ---
 
@@ -767,7 +769,7 @@ export class LoginComponent {
 }
 ```
 
-### Svelte 5 — Accessible modal with focus trap
+### Svelte 5 — Modal dialog with native `<dialog>`
 ```svelte
 <script>
   import { onMount } from 'svelte';
@@ -795,7 +797,7 @@ export class LoginComponent {
   </menu>
 </dialog>
 
-<!-- Native <dialog> provides focus trap, Escape key, and aria-modal automatically -->
+<!-- showModal() makes the page behind inert. Initial focus follows the HTML dialog focusing steps (an autofocus element, else the dialog's focus delegate, else the dialog); on close, focus returns to the element focused before opening, if any. Verify Tab, Escape and initial focus in your target browsers, and choose the initial focus for your content and task. -->
 ```
 
 ### Astro — Accessible island with ARIA
@@ -1088,7 +1090,7 @@ Users with motor disabilities may use input methods beyond keyboard and mouse. D
 
 **Requirements**:
 - Visible label text must match (or be contained in) the accessible name — WCAG 2.5.3 Label in Name
-- Unique visible labels for all interactive elements (no duplicate "Learn more" links)
+- Prefer labels that tell repeated controls apart when their context does not (for example several "Learn more" links); this is a usability recommendation for voice control, not a WCAG uniqueness requirement (see `references/form-labels-and-names.md`)
 - `aria-label` must contain the visible text, not replace it
 
 ```html
@@ -1120,7 +1122,7 @@ Users with motor disabilities may use input methods beyond keyboard and mouse. D
 - Consistent navigation and labeling (WCAG 3.2.3 / 3.2.4)
 - Error recovery: suggest corrections (3.3.3), allow undo (3.3.4)
 - No time limits or extend them (2.2.1)
-- Accessible authentication — no cognitive puzzles (WCAG 3.3.8)
+- Accessible authentication — avoid cognitive function tests in login steps unless an alternative, an assisting mechanism, or a 3.3.8 exception applies (WCAG 3.3.8)
 - Break complex processes into steps; show progress
 - Use icons alongside text for reinforcement
 
@@ -1350,7 +1352,7 @@ const closeBtn = ref<HTMLButtonElement | null>(null);
 watch(() => props.open, async (val) => {
   if (val) {
     await nextTick();
-    closeBtn.value?.focus(); // Move focus into dialog
+    closeBtn.value?.focus(); // Initial focus: Cancel, the least destructive action, because this cannot be undone (choose per task)
   }
 });
 
@@ -1360,7 +1362,7 @@ function handleKeydown(e: KeyboardEvent) {
 </script>
 
 <template>
-  <!-- Teleport out of current DOM tree so aria-modal works correctly -->
+  <!-- Teleport to body so the dialog is not inside a hidden or inert ancestor -->
   <Teleport to="body">
     <div
       v-if="open"
@@ -1380,6 +1382,7 @@ function handleKeydown(e: KeyboardEvent) {
   </Teleport>
 </template>
 ```
+This sketch moves focus and handles Escape only. It does not make the page behind inert, contain Tab or return focus: add those (or use native `<dialog>.showModal()` and check it in your browsers), returning focus to the opener or, if it is gone, to a logical element.
 
 ### Accessible toggle button (Vue 3)
 ```vue
@@ -1603,17 +1606,18 @@ Cognitive, language, and learning disabilities affect ~15% of people. WCAG addre
 
 ### Accessible authentication (WCAG 3.3.8 — WCAG 2.2)
 ```html
-<!-- ❌ Cognitive function test — fails 3.3.8 -->
+<!-- ⚠️ Cognitive function test (transcribing characters): conforms to 3.3.8 only if the step also
+     provides an alternative method or an assisting mechanism. Judge the whole process, not this field. -->
 <p>Type the characters you see in the image:</p>
 <img src="captcha.png" alt="">
 <input type="text" name="captcha">
 
-<!-- ✅ Alternatives that pass 3.3.8 -->
-<!-- 1. Allow paste into password fields -->
+<!-- Options that can support 3.3.8 (confirm they work in the real process) -->
+<!-- 1. Allow paste and password managers in password fields -->
 <input type="password" autocomplete="current-password">
-<!-- 2. Use WebAuthn (passkeys) -->
-<!-- 3. Use OTP sent to email/phone -->
-<!-- 4. If CAPTCHA is unavoidable: provide accessible alternative (audio CAPTCHA) -->
+<!-- 2. Offer another method (e.g. WebAuthn/passkeys, email link) -->
+<!-- 3. Codes sent by email/SMS must be pasteable or autofillable, not only retyped -->
+<!-- 4. An audio CAPTCHA that still requires transcribing is not an alternative -->
 ```
 
 > Full pattern database: `data/cognitive-accessibility.csv` (20 patterns)
@@ -1664,4 +1668,5 @@ Sources (check them for the current status; reviewed 2026-10-01 against the 10 S
 15. **User preference media queries**: recommend prefers-reduced-motion, prefers-contrast, forced-colors, prefers-reduced-transparency in every animation/color/theme discussion — see section 20.
 16. **Templates & prompts**: point users to `templates/` and `prompts/` for ready-to-use assets. The 12 prompts in `prompts/` are designed to be pasted into an assistant directly; if it cannot read this repository's files, paste the relevant `data/` rows or sections along with the prompt.
 17. **External Resources**: refer users to [`RESOURCES.md`](./RESOURCES.md) for comprehensive curated bibliography of books, blogs, research papers, tools, and legal frameworks — updated 2025 with WCAG 2.2, EAA deadline, and peer-reviewed studies.
-18. **Reviewing code fragments** (forms, controls, icon buttons): read `references/form-labels-and-names.md`. Keep findings the code demonstrates apart from those that depend on context, need browser/keyboard/screen-reader/server verification, or are design recommendations; justify severity; do not report what a screen reader announced or an automated tool detected unless it was run; cite a criterion only with the reason it applies.
+18. **Reviewing code fragments** (forms, controls, icon buttons, repeated names such as one "Delete" per row): read `references/form-labels-and-names.md`. Keep findings the code demonstrates apart from those that depend on context, need browser/keyboard/screen-reader/server verification, or are design recommendations; justify severity; do not report what a screen reader announced or an automated tool detected unless it was run; keep behavior shown by the code, described by a comment, merely possible and actually observed apart; cite a criterion only with the reason it applies.
+19. **Authentication and modal dialogs**: for 3.3.8 / 3.3.9 or modal focus questions read `references/authentication-and-modal-focus.md`. Do not call a whole authentication process conformant or non-conformant from one field, or from the mere presence of a password, CAPTCHA, paste or autofill; separate the requirement, a possible technique and what still needs checking. Offer initial-focus options by content and task rather than one fixed rule. Report behavior known only from a comment or description as described, not as observed.

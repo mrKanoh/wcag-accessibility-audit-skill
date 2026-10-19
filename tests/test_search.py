@@ -565,3 +565,33 @@ class TestFormCriteriaTechniqueIds:
     def test_1_3_5_lista_f107_y_h98(self):
         r = self.row("1.3.5")
         assert "H98" in r["techniques"] and "F107" in r["failures"]
+
+
+class TestAuthenticationAndModalData:
+    """Datos de 3.3.8/3.3.9 y del patrón de diálogo modal, contrastados con WCAG 2.2 y APG."""
+
+    @staticmethod
+    def wcag(criterion_id: str) -> dict:
+        return json.loads(run("wcag", "--id", criterion_id, "--output", "json").stdout)[0]
+
+    def test_3_3_8_y_3_3_9_lista_f109_y_no_cita_captcha_sin_audio_como_fallo(self):
+        for cid in ("3.3.8", "3.3.9"):
+            row = self.wcag(cid)
+            assert "F109" in row["failures"]
+            assert "audio" not in row["failures"].lower()
+
+    def test_3_3_9_no_conserva_las_excepciones_de_reconocimiento_ni_contenido_personal(self):
+        text = self.wcag("3.3.9")["description"].lower()
+        assert "alternative" in text and "mechanism" in text
+        assert "are not exceptions" in text
+
+    def test_3_3_8_conserva_las_cuatro_excepciones(self):
+        text = self.wcag("3.3.8")["description"].lower()
+        for word in ("alternative", "mechanism", "object recognition", "provided"):
+            assert word in text
+
+    def test_modal_no_impone_siempre_el_primer_elemento(self):
+        rows = json.loads(run("aria", "--component", "modal", "--output", "json").stdout)
+        focus = rows[0]["focus_management"].lower()
+        assert "tabindex=-1" in focus and "least destructive" in focus
+        assert "logical element" in focus

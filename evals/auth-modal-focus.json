@@ -1,0 +1,189 @@
+{
+  "suite": "auth-modal-focus",
+  "description": "Cases for 3.3.8/3.3.9 and modal focus. The agent receives only the situation and a neutral request; judge by meaning, not keywords.",
+  "request_template": "Revisa la accesibilidad (WCAG 2.2) de lo que hay en {file}. No modifiques ningún archivo. Responde en español.",
+  "cases": [
+    {
+      "id": "A1",
+      "name": "password_with_manager_and_paste",
+      "code": "<form action=\"/login\" method=\"post\">\n  <label for=\"u\">Correo electrónico</label>\n  <input id=\"u\" type=\"email\" name=\"user\" autocomplete=\"username\">\n  <label for=\"p\">Contraseña</label>\n  <input id=\"p\" type=\"password\" name=\"pass\" autocomplete=\"current-password\">\n  <button type=\"submit\">Entrar</button>\n</form>\n<!-- Contexto: no hay JavaScript que bloquee pegar ni el autocompletado; el sitio no ofrece otro método de acceso. -->",
+      "can_conclude": [
+        "Requiring a password is not by itself a failure of 3.3.8: the mechanism exception (password manager, paste) applies when it works.",
+        "The markup is consistent with H100 (marked-up inputs, autocomplete tokens)."
+      ],
+      "cannot_conclude": [
+        "That the whole authentication process conforms: other steps (codes, recovery, CAPTCHA) are not shown.",
+        "That a password manager actually fills the fields in a given browser (needs checking)."
+      ],
+      "must_not": [
+        "Declare a 3.3.8 failure because a password is required.",
+        "Declare the whole process conformant."
+      ],
+      "design_separate": [
+        "Offering passkeys or an email link is an option, not required here."
+      ],
+      "sources": [
+        "https://www.w3.org/TR/WCAG22/#accessible-authentication-minimum",
+        "https://www.w3.org/WAI/WCAG22/Understanding/accessible-authentication-minimum.html"
+      ]
+    },
+    {
+      "id": "A2",
+      "name": "mandatory_cognitive_test_no_alternative_no_help",
+      "code": "Proceso de acceso descrito por el equipo: paso 1, usuario y contraseña (pegar bloqueado con JavaScript: onpaste=\"return false\"); paso 2, el usuario debe transcribir a mano un código de 6 dígitos que se muestra en una imagen distorsionada. No existe ningún otro método de acceso, ni opción de audio, ni ayuda. Se pide una evaluación contra WCAG 2.2 (AA y AAA).",
+      "can_conclude": [
+        "On the basis of the described process (no other method, no audio option, no help, a transcription step), 3.3.8 and 3.3.9 are likely not met for that step; it states the basis is the description and that no real test was run.",
+        "If the description is accurate, the stated absence of any other-modality option supports a finding about alternative forms of CAPTCHA under 1.1.1, with that basis stated."
+      ],
+      "cannot_conclude": [
+        "Whether the image has a text alternative that identifies its purpose: not described, so it cannot be reported as absent.",
+        "That blocking paste also blocks autofill or password managers (onpaste affects paste only; check separately).",
+        "Anything about steps or methods not described (recovery, other login methods).",
+        "That object recognition applies: transcription is not recognition."
+      ],
+      "must_not": [
+        "Claim to have tested the page.",
+        "Treat an audio version that still needs transcribing as an alternative.",
+        "Report a 1.1.1 failure because the image has no text alternative.",
+        "Assume autofill or password managers are blocked.",
+        "Add other findings the description does not support."
+      ],
+      "design_separate": [
+        "Remove the paste block; offer an email link or passkeys."
+      ],
+      "sources": [
+        "https://www.w3.org/TR/WCAG22/#accessible-authentication-minimum",
+        "https://www.w3.org/TR/WCAG22/#accessible-authentication-enhanced",
+        "https://www.w3.org/WAI/WCAG22/Understanding/accessible-authentication-minimum.html"
+      ]
+    },
+    {
+      "id": "A3",
+      "name": "object_recognition_only_challenge",
+      "code": "Proceso de acceso descrito: tras usuario y contraseña (con gestor de contraseñas y pegado permitidos) aparece un reto obligatorio: \"Selecciona todas las imágenes que contienen semáforos\". No hay método alternativo de acceso ni otra ayuda para ese reto. Se evalúa contra WCAG 2.2.",
+      "can_conclude": [
+        "Object recognition is an exception in 3.3.8 (AA) but not in 3.3.9 (AAA); without an alternative or mechanism for the challenge, the challenge step would not meet 3.3.9.",
+        "Under AA the challenge alone is not a 3.3.8 failure; the rest of the process still has to be assessed."
+      ],
+      "cannot_conclude": [
+        "That the whole process conforms to 3.3.8 or 3.3.9.",
+        "Whether a mechanism exists that is not described."
+      ],
+      "must_not": [
+        "Declare the process conformant.",
+        "Say 3.3.8 and 3.3.9 treat the challenge the same way.",
+        "Say that adding an alternative makes the process conform to AAA."
+      ],
+      "design_separate": [
+        "An alternative that does not rely on a cognitive function test can satisfy the matching 3.3.9 condition for that step if it works and the other applicable conditions are met; this is not proof of AAA conformance of the whole process."
+      ],
+      "sources": [
+        "https://www.w3.org/WAI/WCAG22/Understanding/accessible-authentication-enhanced.html",
+        "https://www.w3.org/WAI/WCAG22/Understanding/accessible-authentication-minimum.html"
+      ]
+    },
+    {
+      "id": "M1",
+      "name": "long_structured_dialog",
+      "code": "<div role=\"dialog\" aria-modal=\"true\" aria-labelledby=\"t\" id=\"terms\">\n  <h2 id=\"t\">Términos del servicio</h2>\n  <p>…varios párrafos…</p>\n  <ol><li>…</li><li>…</li><li>…</li></ol>\n  <table>…</table>\n  <button type=\"button\" id=\"accept\">Aceptar</button>\n  <button type=\"button\" id=\"close\">Cerrar</button>\n</div>\n<!-- Al abrir, el script hace document.getElementById(\"accept\").focus(); el contenido es más alto que la ventana. -->",
+      "can_conclude": [
+        "Focusing the Accept button at the end can scroll the start of the content out of view; a reasonable option is focusing the title or the content start with tabindex=-1 (not a Tab stop).",
+        "This is APG guidance, not a WCAG requirement."
+      ],
+      "cannot_conclude": [
+        "That the current choice fails a WCAG criterion by itself.",
+        "What a screen reader announces (not run)."
+      ],
+      "must_not": [
+        "State that focusing the first focusable element is always correct or always wrong."
+      ],
+      "design_separate": [
+        "Omit aria-describedby for long content (APG)."
+      ],
+      "sources": [
+        "https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/"
+      ]
+    },
+    {
+      "id": "M2",
+      "name": "irreversible_delete_confirmation",
+      "code": "<div role=\"alertdialog\" aria-modal=\"true\" aria-labelledby=\"t\" aria-describedby=\"d\">\n  <h2 id=\"t\">¿Eliminar el proyecto?</h2>\n  <p id=\"d\">Se borrarán todos los datos de forma permanente.</p>\n  <button type=\"button\" id=\"del\">Eliminar</button>\n  <button type=\"button\" id=\"cancel\">Cancelar</button>\n</div>\n<!-- Al abrir, el script envía el foco a #del. -->",
+      "can_conclude": [
+        "For a hard-to-reverse action APG suggests considering the least destructive control (Cancel) as initial focus; it is a recommendation, not a universal rule or a WCAG requirement.",
+        "Focusing Delete is a risk (accidental Enter), not a demonstrated failure."
+      ],
+      "cannot_conclude": [
+        "That the current focus is a WCAG failure.",
+        "Keyboard or screen reader behavior (not run)."
+      ],
+      "must_not": [
+        "Impose focusing Cancel as a rule for every dialog."
+      ],
+      "design_separate": [
+        "Escape cancels; both buttons have clear names."
+      ],
+      "sources": [
+        "https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/"
+      ]
+    },
+    {
+      "id": "M3",
+      "name": "simple_dialog",
+      "code": "<div role=\"dialog\" aria-modal=\"true\" aria-labelledby=\"t\">\n  <h2 id=\"t\">Cambiar nombre</h2>\n  <label for=\"n\">Nuevo nombre</label>\n  <input id=\"n\" type=\"text\">\n  <button type=\"button\">Guardar</button>\n  <button type=\"button\">Cancelar</button>\n</div>\n<!-- Al abrir, el script envía el foco al campo #n. -->",
+      "can_conclude": [
+        "Focusing the input is a suitable choice for a short form dialog: the task starts there.",
+        "Nothing shown here demonstrates a failure about initial focus."
+      ],
+      "cannot_conclude": [
+        "Containment, Escape or focus return: that script is not shown.",
+        "That role=dialog and aria-modal=true provide modal behavior by themselves."
+      ],
+      "must_not": [
+        "Insist on focusing the title or Cancel.",
+        "Claim that aria-modal implements containment."
+      ],
+      "design_separate": [
+        "Verify Tab containment, Escape and focus return in the real page."
+      ],
+      "sources": [
+        "https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/"
+      ]
+    },
+    {
+      "id": "M4",
+      "name": "trigger_removed_after_action",
+      "code": "<ul id=\"lista\">\n  <li>Informe.pdf <button type=\"button\" class=\"del\" data-id=\"1\">Eliminar</button></li>\n  <li>Notas.txt <button type=\"button\" class=\"del\" data-id=\"2\">Eliminar</button></li>\n</ul>\n<!-- Al confirmar en el diálogo modal, el script elimina el <li> (y su botón Eliminar, que abrió el diálogo), cierra el diálogo y luego llama a trigger.focus(). -->",
+      "can_conclude": [
+        "Behavior known only from the comment (the script removes the item and then calls trigger.focus()) is attributed to the comment; reasoning from it is given as a risk with its condition, not as observed.",
+        "As APG guidance, when the trigger disappears, move focus to a logical element of the workflow (for example the next item or the list), with its reason and with the focus destination, Tab continuation and announcements still to be verified in the real environment.",
+        "The HTML shows two buttons with the same visible name next to different list items; the list context is considered, and more specific names (keeping Eliminar in the name) are an improvement or context to verify, not a failure."
+      ],
+      "cannot_conclude": [
+        "Where focus ends up, from where Tab continues, which position is lost, or what a screen reader announces or does not announce, without running it: no categorical statement, even after a 'not run' disclaimer.",
+        "That the absence of the dialog code or of a status message in the fragment is a demonstrated failure (including 4.1.3): it cannot be assessed from the fragment.",
+        "That the two Eliminar names are a failure of 2.4.6, 2.5.3 or 4.1.2 from the repetition alone.",
+        "Anything about the dialog's own markup or script, CSS or page-level items: not shown."
+      ],
+      "must_not": [
+        "Say focus must always return to the trigger even if it is gone.",
+        "State as fact where focus ends or where Tab continues, or that a screen reader does not announce something, without a real test.",
+        "Present the comment's content as verified code.",
+        "Present a specific focus destination as a universal WCAG requirement; it is APG guidance.",
+        "Impose Cancel as initial focus without noting that it fits a hard-to-reverse action and depends on the task.",
+        "Report identical Eliminar names as a failure of 2.4.6, 2.5.3 or 4.1.2, or as demonstrated by the code, on repetition alone.",
+        "Apply 2.4.4 to the buttons automatically.",
+        "Add findings the fragment does not support (for example invented dialog markup, errors or status behavior shown as defects)."
+      ],
+      "design_separate": [
+        "Distinguishing the button names (for example Eliminar Informe.pdf) may improve the list, keeping the visible text in the name (2.5.3); an aria-label is not required when context or an association already identifies the item; announcing the result with a status message is optional."
+      ],
+      "sources": [
+        "https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/",
+        "https://www.w3.org/WAI/WCAG22/Understanding/headings-and-labels.html",
+        "https://www.w3.org/WAI/WCAG22/Understanding/label-in-name.html",
+        "https://www.w3.org/WAI/WCAG22/Understanding/name-role-value.html",
+        "https://www.w3.org/WAI/WCAG22/Understanding/link-purpose-in-context.html"
+      ]
+    }
+  ]
+}

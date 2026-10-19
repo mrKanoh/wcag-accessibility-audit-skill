@@ -13,7 +13,7 @@ Design,Content hierarchy clear,Content,Copy doc,Heading levels plain language li
 Development,Semantic HTML used,Dev,Code,Prefer native elements over ARIA
 Development,Accessible name on every control,Dev,Code,aria-label aria-labelledby or visible text
 Development,Keyboard support implemented,Dev,Code,Matches design keyboard spec; no traps
-Development,Focus management on route/modal,Dev,Code,Focus moves appropriately; returned to trigger on close
+Development,Focus management on route/modal,Dev,Code,Focus moves appropriately; returned to the trigger (or a logical element if it is gone) on close
 Development,Live regions wired,Dev,Code,aria-live for async status; role=alert for errors
 Development,Reduced motion honored,Dev,Code,prefers-reduced-motion disables non-essential animation
 Development,Forced colors supported,Dev,Code,forced-colors media query handled
