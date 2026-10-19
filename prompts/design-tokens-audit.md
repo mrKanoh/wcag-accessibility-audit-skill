@@ -1,6 +1,6 @@
 # Prompt: Audit design tokens against WCAG
 
-Use when you want Claude to audit a set of design tokens (from Figma Tokens,
+Use when you want the assistant to audit a set of design tokens (from Figma Tokens,
 Style Dictionary, or a CSS custom properties file) against WCAG color contrast
 and semantic accessibility requirements.
 
@@ -51,6 +51,7 @@ calculate the contrast ratio and report:
 - Paste CSS variables (`--color-*: #hex;`) or a JSON token object.
 - Figma Tokens plugin exports a JSON that you can paste directly.
 - For a full palette audit, list the pairs you actually use in the UI (not all combinations).
-- Check `data/color-palette-rules.csv` for additional palette design rules.
+- If the assistant can read this repository's files, point it to `data/color-palette-rules.csv`
+  for additional palette design rules; otherwise paste the relevant rows.
 - Use the [WebAIM Contrast Checker](https://webaim.org/resources/contrastchecker/)
-  to verify Claude's calculations if needed.
+  to verify the assistant's calculations if needed.

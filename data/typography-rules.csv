@@ -1,21 +1,21 @@
 rule,category,recommendation,wcag_ref,rationale
-Minimum body size,Size,16 px / 1rem minimum for body text,1.4.4,Smaller sizes fail low-vision users and reduce readability
-Line height,Spacing,1.5x font size minimum for paragraphs,1.4.12,Dyslexia and tracking support
-Paragraph spacing,Spacing,At least 2x font size between paragraphs,1.4.12,Visual grouping and scannability
-Letter spacing,Spacing,0.12x font size supported without loss,1.4.12,Text spacing user customization
-Word spacing,Spacing,0.16x font size supported without loss,1.4.12,Readability for dyslexia and low vision
-Line length,Layout,45-75 characters per line (~65 optimal),1.4.8 AAA,Long lines cause line-tracking loss
-Text alignment,Layout,Left-align (LTR) or start-align; avoid justified,1.4.8 AAA,Justified creates rivers of whitespace
+Minimum body size,Size,"Design guidance, not a WCAG minimum: 16 px / 1rem is a common starting body size. 1.4.4 sets no minimum size; it requires text to resize up to 200% without assistive technology and without loss of content or functionality (exceptions: captions and images of text)",1.4.4,Context-dependent. Smaller text is not a 1.4.4 failure by itself and rem does not guarantee accessibility; test resizing instead
+Line height,Spacing,Design guidance: about 1.5 is a common starting line height. 1.4.12 requires no loss of content or functionality when the user sets line height to at least 1.5x font size together with the other three spacing values,1.4.12,Tests tolerance to user overrides; the initial authored value is not the requirement
+Paragraph spacing,Spacing,Design guidance: clear paragraph spacing helps grouping. 1.4.12 requires no loss of content or functionality when the user sets spacing after paragraphs to at least 2x font size together with the other three spacing values,1.4.12,Tests tolerance to user overrides; content need not start with this value
+Letter spacing,Spacing,"Tolerate user-set letter spacing of at least 0.12x font size without loss of content or functionality (applied together with line, paragraph and word spacing)",1.4.12,User override tolerance; the page need not offer its own control. Languages and scripts without a property may conform using only the properties they use
+Word spacing,Spacing,"Tolerate user-set word spacing of at least 0.16x font size without loss of content or functionality (applied together with line, paragraph and letter spacing)",1.4.12,User override tolerance; the page need not offer its own control. Languages and scripts without a property may conform using only the properties they use
+Line length,Layout,"Design guidance: 45-75 characters per line is a common readability target, not a WCAG requirement. AAA 1.4.8 requires a mechanism (page or user agent) for width of no more than 80 characters (40 for CJK)",1.4.8 AAA,"Not an AA requirement; 1.4.8 also covers colors, justification, spacing and 200% resize without horizontal scrolling"
+Text alignment,Layout,"Design guidance: avoid fully justified blocks and align to the start edge of the writing direction (left in LTR, right in RTL). AAA 1.4.8 requires a mechanism so text is not justified; it does not dictate the default appearance",1.4.8 AAA,Justification can create uneven word gaps; AA does not prohibit justified text
 Reflow,Responsive,Readable at 320 CSS px wide without horizontal scroll,1.4.10,Zoom and mobile usability
-Resize text,Responsive,Zoom to 200% without loss of functionality,1.4.4,Low-vision zoom support
+Resize text,Responsive,Text can be resized up to 200% without assistive technology and without loss of content or functionality (exceptions: captions and images of text),1.4.4,Browser zoom or text-only resizing can satisfy it; do not block user agent scaling. Check intermediate steps and each responsive layout
 Contrast normal text,Contrast,4.5:1 against background,1.4.3,AA minimum
 Contrast large text,Contrast,3:1 against background (18pt or 14pt bold),1.4.3,AA large text minimum
-Avoid color only,Meaning,Do not convey info by color alone (e.g., error = red),1.4.1,Color blind users cannot perceive
+Avoid color only,Meaning,"Do not convey info by color alone (e.g., error = red)",1.4.1,Color blind users cannot perceive
 Webfonts,Technical,Use font-display swap; fallback readable,-,Avoids invisible text while loading
 Avoid all caps,Style,Do not set uppercase for long blocks,-,Screen readers may spell letters; slower reading
-Avoid thin weights,Weight,Body text >= 400 weight; avoid 100-300 for paragraphs,1.4.3,Low contrast and pixelation
+Avoid thin weights,Weight,Design guidance: prefer regular or heavier weights for body text; very thin strokes can look weaker than their measured contrast,-,1.4.3 sets no minimum weight. Size and bold together classify large text (at least 18 pt or 14 pt bold) so AA needs 4.5:1 normal and 3:1 large text with its exceptions. Very thin strokes may benefit from heavier strokes or more contrast: a legibility recommendation not a mandatory weight
 Italics sparingly,Style,Reserve for emphasis; avoid blocks of italic,-,Reduced legibility especially in dyslexia
-Accessible dyslexia choice,Face,Sans-serif or dyslexia-friendly faces (Atkinson Hyperlegible Lexend),-,Wider characters reduce confusion
+Accessible dyslexia choice,Face,Design guidance: choose a face with clearly distinguishable letterforms and test with your audience. No WCAG criterion requires a specific face,-,Benefits of any one typeface are not guaranteed for every reader; do not treat a font as a compliance measure
 Avoid decorative for body,Face,Use decorative faces only for display headlines,-,Low legibility in long copy
 No text in images,Perceivable,Use real text not images of text except logos,1.4.5,Zoom and AT cannot handle image text
 Link text style,Links,Underline links in body copy; contrast 3:1 vs text and 4.5:1 vs background,1.4.1 / 1.4.11,Color alone insufficient for color blind

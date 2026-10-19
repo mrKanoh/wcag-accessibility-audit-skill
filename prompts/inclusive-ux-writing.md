@@ -1,6 +1,6 @@
 # Prompt: Inclusive UX writing review
 
-Use when you want Claude to review UI copy (labels, errors, CTAs, microcopy)
+Use when you want the assistant to review UI copy (labels, errors, CTAs, microcopy)
 for plain language, inclusive terminology, and cognitive accessibility.
 
 ---
@@ -47,4 +47,5 @@ Good: "Create your account" | "Download accessibility guide (PDF, 2MB)" | "Read 
 - Review in batches of 10–20 strings for best output quality.
 - Include context: where does this copy appear? What's the user trying to do?
 - For error messages, also verify the technical implementation uses `role="alert"`.
-- Check `data/glossary-es.csv` if reviewing Spanish copy.
+- If reviewing Spanish copy, give the assistant `data/glossary-es.csv` (or the relevant terms)
+  when it cannot read repository files.

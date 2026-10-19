@@ -9,6 +9,7 @@ Usage:
   python search.py wcag --level AA
   python search.py wcag --keyword contrast --output json
   python search.py wcag --principle Perceivable --export results.json
+  python search.py wcag --wcag-version 2.2 --level AA
   python search.py aria --component modal --detail
   python search.py tools --type screen-reader --platform Windows --free
   python search.py keys --reader NVDA --action heading
@@ -169,6 +170,12 @@ def cmd_wcag(args: argparse.Namespace) -> None:
         rows = [r for r in rows if matches(r, args.keyword, ignore=WCAG_METADATA_FIELDS)]
     if args.id:
         rows = [r for r in rows if r["id"].startswith(args.id)]
+    if args.wcag_version:
+        # Pertenencia exacta a la lista `versions` (p. ej. "2.1;2.2"); no se infiere del id.
+        rows = [r for r in rows if args.wcag_version in [v.strip() for v in r["versions"].split(";")]]
+        if args.level and args.level.upper() == "AAA":
+            print("note: the catalog does not include the AAA criteria inherited from WCAG 2.1, "
+                  "so --level AAA with --wcag-version is not a complete list.", file=sys.stderr)
 
     cols = ["id", "level", "principle", "criterion", "description"]
     render(rows, cols, args.output, args.export)
@@ -476,6 +483,9 @@ def main() -> None:
     p_wcag.add_argument("--principle", help="Perceivable / Operable / Understandable / Robust")
     p_wcag.add_argument("--keyword", help="Search across all fields")
     p_wcag.add_argument("--id", help="Criterion ID prefix (e.g. 1.4 or 2.1.1)")
+    p_wcag.add_argument("--wcag-version", dest="wcag_version", choices=["2.1", "2.2"],
+                        help="Only criteria tagged with this WCAG version in the `versions` column "
+                             "(2.1 includes 4.1.1; 2.2 includes the 2.2 additions). The catalog has no 2.1 AAA criteria")
     p_wcag.add_argument("--url", action="store_true", help="Show understanding URLs")
     add_common_args(p_wcag)
 

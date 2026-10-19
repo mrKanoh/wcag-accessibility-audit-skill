@@ -32,7 +32,7 @@ def run(*args: str) -> subprocess.CompletedProcess:
 # ── CSV integrity ─────────────────────────────────────────────────────────────
 
 class TestCSVIntegrity:
-    """Verify every database CSV can be loaded and has expected columns."""
+    """Verify database headers and that every row has the same field count."""
 
     EXPECTED_COLS = {
         "wcag-criteria.csv":          {"id", "level", "principle", "criterion", "versions"},
@@ -62,6 +62,14 @@ class TestCSVIntegrity:
         assert len(rows) > 0, f"{filename} is empty"
         missing = required_cols - cols
         assert not missing, f"{filename} missing columns: {missing}"
+        for row_number, row in enumerate(rows, start=2):
+            assert None not in row, (
+                f"{filename}: row {row_number} has extra fields: {row.get(None)!r}"
+            )
+            missing_values = [column for column, value in row.items() if value is None]
+            assert not missing_values, (
+                f"{filename}: row {row_number} is missing fields: {missing_values}"
+            )
 
 
 # ── Table output ──────────────────────────────────────────────────────────────
@@ -399,7 +407,7 @@ class TestWcagVersionMetadata:
     def test_level_sin_version_no_cambia(self):
         data = json.loads(run("wcag", "--level", "A", "--output", "json").stdout)
         assert len(data) == 32
-        assert "4.1.1" in {d["id"] for d in data}  # D2-1 no añade filtros por versión
+        assert "4.1.1" in {d["id"] for d in data}  # sin --wcag-version no se filtra por versión
 
     def test_exportacion_json_incluye_versions(self, tmp_path):
         out = tmp_path / "wcag.json"
@@ -438,3 +446,122 @@ class TestKeywordIgnoresVersions:
             if row["_database"] == "wcag":
                 content = [str(v) for k, v in row.items() if k not in ("versions", "_database")]
                 assert any("2.2" in v for v in content), row["id"]
+
+
+class TestWcagVersionFilter:
+    """`--wcag-version` filtra por pertenencia exacta a la columna `versions`."""
+
+    @staticmethod
+    def ids(*args: str) -> list[str]:
+        r = run("wcag", *args, "--output", "json")
+        assert r.returncode == 0, r.stderr
+        return [d["id"] for d in json.loads(r.stdout)]
+
+    @staticmethod
+    def rows(*args: str) -> list[dict]:
+        r = run("wcag", *args, "--output", "json")
+        assert r.returncode == 0, r.stderr
+        return json.loads(r.stdout)
+
+    @pytest.mark.parametrize("version,total,level_a", [("2.1", 50, 30), ("2.2", 58, 31)])
+    def test_conteos_por_version(self, version, total, level_a):
+        data = self.rows("--wcag-version", version)
+        assert len(data) == total
+        assert sum(d["level"] == "A" for d in data) == level_a
+        assert all(version in d["versions"].split(";") for d in data)
+
+    def test_sin_filtro_conserva_59_y_32_de_nivel_a(self):
+        data = self.rows()
+        assert len(data) == 59
+        assert sum(d["level"] == "A" for d in data) == 32
+
+    def test_4_1_1_solo_en_2_1_y_2_5_8_solo_en_2_2(self):
+        v21, v22 = self.ids("--wcag-version", "2.1"), self.ids("--wcag-version", "2.2")
+        assert "4.1.1" in v21 and "2.5.8" not in v21
+        assert "4.1.1" not in v22 and "2.5.8" in v22
+
+    def test_pertenencia_exacta_no_por_identificador(self):
+        # 2.5.8 empieza por "2." pero solo está etiquetado 2.2; 4.1.1 solo 2.1.
+        assert self.ids("--wcag-version", "2.1", "--id", "2.5.8") == []
+        assert self.ids("--wcag-version", "2.2", "--id", "4.1.1") == []
+        assert self.ids("--wcag-version", "2.2", "--id", "2.5.8") == ["2.5.8"]
+        assert self.ids("--wcag-version", "2.1", "--id", "4.1.1") == ["4.1.1"]
+
+    def test_combina_con_level_exacto(self):
+        aa22 = self.ids("--wcag-version", "2.2", "--level", "AA")
+        assert "2.5.8" in aa22 and "1.1.1" not in aa22  # AA exacto, no A+AA
+        assert set(aa22) == set(self.ids("--level", "AA")) - {
+            d["id"] for d in self.rows("--level", "AA") if "2.2" not in d["versions"].split(";")
+        }
+
+    def test_combina_con_principle_y_keyword(self):
+        assert self.ids("--wcag-version", "2.2", "--principle", "Operable", "--keyword", "target") == ["2.5.8"]
+        assert self.ids("--wcag-version", "2.1", "--keyword", "target") == []
+
+    def test_keyword_2_1_sigue_sin_coincidir_por_versions(self):
+        ids = self.ids("--wcag-version", "2.1", "--keyword", "2.2")
+        assert ids == ["1.2.2", "2.2.1", "2.2.2", "3.2.2", "4.1.1"]
+
+    def test_version_invalida_la_rechaza_argparse(self):
+        for bad in ("2.0", "3.0", "2", ""):
+            r = run("wcag", "--wcag-version", bad)
+            assert r.returncode == 2
+            assert "invalid choice" in r.stderr and r.stdout == ""
+
+    @pytest.mark.parametrize("version", ["2.1", "2.2"])
+    def test_exportacion_json_con_version(self, version, tmp_path):
+        out = tmp_path / "wcag.json"
+        r = run("wcag", "--wcag-version", version, "--output", "json", "--export", str(out))
+        assert r.returncode == 0
+        data = json.loads(out.read_text(encoding="utf-8"))
+        assert data == json.loads(r.stdout)
+        assert len(data) == (50 if version == "2.1" else 58)
+        assert all("versions" in d for d in data)
+
+    def test_csv_con_version_conserva_cinco_columnas(self):
+        r = run("wcag", "--wcag-version", "2.2", "--output", "csv")
+        assert r.returncode == 0
+        rows = [x for x in csv.reader(r.stdout.splitlines()) if x]  # ignora líneas en blanco de fin de línea
+        assert rows[0] == ["id", "level", "principle", "criterion", "description"]
+        assert len(rows) == 59 and {len(x) for x in rows} == {5}
+
+    def test_tabla_con_version_no_muestra_versions(self):
+        r = run("wcag", "--wcag-version", "2.2", "--id", "2.5.8")
+        assert r.returncode == 0 and "2.5.8" in r.stdout and "versions" not in r.stdout
+
+    def test_aviso_aaa_solo_en_stderr(self):
+        r = run("wcag", "--wcag-version", "2.2", "--level", "AAA", "--output", "json")
+        assert r.returncode == 0
+        assert "AAA" in r.stderr and "not include" in r.stderr
+        assert [d["id"] for d in json.loads(r.stdout)] == ["2.4.12", "2.4.13", "3.3.9"]
+
+    def test_sin_aviso_fuera_de_aaa(self):
+        assert run("wcag", "--wcag-version", "2.2", "--level", "AA").stderr == ""
+        assert run("wcag", "--level", "AAA").stderr == ""
+
+    def test_level_aaa_sin_version_no_cambia(self):
+        assert self.ids("--level", "AAA") == ["2.4.12", "2.4.13", "3.3.9"]
+
+    def test_all_no_acepta_el_filtro(self):
+        assert run("all", "--keyword", "contrast", "--wcag-version", "2.2").returncode == 2
+
+
+class TestFormCriteriaTechniqueIds:
+    """IDs de técnicas/fallos de formularios verificados contra las páginas Understanding de W3C."""
+
+    @staticmethod
+    def row(criterion_id: str) -> dict:
+        return json.loads(run("wcag", "--id", criterion_id, "--output", "json").stdout)[0]
+
+    def test_4_1_2_lista_f68_para_control_sin_nombre(self):
+        failures = self.row("4.1.2")
+        assert "F68" in failures["failures"] and "F68" not in failures["techniques"]
+
+    def test_3_3_2_no_atribuye_f86_ni_f82_a_campos_obligatorios(self):
+        failures = self.row("3.3.2")["failures"]
+        assert "F86" not in failures  # F86 pertenece a 4.1.2 (campos multiparte)
+        assert "required" not in failures
+
+    def test_1_3_5_lista_f107_y_h98(self):
+        r = self.row("1.3.5")
+        assert "H98" in r["techniques"] and "F107" in r["failures"]

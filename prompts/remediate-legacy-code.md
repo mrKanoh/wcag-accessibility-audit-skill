@@ -1,6 +1,6 @@
 # Prompt: Remediate legacy HTML/jQuery code
 
-Use when you need Claude to audit AND fix legacy code that lacks accessibility — old
+Use when you need the assistant to audit AND fix legacy code that lacks accessibility — old
 jQuery-heavy pages, server-rendered HTML without ARIA, Bootstrap 3, etc.
 
 ---
@@ -27,7 +27,7 @@ following legacy [HTML / jQuery / Bootstrap 3 / PHP-rendered] code for accessibi
 - `<div onclick>` and `<span onclick>` → replace with `<button>` or `<a>`
 - Missing `type` attribute on `<button>` (defaults to submit inside forms)
 - `<a href="#">` used for actions → use `<button>`
-- `placeholder` used as the only label → add proper `<label>`
+- `placeholder` as the only label → check every accessible-name source and the context first (a placeholder can supply a fallback name, so it is not automatically an unnamed control); do not report a 4.1.2 or 3.3.2 failure solely because `<label>` is missing; recommend a persistent visible `<label>` as an improvement, kept apart from demonstrated failures and checks still pending
 - `$.show()` / `$.hide()` making content appear without SR announcement → add `aria-live`
 - Bootstrap modal without focus trap → add focus management
 - Icon fonts (Font Awesome `<i class="fa">`) → add `aria-hidden="true"` and SR text
@@ -46,4 +46,4 @@ following legacy [HTML / jQuery / Bootstrap 3 / PHP-rendered] code for accessibi
 - Works best with one component or section at a time (nav, form, modal, table).
 - If the codebase uses a specific jQuery version or Bootstrap version, mention it.
 - For very large files, paste the component markup + relevant CSS only.
-- Ask Claude to add a `// WCAG FIX: SC X.X.X` comment above each change for traceability.
+- Ask the assistant to add a `// WCAG FIX: SC X.X.X` comment above each change for traceability.

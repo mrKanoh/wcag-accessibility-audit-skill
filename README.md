@@ -1,427 +1,266 @@
 <div align="center">
 
-# ♿ wcag-accessibility-skill
+# ♿ WCAG Accessibility Audit Skill
 
-**A Claude Code skill for web and mobile accessibility — grounded in WCAG 2.1/2.2 Level AA and Paul J. Adam's expertise.**
+**An open-source accessibility skill for AI agents and people working with WCAG 2.1/2.2 AA.**
 
-[![WCAG 2.2 AA](https://img.shields.io/badge/WCAG-2.2_AA-blueviolet?style=for-the-badge)](https://www.w3.org/WAI/standards-guidelines/wcag/)
-[![Claude Code](https://img.shields.io/badge/Claude_Code-Skill-D97757?style=for-the-badge&logo=anthropic&logoColor=white)](https://claude.ai)
-[![License: MIT](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](https://opensource.org/licenses/MIT)
-[![Tests](https://img.shields.io/github/actions/workflow/status/mrKanoh/claude-wcag-accessibility-skill/test.yml?branch=main&label=tests&style=for-the-badge)](https://github.com/mrKanoh/claude-wcag-accessibility-skill/actions)
+Review web UI code, plan keyboard and screen reader tests, and prepare accessibility
+findings in English or Spanish. Includes WAI-ARIA patterns, mobile guidance,
+searchable reference data, and report templates. AI reviews and automated checks
+require manual validation.
 
-[🇪🇸 Leer en Español](./README-es.md)
+[![Scope: WCAG 2.1/2.2 AA](https://img.shields.io/badge/Scope-WCAG_2.1%2F2.2_AA-blueviolet)](https://www.w3.org/WAI/standards-guidelines/wcag/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green)](./LICENSE)
+[![Tests](https://img.shields.io/github/actions/workflow/status/mrKanoh/wcag-accessibility-audit-skill/test.yml?branch=main&label=tests)](https://github.com/mrKanoh/wcag-accessibility-audit-skill/actions/workflows/test.yml)
 
-<br>
+[Leer en español](./README-es.md)
 
-[What it does](#-what-this-skill-does) • [Installation](#-installation) • [Searchable Databases](#searchable-databases) • [Skill Coverage](#skill-coverage) • [File Structure](#file-structure)
+[What it does](#what-it-does) · [Installation](#installation) · [Compatibility](#compatibility-matrix-from-official-documentation) · [First use](#first-use) · [Scope and limitations](#scope-and-limitations) · [Searchable databases](#searchable-databases)
 
 </div>
 
----
+## What it does
 
-## ✨ What This Skill Does
+For developers, designers, and people reviewing accessibility, this skill provides reusable instructions and references for AI-assisted work:
 
-This skill gives Claude comprehensive, actionable knowledge to help you:
+- Review UI code and suggest corrections for semantics, forms, keyboard behavior, focus, contrast, and WAI-ARIA (roles, states, and properties for assistive technologies).
+- Plan manual keyboard and screen reader tests, including NVDA, JAWS, VoiceOver, and TalkBack.
+- Prepare findings, acceptance criteria, design handoffs, and audit reports.
+- Consult reference data and adapt examples of automated accessibility checks to a project.
 
-* **🔍 Audit** websites and apps against WCAG 2.0 / 2.1 / 2.2 and Section 508.
-* **🏗️ Build** accessible components: forms, modals, tabs, accordions, data tables, date pickers, autocompletes.
-* **🎹 Implement** WAI-ARIA roles, states, and properties correctly.
-* **🎧 Test** with real assistive technologies: NVDA, JAWS, VoiceOver, TalkBack.
-* **⚙️ Set up** automated accessibility testing in CI/CD (axe-core, Playwright, Jest).
-* **🎨 Evaluate** color contrast, keyboard navigation, focus management, and mobile touch targets.
+The skill instructs the agent to answer in the user's language. Its reference data is primarily in English; the included [English–Spanish glossary](./data/glossary-es.csv) supports Spanish terminology.
 
-> Comes with **searchable CSV databases** and a **Python search utility** — inspired by the `ui-ux-pro-max` skill architecture.
+## Installation
 
----
+This project is intended for people using different AI agents, not just Claude Code. Its data, prompts, and templates can also be consulted directly without AI. The repository follows the open [Agent Skills format](https://agentskills.io/specification): a directory with a `SKILL.md` plus `scripts/` and `data/`. A single `SKILL.md` is the core for every product; there are no per-vendor copies.
 
-## 📦 Installation
+### Three ways to use it
 
-### Claude Code (CLI / Desktop)
+1. **Native skill** — in an agent that supports Agent Skills, install the **full directory** under the name `wcag-accessibility` (the specification requires `name` to match the directory name).
+2. **Search with Python** — if the agent can read the files and run commands, it can query the databases with `python scripts/search.py …` from the skill root. This needs **Python 3.10 or newer** (`requires-python = ">=3.10"` in `pyproject.toml`); loading the instructions does not.
+3. **Manual context** — give the assistant `SKILL.md` and the relevant `data/*.csv` files or [`prompts/`](./prompts) as context, where the product allows it. This mode has no automatic discovery and no execution. If the assistant cannot run a query, it should say so, ask you for the data, or give you the command to run yourself. It must not invent results.
 
-**The fastest way** — one command:
+Reading instructions and executing Python are different capabilities: an agent can have the first without the second.
+
+### Compatibility matrix (from official documentation)
+
+Evidence states: **documented** = the vendor documents the format and paths; **NOT VERIFIED** = not tested by this project. Only Claude Code has been tested, and only in the single environment described under the table; installation, discovery, and execution remain **NOT VERIFIED** for Codex, Cursor, and Copilot. Do not read this table as a guarantee of compatibility.
+
+| Agent | Documented skill locations | Documented limits | Source |
+|-------|---------------------------|-------------------|--------|
+| Claude Code | Personal `~/.claude/skills/<name>/SKILL.md`; project `.claude/skills/<name>/SKILL.md`; supporting files allowed | `/reload-skills` if the top-level `skills` folder is new | [docs](https://code.claude.com/docs/en/skills) |
+| Codex (OpenAI) | Repo `.agents/skills` (from the working directory up to the repo root); user `$HOME/.agents/skills`; admin `/etc/codex/skills` | Same-named skills are not merged. Repository skills are available in cloud tasks; local personal skills are not synced there. Script execution needs the target environment and permissions | [Skills](https://learn.chatgpt.com/docs/build-skills), [cloud environments](https://learn.chatgpt.com/docs/environments/cloud-environments) |
+| Cursor | Project `.agents/skills/`, `.cursor/skills/`; user `~/.agents/skills/`, `~/.cursor/skills/`; also reads `.claude/skills/`, `.codex/skills/`, `~/.claude/skills/`, `~/.codex/skills/` | The agent runs referenced scripts when the skill is invoked. Cloud Agents: only `~/.cursor/skills/` syncs, and only if enabled; project skills and `~/.agents/skills/` are not copied | [docs](https://cursor.com/docs/skills) |
+| GitHub Copilot | Project `.github/skills`, `.claude/skills`, `.agents/skills`; personal `~/.copilot/skills`, `~/.agents/skills` | Documented for Copilot cloud agent, code review, CLI, the Copilot app, and agent mode in VS Code and JetBrains. The page does not cover frontmatter or script execution | [docs](https://docs.github.com/en/copilot/concepts/agents/about-agent-skills) |
+
+| Status | Claude Code | Codex | Cursor | Copilot |
+|--------|-------------|-------|--------|---------|
+| Format support documented | Yes | Yes | Yes | Yes |
+| Installation tested | Yes (project copy, see below) | NOT VERIFIED | NOT VERIFIED | NOT VERIFIED |
+| Discovery tested | Yes (project copy, see below) | NOT VERIFIED | NOT VERIFIED | NOT VERIFIED |
+| Execution tested | Yes (`search.py`, see below) | NOT VERIFIED | NOT VERIFIED | NOT VERIFIED |
+
+**Claude Code test scope (2026-10-19):** Claude Code 2.1.292 on Windows 11, non-interactive mode (`claude -p`, `--setting-sources project`), model `claude-sonnet-5-5`. The skill files were copied by hand into an isolated project at `.claude/skills/wcag-accessibility/`; Claude Code listed the skill at startup and loaded it. In one run the agent executed the bundled `scripts/search.py` (`--wcag-version`, `--id`, `aria --component`) and its WCAG 2.1/2.2 record counts (50/58) matched a direct run of the script. In a second run it reviewed a small `form.html` statically without modifying files. This is two runs in one environment, not a guarantee for other versions, operating systems, models, or interactive sessions. A later check ran six small form-review cases and a new-session install and first-use walk-through from a local copy of the candidate files (not from GitHub); this is a technical walk-through, not a usability test with an external person, and it did not include a screen reader. In that check one case first produced an invented finding and passed on a repeat, and one answer misread `--wcag-version` as "only criteria added in that version" (the catalog notes now explain that it selects what belongs to a version). The test records are stored in the local `reports/` folder of the development checkout, which Git ignores: they are not part of the published repository. Installing through any marketplace or third-party distribution channel (including Agensi) was not tested.
+
+### Get a local copy without choosing an agent
+
+From a parent directory of your choice:
 
 ```bash
-npx claude-code-templates@latest --skill accessibility/wcag-accessibility
+git clone https://github.com/mrKanoh/wcag-accessibility-audit-skill.git wcag-accessibility
+cd wcag-accessibility
 ```
 
-**Or clone the full repository:**
+If the destination already exists, inspect it first or choose another location. You can browse this copy or run the Python CLI without an agent. For native skill discovery, use the appropriate host-specific location below instead; a generic clone is not automatically installed in every agent.
+
+### Install the full package
+
+Requirements: Git to clone and update; Python 3.10+ only for `scripts/search.py`. Choose **one location per product** and avoid keeping duplicate copies: no single folder is documented for all four products. Claude Code reads `~/.claude/skills/`; Codex and Copilot (personal) read `~/.agents/skills/`; Cursor reads both, so it needs only one of them.
+
+```bash
+# Claude Code (Cursor also reads this folder)
+git clone https://github.com/mrKanoh/wcag-accessibility-audit-skill.git ~/.claude/skills/wcag-accessibility
+
+# Codex, GitHub Copilot, Cursor (user level)
+git clone https://github.com/mrKanoh/wcag-accessibility-audit-skill.git ~/.agents/skills/wcag-accessibility
+```
+
+```powershell
+# Windows (PowerShell), Claude Code; how Codex/Copilot resolve $HOME on Windows is NOT VERIFIED
+git clone https://github.com/mrKanoh/wcag-accessibility-audit-skill.git "$env:USERPROFILE\.claude\skills\wcag-accessibility"
+```
+
+For a single repository, clone into that repository's project folder instead (for example `.claude/skills/wcag-accessibility` or `.agents/skills/wcag-accessibility`, as listed above). Cloud agents (Copilot cloud agent, Cursor Cloud Agents, Codex cloud) work from what the cloud environment can see, so a local user-level install may not apply there; check each vendor's page.
+
+If the target directory already exists, `git clone` fails and nothing is overwritten. Do not delete it:
+
+- If it is a clone of this repository, run `git status` inside it first. Commit or stash local changes you want to keep, then update with `git pull`.
+- If it is another installation, keep it: rename or move it outside the skills folders, so two copies are not loaded side by side, or clone into another directory outside them to compare both before deciding which to install.
+
+Copying only `SKILL.md` is **not** equivalent: the instructions would load, but the searchable databases and `scripts/search.py` would be missing.
+
+### MCP server (optional, separate from the skill format)
+
+`scripts/mcp-server.py` exposes the CSV databases as 15 MCP **resources** (`wcag://…`). It defines no tools or prompts, and it is not an audit engine. Resource support depends on the client; no client validation record is provided here (**NOT VERIFIED**). It imports the `mcp` Python package, which is not declared in `pyproject.toml`. This repository does not configure it for you.
+
+For Claude Code, if the top-level `skills` directory did not exist when the session started, run `/reload-skills`. Reading instructions does not grant file access or permission to execute scripts in any agent.
+
+## First use
+
+Load the skill using your agent's supported mechanism, or provide the relevant instructions and supporting files manually. For the Claude Code installation above, invoke it directly:
+
+```text
+/wcag-accessibility
+```
+
+In either case, paste or identify the component you want reviewed and describe the intended behavior:
+
+```text
+Review this modal against WCAG 2.2 AA. Identify the code you inspected,
+explain each potential barrier, cite the relevant criterion, and suggest
+small corrections. Separate confirmed findings from issues that need
+browser, keyboard, or screen reader testing. Do not modify files yet.
+```
+
+A useful finding should identify the element, the barrier, the related criterion, a proposed correction, and the verification still needed. For example:
+
+> **Illustrative finding:** an icon-only button has no accessible name in the supplied HTML (4.1.2). Add an appropriate accessible name, then check its announcement in a browser with a screen reader. Code reviewed; screen reader test not performed.
+
+You can also ask naturally, such as “How do I test this form with NVDA?” In Claude Code, automatic activation depends on Claude matching your request to the skill description. If it does not activate, use `/wcag-accessibility`. See the [official skill documentation](https://code.claude.com/docs/en/skills).
+
+## Scope and limitations
+
+- **WCAG target:** the skill instructions use WCAG 2.1 AA by default and discuss additions in 2.2. State the version and level you need in your request. The scope badge above describes the subject matter, not a certification.
+- **Catalog coverage:** [wcag-criteria.csv](./data/wcag-criteria.csv) contains 59 records: all 50 A/AA criteria of 2.1 plus the nine additions in 2.2, including three AAA additions. The 28 AAA criteria inherited from 2.1 are absent. Criterion 4.1.1 is retained for historical 2.1 use; it was removed in 2.2.
+- **Version metadata:** each catalog record has a `versions` field (`2.1`, `2.2`, or `2.1;2.2`), visible in JSON. Use `--wcag-version 2.1` or `--wcag-version 2.2` on the `wcag` subcommand to keep only records tagged with that version (exact match on the field; 2.1 gives 50 records including 4.1.1, 2.2 gives 58 including 2.5.8). Without it nothing is filtered. The filter selects the criteria that belong to a version, not only those it added: every AA record belongs to 2.2, so `--wcag-version 2.2 --level AA` returns the same 24 records as `--level AA`. To list only the nine 2.2 additions, use `--output json` and keep the records whose `versions` is exactly `2.2`; the table and CSV outputs do not show `versions`. The catalog has no 2.1 AAA criteria, so a version filter combined with `--level AAA` is not a complete list.
+- **Review evidence:** AI suggestions and automated scans do not establish conformance. Test relevant pages, states, complete user flows, keyboard behavior, and assistive technologies in the target environment. Record what was actually tested.
+- **Other platforms and legal references:** mobile guidance and jurisdictional summaries are starting points. Select applicable platform requirements and verify current official legal sources; a database lookup cannot determine your product's legal obligations.
+
+Use the [W3C WCAG 2.2 recommendation](https://www.w3.org/TR/WCAG22/) as the normative source. The `wcag3` CLI command returns a draft-status notice and W3C links, not a criteria catalog.
+
+## Searchable databases
+
+The Python command-line interface (CLI) can be used without any AI agent. It uses the Python standard library; no additional Python packages are needed for these searches.
+
+Run searches from the root of your local copy (`wcag-accessibility` in the generic clone above). If you used the Claude Code personal installation, change to its directory:
 
 ```bash
 # macOS / Linux
-git clone https://github.com/mrKanoh/wcag-accessibility-skill.git ~/.claude/skills/wcag-accessibility
+cd ~/.claude/skills/wcag-accessibility
+```
 
+```powershell
 # Windows (PowerShell)
-git clone https://github.com/mrKanoh/wcag-accessibility-skill.git "$env:USERPROFILE\.claude\skills\wcag-accessibility"
+Set-Location "$env:USERPROFILE\.claude\skills\wcag-accessibility"
 ```
 
-**Or copy just the skill file:**
+For a Claude Code project installation, use `.claude/skills/wcag-accessibility` instead; for other agents, use the actual repository location. The following commands work from that directory:
 
 ```bash
-# macOS / Linux
-mkdir -p ~/.claude/skills/wcag-accessibility
-curl -o ~/.claude/skills/wcag-accessibility/SKILL.md \
-  https://raw.githubusercontent.com/mrKanoh/wcag-accessibility-skill/main/SKILL.md
-```
-
-Claude Code automatically discovers skills in `~/.claude/skills/`. No restart required.
-
----
-
-## Searchable Databases
-
-Run searches from the skill root:
-
-```bash
-# All WCAG AA criteria
-python scripts/search.py wcag --level AA
-
-# Criteria about contrast — output as JSON
+# Criteria about contrast, including version metadata
 python scripts/search.py wcag --keyword contrast --output json
 
-# Export results to a file
-python scripts/search.py wcag --level AA --output json --export aa-criteria.json
-
-# Full ARIA spec for a modal dialog
+# Modal pattern: roles, keyboard behavior, and focus guidance
 python scripts/search.py aria --component modal --detail
 
-# ARIA patterns involving keyboard focus
-python scripts/search.py aria --keyword focus
+# English–Spanish glossary
+python scripts/search.py glossary --keyword contrast
+```
+
+These glossary and contrast searches should return matching records; the modal search should describe dialog behavior. If `python` is unavailable, try `python3` on macOS/Linux or `py` on Windows, and check that it is Python 3.10 or newer. A “can't open file” error usually means you are outside the skill root.
+
+<details>
+<summary>More searches and output options</summary>
+
+```bash
+# Only records labeled AA (not A + AA)
+python scripts/search.py wcag --level AA
+
+# Only records tagged with a WCAG version (combines with --level, --id, --keyword, --principle)
+python scripts/search.py wcag --wcag-version 2.2 --level AA
+
+# All available WCAG records; inspect level and versions for your target
+python scripts/search.py wcag --output json
+
+# NVDA heading-navigation shortcuts
+python scripts/search.py keys --reader NVDA --action heading
 
 # Free screen reader tools for Windows
 python scripts/search.py tools --type screen-reader --platform Windows --free --url
 
-# NVDA shortcuts for heading navigation
-python scripts/search.py keys --reader NVDA --action heading
+# Cross-database search
+python scripts/search.py all --keyword contrast --output json
 
-# Cognitive accessibility patterns (COGA)
-python scripts/search.py cognitive --keyword memory
-python scripts/search.py cognitive --user-group ADHD
-
-# Cross-database search across all 14 databases at once
-python scripts/search.py all --keyword contrast
-python scripts/search.py all --keyword "focus" --output json
-
-# Semantic HTML reference
-python scripts/search.py semantic --element nav
-
-# Accessible typography rules by category
-python scripts/search.py typography --category Spacing
-
-# Color palette rules
-python scripts/search.py color --scope Non-text
-
-# Accessibility KPIs
-python scripts/search.py kpis --category Remediation
-
-# Handoff checklist by phase / owner
-python scripts/search.py handoff --phase Design --owner Designer
-
-# Models of disability
-python scripts/search.py models --keyword social
-
-# Legal framework by jurisdiction
-python scripts/search.py legal --jurisdiction EU
-python scripts/search.py legal --jurisdiction Spain
-
-# Curated resources
-python scripts/search.py resources --category "Official Standards"
-python scripts/search.py resources --type Blog --url
-python scripts/search.py resources --authority W3C
-
-# Spanish ↔ English glossary
-python scripts/search.py glossary --keyword contrast
+# All subcommands and WCAG-specific options
+python scripts/search.py --help
+python scripts/search.py wcag --help
 ```
 
-| File | Contents |
-|------|----------|
-| `data/wcag-criteria.csv` | 59 WCAG criteria: all Level A and AA of 2.1 plus the 9 added in **2.2** (2.4.11–2.4.13, 2.5.7–2.5.8, 3.2.6, 3.3.7–3.3.9). **Not complete:** the 28 Level AAA criteria of 2.1 are missing. `versions` column: `2.1`, `2.2` or `2.1;2.2`; 4.1.1 Parsing is a historical 2.1 entry, removed in 2.2 |
-| `data/aria-patterns.csv` | 25+ component patterns · ARIA · keyboard · focus mgmt |
-| `data/testing-tools.csv` | 30+ tools by type · platform · browser · cost |
-| `data/screen-reader-keys.csv` | Shortcuts for NVDA · JAWS · VoiceOver (macOS/iOS) · TalkBack · Narrator |
-| `data/semantic-html.csv` | Semantic HTML element → role → when to use / avoid |
-| `data/typography-rules.csv` | 20 accessible typography rules mapped to WCAG |
-| `data/color-palette-rules.csv` | Palette design rules (contrast, color-blindness, HCM, states) |
-| `data/kpis.csv` | 15 accessibility KPIs with formulas, targets, cadence |
-| `data/handoff-checklist.csv` | Research → Design → Dev → QA → Release handoff |
-| `data/disability-models.csv` | Medical / Social / Biopsychosocial / CRPD / Identity |
-| `data/glossary-es.csv` | Spanish ↔ English a11y glossary (70+ terms with definitions) |
-| `data/legal-framework.csv` | 25+ jurisdictions: ADA, EAA, Section 508, AODA, LGPD, and more |
-| `data/resources.csv` | 50+ curated books, blogs, research papers, tools, and standards |
-| `data/cognitive-accessibility.csv` | 20 COGA patterns: ADHD, dyslexia, memory, anxiety, autism |
-| `scripts/search.py` | CLI search across all **14 databases** · `wcag3` shows WCAG 3 draft status and W3C links only · `--output json/csv` · `--export` · `all` subcommand |
-| `scripts/mcp-server.py` | Model Context Protocol server exposing all databases to Claude directly |
-| `RESOURCES.md` | Human-readable bibliography — browse by category, W3C standards, academic research, etc. |
-| `templates/audit-report.md` | Fill-in audit report template |
-| `templates/a11y-ci.yml` | GitHub Actions pipeline (axe + pa11y + Playwright + Lighthouse) |
-| `templates/vpat-2.5-template.md` | Official VPAT 2.5 Rev WCAG (A/AA/AAA · Section 508 · EN 301 549) |
-| `templates/.pa11yci.json` | pa11y-ci config referenced by the CI pipeline |
-| `templates/.lighthouserc.json` | Lighthouse CI config with accessibility assertions |
-| `prompts/audit-component.md` | Prompt: audit a UI component |
-| `prompts/sc-to-acceptance-criteria.md` | Prompt: WCAG SC → Gherkin ACs |
-| `prompts/generate-alt-text.md` | Prompt: generate alt text |
-| `prompts/review-figma-handoff.md` | Prompt: review design handoff |
-| `prompts/summarize-audit-findings.md` | Prompt: exec summary from findings |
-| `prompts/generate-aria-pattern.md` | Prompt: generate any accessible widget |
-| `prompts/remediate-legacy-code.md` | Prompt: audit + fix legacy HTML/jQuery/Bootstrap |
-| `prompts/generate-vpat-entry.md` | Prompt: translate audit findings into VPAT ACR language |
-| `prompts/test-with-screen-reader.md` | Prompt: step-by-step NVDA/VoiceOver/TalkBack test scripts |
-| `prompts/mobile-a11y-checklist.md` | Prompt: React Native / SwiftUI / Jetpack Compose checklist |
-| `prompts/inclusive-ux-writing.md` | Prompt: plain language + inclusive terminology review |
-| `prompts/design-tokens-audit.md` | Prompt: audit Figma/Style Dictionary tokens against WCAG |
-| `examples/components/date-picker.html` | Date picker: dialog pattern, roving tabindex, Arrow keys, typed input |
-| `examples/components/toast-notifications.html` | Toast system: `role="status"` + `role="alert"`, reduced motion |
-| `examples/components/carousel.html` | Carousel: play/pause (WCAG 2.2.2), ARIA, auto-rotation, reduced motion |
-| `examples/components/tree-view.html` | Tree View: expand/collapse, roving tabindex, full keyboard nav |
-| `examples/components/combobox.html` | Combobox/Autocomplete: ARIA 1.2, real-time filtering, live region |
-| `examples/components/data-grid.html` | Data Grid: aria-sort, select-all, pagination, search filter |
-| `examples/components/media-player.html` | Media Player: Custom CC/AD toggles, accessible sliders |
+Conformance at level AA requires meeting both level A and level AA criteria. `--level AA` is an exact level filter, not a complete AA checklist. Search terms generally need to match the language of the data; use English terms for most databases.
 
----
+Use `--output json` or `--output csv` for structured output and `--export results.json` to save the selected output format to a file. JSON WCAG records include `versions`; the table and CSV outputs show a smaller set of fields.
 
-## Trigger Examples
+</details>
 
-Claude loads this skill automatically when you ask things like:
+<details>
+<summary>Browse all 14 databases</summary>
 
-- *"Is this button accessible?"*
-- *"What's the correct ARIA pattern for a modal dialog?"*
-- *"How do I test my site with NVDA?"*
-- *"Does this color combination pass WCAG AA contrast?"*
-- *"How do I make this form validation accessible?"*
-- *"What keyboard shortcuts does VoiceOver use?"*
-- *"Set up axe-core in my Playwright tests"*
-- *"My React tab component isn't announcing correctly in JAWS"*
-- *"What WCAG criterion covers focus visibility?"*
+| Command after `python scripts/search.py` | Reference data |
+|---|---|
+| `wcag` | WCAG criteria, levels, techniques, failures, sources, and versions |
+| `aria` | Component roles, properties, keyboard behavior, and focus management |
+| `tools` | Testing tools by platform, type, and cost |
+| `keys` | Screen reader shortcuts |
+| `semantic` | HTML semantics and usage guidance |
+| `typography` | Typography, spacing, reflow, and zoom guidance |
+| `color` | Contrast, states, forced colors, and color perception |
+| `kpis` | Accessibility metrics and suggested targets |
+| `handoff` | Research, design, development, QA, and release checklists |
+| `models` | Models of disability |
+| `glossary` | English–Spanish terminology and definitions |
+| `legal` | Jurisdictional reference summaries |
+| `resources` | Standards, guides, research, tools, and community references |
+| `cognitive` | Cognitive accessibility patterns |
 
----
+Use `all --keyword contrast` to search across these databases. `wcag3` is a separate status command.
 
-## Skill Coverage
+</details>
 
-This skill spans 7 interconnected domains to support accessibility work from research through release:
+## Examples and project resources
 
-### 🎯 **Standards & Compliance**
-Meet global accessibility requirements across WCAG, Section 508, and jurisdictional laws.
+The repository includes eight HTML component examples: [date picker](./examples/components/date-picker.html), [toast notifications](./examples/components/toast-notifications.html), [carousel](./examples/components/carousel.html), [tree view](./examples/components/tree-view.html), [combobox](./examples/components/combobox.html), [data grid](./examples/components/data-grid.html), [media player](./examples/components/media-player.html), and [tabs](./examples/components/tabs.html).
 
-| Domain | What You Can Do |
-|--------|-----------------|
-| **WCAG & Standards** | Audit against WCAG 2.0 / 2.1 / 2.2, Section 508, EN 301 549, EAA, WAI-ARIA 1.2 |
-| **Legal Framework** | Check 25+ jurisdictions (ADA, EAA, Section 508, AODA, LGPD, etc.) with scope & effective dates |
-| **Accessibility KPIs** | Track 15 key metrics: violation density, MTTR, conformance rate, AC coverage |
+Treat these as learning and adaptation examples. Before using them in a product, review their behavior and test them with the browsers and assistive technologies your users need. Inclusion here is not evidence of production readiness or a completed compatibility test.
 
-**Example:** Query `python scripts/search.py legal --jurisdiction "EU"` → get EAA requirements for your product.
+| Resource | Purpose |
+|---|---|
+| [SKILL.md](./SKILL.md) | Agent instructions and entry point for hosts with skill support |
+| [Prompts](./prompts/) | Twelve task prompts for reviews, remediation, content, design handoffs, and test planning |
+| [Audit report](./templates/audit-report.md) | Starting point for documenting scope, findings, and evidence |
+| [CI template](./templates/a11y-ci.yml) | Example automated checks; adapt dependencies, commands, URLs, configuration paths, and failure handling to your project |
+| [VPAT reporting template](./templates/vpat-2.5-template.md) | Reporting aid; consult [ITI's official VPAT resources](https://www.itic.org/policy/accessibility/vpat) before preparing an Accessibility Conformance Report (ACR) |
+| [Bibliography](./RESOURCES.md) | Standards and additional reading |
+| [MCP server source](./scripts/mcp-server.py) | Optional Model Context Protocol server for exposing reference data; requires the `mcp` Python package and separate client configuration |
+| [Changelog](./CHANGELOG.md) | Recorded project changes |
 
----
+## References and credits
 
-### 🎨 **Design & Content**
+Standards and reference materials include [WCAG 2.1](https://www.w3.org/TR/WCAG21/), [WCAG 2.2](https://www.w3.org/TR/WCAG22/), the [WAI-ARIA Authoring Practices Guide](https://www.w3.org/WAI/ARIA/apg/), [WebAIM](https://webaim.org/), [Deque axe-core](https://github.com/dequelabs/axe-core), and [The A11Y Project](https://www.a11yproject.com/).
 
-Build accessible designs and content from the start—avoid remediation costs later.
-
-| Domain | What You Can Do |
-|--------|-----------------|
-| **Semantic HTML** | Reference all HTML elements with roles, ARIA equivalents, when to use/avoid |
-| **Typography** | Apply 20 accessible typography rules (size, spacing, reflow, zoom, dyslexia-friendly) |
-| **Color Palettes** | Design contrast-safe palettes: AA/AAA ratios, dark mode, forced-colors, color blindness |
-| **Handoff Checklist** | Phase-by-phase checklist: Research → Design → Dev → QA → Release with owner responsibilities |
-
-**Example:** Need to ensure your form design is accessible? Use the handoff checklist (Design phase section) to verify label placement, field grouping, and error messaging before handing to dev.
-
----
-
-### 🛠️ **Implementation & Testing**
-
-Choose the right tools and patterns for your tech stack.
-
-| Domain | What You Can Do |
-|--------|-----------------|
-| **ARIA Patterns** | 25+ component patterns with keyboard behavior, focus management (modals, tabs, accordions, etc.) |
-| **Components** | Build accessible UI: modals, tabs, accordions, forms, tables, date pickers, autocomplete, carousels |
-| **Keyboard Navigation** | Tab order, focus management, arrow key patterns, detect and fix keyboard traps |
-| **Screen Readers** | Test with NVDA, JAWS, VoiceOver (macOS + iOS), TalkBack (Android), Narrator—get platform-specific shortcuts |
-| **Mobile Accessibility** | Touch targets, gesture alternatives, platform-specific testing checklists |
-
-**Example:** Building a modal in React? Query `python scripts/search.py aria --component modal --detail` → get exact ARIA roles, focus trap code, and VoiceOver-tested patterns.
-
----
-
-### 📊 **Testing & CI/CD**
-
-Automate accessibility testing from pull request to production.
-
-| Domain | What You Can Do |
-|--------|-----------------|
-| **Testing Tools** | 30+ tools by type (browser extensions, CLI, frameworks): axe DevTools, WAVE, Accessibility Insights, ARC Toolkit |
-| **CI/CD** | GitHub Actions pipeline with axe-core, Playwright, Jest, and Lighthouse |
-| **Stack Support** | Next.js App Router, Angular, Svelte, Astro, SolidJS, React (Radix UI), Vue 3, HTML+Vanilla JS, SwiftUI, Jetpack Compose |
-
-**Example:** New Next.js app? Copy `templates/a11y-ci.yml` → add to your GitHub Actions → get automated a11y checks on every PR.
-
----
-
-### 🧠 **Inclusive Design & Research**
-
-Understand disability, research users, and document your process.
-
-| Domain | What You Can Do |
-|--------|-----------------|
-| **Disability Models** | Learn medical, social, ICF, CRPD, and identity-based frameworks for accessibility |
-| **Inclusive Research** | Plan user research: recruitment strategies, consent, modality, disability categories |
-| **User Preferences** | Detect and respect browser/OS settings: prefers-reduced-motion, prefers-contrast, forced-colors |
-| **Alternative Input** | Support diverse input methods: switch access, voice control, eye tracking, head pointer, cognitive a11y (COGA) |
-
-**Example:** Designing a video feature? Respect `prefers-reduced-motion` to avoid motion sickness for vestibular users.
-
----
-
-### 📚 **Reference & Localization**
-
-Keep 13 searchable databases at your fingertips—in English and Spanish.
-
-| Domain | What You Can Do |
-|--------|-----------------|
-| **Spanish Glossary** | 70+ a11y terms translated: English ↔ Spanish with context and definitions |
-| **Ready-to-Use Prompts** | 6 Claude prompts for audit reports, alt text, ARIA patterns, design handoff review, findings summaries |
-
-**Example:** Working with a Spanish-speaking team? Query `python scripts/search.py glossary-es --keyword contrast` → get the right terminology.
-
----
-
-## File Structure
-
-```
-wcag-accessibility/
-  ├─ SKILL.md                          ← Claude skill (28 sections, loaded by Claude Code)
-  ├─ README.md                         ← This file
-  ├─ CHANGELOG.md                      ← Version history
-  ├─ CONTRIBUTING.md                   ← Contribution guide
-  │
-  ├─ data/                             ← 14 searchable databases
-  │  ├─ wcag-criteria.csv              59 WCAG criteria (2.1 A/AA + 9 added in 2.2; no 2.1 AAA)
-  │  ├─ aria-patterns.csv              25+ component patterns: keyboard, focus, roles
-  │  ├─ testing-tools.csv              30+ tools: axe, WAVE, Accessibility Insights, etc.
-  │  ├─ screen-reader-keys.csv         Shortcuts for NVDA, JAWS, VoiceOver, TalkBack, Narrator
-  │  ├─ semantic-html.csv              HTML element → role → when to use/avoid
-  │  ├─ typography-rules.csv           20 accessible typography rules mapped to WCAG
-  │  ├─ color-palette-rules.csv        Palette design: AA/AAA contrast, HCM, CVD
-  │  ├─ kpis.csv                       15 accessibility KPIs with formulas & targets
-  │  ├─ handoff-checklist.csv          Research → Design → Dev → QA → Release checklist
-  │  ├─ disability-models.csv          Medical, Social, ICF, CRPD, Identity frameworks
-  │  ├─ glossary-es.csv                Spanish ↔ English a11y glossary (70+ terms)
-  │  ├─ legal-framework.csv            25+ jurisdictions: ADA, EAA, Section 508, AODA, LGPD
-  │  ├─ resources.csv                  50+ curated books, blogs, research, tools
-  │  └─ cognitive-accessibility.csv    20 COGA patterns: ADHD, dyslexia, memory, anxiety
-  │
-  ├─ RESOURCES.md                      ← Human-readable bibliography by category
-  │
-  ├─ scripts/
-  │  ├─ search.py                      ← CLI to query all 14 databases
-  │  │                                    --output json/csv, --export, 'all' subcommand
-  │  ├─ generate-resources-md.py       ← Auto-generate RESOURCES.md from CSV
-  │  └─ mcp-server.py                  ← Model Context Protocol server
-  │
-  ├─ tests/
-  │  └─ test_search.py                 ← pytest suite (39 tests, all pass)
-  │
-  ├─ templates/                        ← Ready-to-use files
-  │  ├─ audit-report.md                Fill-in audit report template
-  │  ├─ a11y-ci.yml                    GitHub Actions CI pipeline
-  │  ├─ vpat-2.5-template.md           VPAT 2.5 Rev WCAG (A/AA/AAA + S508 + EN 301 549)
-  │  ├─ .pa11yci.json                  pa11y-ci config
-  │  └─ .lighthouserc.json             Lighthouse CI config with a11y assertions
-  │
-  ├─ examples/
-  │  └─ components/                    ← 7 working accessible HTML components
-  │     ├─ date-picker.html            Dialog pattern, roving tabindex, Arrow keys
-  │     ├─ toast-notifications.html    Live regions: polite + assertive, reduced motion
-  │     ├─ carousel.html               Play/pause (WCAG 2.2.2), ARIA, auto-rotation
-  │     ├─ tree-view.html              Expand/collapse, roving tabindex, full keyboard
-  │     ├─ combobox.html               ARIA 1.2, real-time filtering, live region
-  │     ├─ data-grid.html              aria-sort, select-all, pagination, search filter
-  │     └─ media-player.html           Custom CC/AD toggles, accessible sliders
-  │
-  ├─ prompts/                          ← 12 Claude prompts ready to copy-paste
-  │  ├─ audit-component.md
-  │  ├─ sc-to-acceptance-criteria.md
-  │  ├─ generate-alt-text.md
-  │  ├─ review-figma-handoff.md
-  │  ├─ summarize-audit-findings.md
-  │  ├─ generate-aria-pattern.md
-  │  ├─ remediate-legacy-code.md
-  │  ├─ generate-vpat-entry.md
-  │  ├─ test-with-screen-reader.md
-  │  ├─ mobile-a11y-checklist.md
-  │  ├─ inclusive-ux-writing.md
-  │  └─ design-tokens-audit.md
-  │
-  └─ .github/
-     └─ ISSUE_TEMPLATE/
-        ├─ bug_report.md
-        └─ feature_request.md
-```
-
-### How to Use Each Database
-
-```bash
-# Query WCAG AA criteria
-python scripts/search.py wcag --level AA
-
-# Find ARIA patterns for modals with focus management details
-python scripts/search.py aria --component modal --detail
-
-# Get all screen reader shortcuts for heading navigation
-python scripts/search.py keys --reader NVDA --action heading
-
-# Find tools that work on Windows and are free
-python scripts/search.py tools --platform Windows --free
-
-# Look up Spanish terminology
-python scripts/search.py glossary-es --keyword "contrast"
-
-# Check legal requirements for EU
-python scripts/search.py legal --jurisdiction "EU"
-```
-
----
-
-## Attribution & Credits
-
-This skill is based on the work and expertise of **Paul J. Adam**, Web & Mobile Accessibility Specialist/Consultant based in Austin, TX.
-
-Paul provides enterprise-level accessibility consulting across government, financial, healthcare, and technology sectors, and has been a leading voice in the web accessibility community for over a decade.
-
-- **Website**: [pauljadam.com](https://pauljadam.com/)
-- **Specialty**: WCAG compliance, WAI-ARIA, iOS/Android accessibility, screen reader testing
-
-Additional standards and references:
-- [W3C Web Content Accessibility Guidelines (WCAG 2.1)](https://www.w3.org/TR/WCAG21/)
-- [WAI-ARIA Authoring Practices Guide](https://www.w3.org/WAI/ARIA/apg/)
-- [WebAIM](https://webaim.org/)
-- [Deque axe-core](https://github.com/dequelabs/axe-core)
-- [The A11Y Project](https://www.a11yproject.com/)
-
----
+[Paul J. Adam's accessibility resources](https://pauljadam.com/) and the `ui-ux-pro-max` skill architecture are acknowledged as references and inspiration. These acknowledgments do not imply authorship, review, or endorsement of this project by the referenced people or organizations. See the [bibliography](./RESOURCES.md) for individual resource links.
 
 ## Contributing
 
-Improvements, corrections, and new component patterns are welcome.
-See [`CONTRIBUTING.md`](./CONTRIBUTING.md) for full guidelines, commit conventions,
-component checklist, and how to run the tests.
+Corrections to documentation, criteria, examples, and translations are welcome. See [CONTRIBUTING.md](./CONTRIBUTING.md) for the contribution process. Include a source for technical corrections and distinguish code review from tests you actually performed.
+
+To run the existing Python tests from a development checkout with pytest installed:
 
 ```bash
-# Run the test suite
-pip install pytest
-pytest tests/ -v
-
-# Regenerate RESOURCES.md from the CSV
-python scripts/generate-resources-md.py
+python -m pytest tests/ -v
 ```
 
-Quick areas that could grow:
-- More accessible component examples (data grid, rich text editor, combobox multi-select)
-- Additional ARIA patterns
-- More localization of Spanish-language a11y terminology
-- Remediation cost/effort estimation heuristics
-
----
+These tests exercise the search utility and data checks; they do not establish accessibility conformance or screen reader compatibility.
 
 ## License
 
-MIT — free to use, share, and adapt with attribution.
+[MIT](./LICENSE). You may use, share, and adapt the project under the license terms, including preservation of its copyright and permission notice.
