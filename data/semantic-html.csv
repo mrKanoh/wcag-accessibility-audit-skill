@@ -14,10 +14,10 @@ dl/dt/dd,term/definition,Key-value pairs,Tabular data (use table),Useful for met
 table,table,Data relationships,Layout,Include caption and th scope
 th,columnheader/rowheader,Column or row header cells,Data cells,scope=col or scope=row
 caption,caption,Table title,Absent when table is data,First child of table
-label,-,Associate text with form field,Icon-only buttons,Use for or wrap input
+label,-,Associate text with form field,Icon-only buttons,Use for or wrap input; aria-label/aria-labelledby/title can also name a control; placeholder is only a fallback name
 fieldset/legend,group,Grouping related form controls,Every field,Essential for radio groups
 input type=search,searchbox,Search field,Generic text when labeled as search,Gets SR search announcement
-input type=email/tel/url/number,-,Typed input with mobile keyboard,Generic text,Triggers appropriate mobile keyboard
+input type=email/tel/url/number,-,Typed input with mobile keyboard,Generic text,Triggers appropriate mobile keyboard; type alone does not meet 1.3.5 (use autocomplete)
 details/summary,disclosure,Progressive disclosure,Complex accordion with many rules,Simple expand/collapse
 dialog,dialog,Modal/non-modal dialog,Complex menus (use popover),Use showModal() for focus trap
 figure/figcaption,figure,Image with caption,Decorative images,figcaption provides description
@@ -26,4 +26,4 @@ mark,-,Highlighted relevance (search),Stylistic emphasis,Use em for stress empha
 abbr,-,Abbreviations with title expansion,Obvious acronyms,title announced on some SR
 output,status,Calculated result in form,Generic div,Live region by default
 progress,progressbar,Determinate progress,Indeterminate forever,Shows % via value/max
-meter,meter,Scalar measurement in known range,Progress (use progress),E.g., disk usage level
+meter,meter,Scalar measurement in known range,Progress (use progress),"E.g., disk usage level"

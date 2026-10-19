@@ -9,6 +9,48 @@ This project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Added
+- `python scripts/search.py wcag --wcag-version 2.1|2.2`: filters by exact membership in the
+  existing `versions` column (2.1: 50 records, 2.2: 58). Combines with `--id`, `--keyword`,
+  `--level` and `--principle`; not available in `all` or the MCP server; without it results
+  are unchanged. With `--level AAA` it prints a note to stderr because the catalog has no
+  2.1 AAA criteria. Covered by new tests.
+
+### Fixed
+- Reviews of form fragments over-claimed: a missing `<label>` was reported as a certain 4.1.2/1.3.1/3.3.2/2.4.6
+  failure, `type="text"` was tied to 1.3.5, server behavior was inferred, and severity was automatic.
+  Added `references/form-labels-and-names.md` (evidence categories, accessible-name sources, what each
+  criterion requires), a pointer in `SKILL.md` and the component audit prompt, and corrected the
+  techniques/failures and descriptions for 1.3.1, 1.3.5, 2.4.6, 3.3.2 and 4.1.2 in
+  `data/wcag-criteria.csv` plus two notes in `data/semantic-html.csv` (sources: WCAG 2.2, Understanding
+  pages, HTML-AAM Working Draft).
+- Quote comma-containing fields in the typography and semantic HTML databases so
+  recommendations, WCAG references, and notes stay in their intended columns.
+- Check every database row for extra or missing fields in the CSV integrity tests.
+- Separate WCAG requirements from design guidance in typography: 16 px / 1rem, body
+  weight 400 and a named typeface are no longer presented as WCAG obligations; text
+  spacing (1.4.12) is described as tolerance to user overrides; line length and
+  alignment are tied to the AAA mechanism of 1.4.8. Synced `data/typography-rules.csv`
+  and SKILL.md section 6 (sources: WCAG 2.2 and Understanding 1.4.3, 1.4.4, 1.4.8, 1.4.12).
+- Replace unsupported install commands in both READMEs with a `git clone` of the
+  public repository into `wcag-accessibility`, and document that the full package
+  (`scripts/` and `data/`) is required, unlike copying only `SKILL.md`.
+
+### Changed
+- State in `SKILL.md` that `scripts/search.py` needs Python 3.10 or newer (standard library only).
+- Use "WCAG Accessibility Audit Skill" as the display title in the skill and both
+  READMEs, with an introduction describing audit guidance, remediation, and
+  manual validation. Keep the technical skill identifier and repository URLs.
+- Make instructions provider-neutral: "Notes for the agent", assistant-neutral prompts, and a
+  usage-modes note in `SKILL.md` (native skill, Python search, manual context; never invent
+  results when a query cannot run). Both READMEs now document the three modes, a
+  compatibility matrix for Claude Code, Codex, Cursor and GitHub Copilot that separates
+  support documented by each vendor from support tested here, and the MCP server as
+  optional resources only. Tested so far: Claude Code only, in the environment the READMEs
+  describe (project install from a local copy, Windows, new non-interactive sessions);
+  Codex, Cursor and Copilot remain NOT VERIFIED. This neutral-wording and documentation
+  change did not itself touch code, data, tests or metadata; other entries here cover those.
+
 ## [2.2.0] - 2026-04-21
 ### Added
 - MCP Server (`scripts/mcp-server.py`) to expose 15 databases to Claude directly.

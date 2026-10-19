@@ -1,63 +1,21 @@
 ---
 name: wcag-accessibility
 description: >
-  Comprehensive WCAG 2.1/2.2 AA accessibility skill covering audits, remediation, ARIA patterns,
-  screen reader testing, color contrast, keyboard navigation, mobile a11y, cognitive accessibility,
-  legal compliance, and CI/CD testing pipelines.
-
-  Use this skill whenever the user asks about or touches ANY of the following — even if they do not
-  use the word "accessibility":
-
-  AUDITING & COMPLIANCE: "is this accessible?", "does this pass WCAG?", "audit my component",
-  "Section 508 compliance", "EAA 2025", "VPAT", "ACR", "conformance report",
-  "accessibility statement", reviewing code or designs for a11y problems.
-
-  ARIA & HTML: "what role do I use?", "aria-label vs aria-labelledby", "focus management",
-  "focus trap", "live region", "aria-expanded", "roving tabindex", "skip link",
-  "semantic HTML", "accessible name", role on any UI element.
-
-  KEYBOARD & INTERACTION: "keyboard navigation", "Tab order", "keyboard trap",
-  "no keyboard access", "arrow key navigation", any interactive component that needs keyboard support.
-
-  SCREEN READERS: "NVDA", "JAWS", "VoiceOver", "TalkBack", "Narrator", "AT", "assistive technology",
-  "screen reader announces", "announced as", "SR testing", braille display.
-
-  COLOR & TYPOGRAPHY: "color contrast", "contrast ratio", "passes AA?", "4.5:1", "3:1",
-  "APCA", "color blind", "forced colors", "high contrast mode",
-  "font size accessibility", "readable typography", "text spacing".
-
-  COMPONENTS: building or reviewing modals, dialogs, menus, dropdowns, tabs, accordions, carousels,
-  date pickers, toasts, alerts, data tables, tree views, comboboxes, autocomplete, sliders,
-  tooltips, form validation — any interactive UI component.
-
-  MOBILE: "React Native accessibility", "SwiftUI a11y", "Jetpack Compose accessibility",
-  "touch target", "Dynamic Type", "TalkBack", "VoiceOver iOS", "reduce motion".
-
-  COGNITIVE: ADHD, dyslexia, plain language, reading level, cognitive load, COGA,
-  "too complex", "hard to understand", error messages, time limits, accessible authentication.
-
-  FRAMEWORKS: making any React, Next.js, Vue 3, Angular, Svelte, Astro, SolidJS, or native
-  mobile component accessible.
-
-  LEGAL: "ADA lawsuit", "EAA", "EN 301 549", "Section 508", "AODA", "accessibility law",
-  which standard applies, legal risk, "do I need to be accessible?".
-
-  CI/CD: "axe-core", "pa11y", "Playwright accessibility", "jest-axe", "Lighthouse score",
-  "automated accessibility testing", adding a11y to a pipeline.
-
-  DESIGN: reviewing Figma for accessibility, design tokens contrast, handoff checklist,
-  accessible color palette, inclusive design, WCAG at design phase.
-
-  Always apply this skill proactively when the user is building any user-facing UI, reviewing
-  front-end code, or asking about legal or compliance requirements — even without the word
-  "accessibility" — because most developers don't know what they don't know.
+  WCAG 2.1/2.2 AA accessibility skill: audits, remediation, ARIA roles and patterns, keyboard
+  navigation, focus management, screen reader behavior (NVDA, JAWS, VoiceOver, TalkBack), color
+  contrast, accessible components (modals, menus, tabs, forms, tables, comboboxes), React, Vue,
+  Angular, Svelte and Next.js, mobile a11y (React Native, SwiftUI, Compose), cognitive accessibility,
+  legal compliance (ADA, EAA, Section 508, EN 301 549, VPAT/ACR) and CI testing (axe-core, pa11y,
+  Playwright). Use when the user asks whether UI is accessible or passes WCAG, asks about ARIA,
+  focus traps, live regions, skip links, contrast ratios or touch targets, or is building or
+  reviewing front-end UI, even without the word "accessibility".
 ---
 
-# Paul J. Adam Web & Mobile Accessibility Skill
+# WCAG Accessibility Audit Skill
 
 ## Overview
 
-Comprehensive accessibility knowledge grounded in **WCAG 2.1 AA by default** (with full **WCAG 2.2** coverage), WAI-ARIA 1.2, and real-world audit, remediation, and handoff practice. Spans standards, semantic HTML, ARIA patterns, keyboard, screen readers, mobile (iOS/Android), typography, color, CI testing, KPIs, organizational processes, and disability theory.
+Comprehensive accessibility knowledge grounded in **WCAG 2.1 AA by default** (the criteria added in **WCAG 2.2** are surfaced where relevant; the searchable catalog lists the Level A and AA criteria of 2.1 plus the 9 added in 2.2, not the 2.1 AAA criteria), WAI-ARIA 1.2, and real-world audit, remediation, and handoff practice. Spans standards, semantic HTML, ARIA patterns, keyboard, screen readers, mobile (iOS/Android), typography, color, CI testing, KPIs, organizational processes, and disability theory.
 
 ### 🌍 Multilingual Behavior (CRITICAL)
 You are a **polyglot accessibility expert**. While your underlying databases and CSV files are in English, you must **ALWAYS respond in the exact language the user is speaking**. 
@@ -65,7 +23,19 @@ You are a **polyglot accessibility expert**. While your underlying databases and
 - When speaking Spanish, ALWAYS use the terminology defined in `data/glossary-es.csv` to ensure industry-standard translations (e.g., "Screen reader" = "Lector de pantalla", "Landmark" = "Región de la página", "Focus" = "Foco").
 - Never tell the user "the database is in English", just provide the translated answer seamlessly.
 
-**Authority**: Paul J. Adam — Web & Mobile Accessibility Specialist/Consultant ([pauljadam.com](https://pauljadam.com/)). Curriculum themes additionally informed by industry-standard training paths (semantic HTML for designers, ARIA, NVDA, VoiceOver/TalkBack, accessibility audits, inclusive research, accessibility KPIs, handoff, typography, color palette, disability models, mobile, developer test tooling).
+**References and inspiration**: the resources of Paul J. Adam, a web & mobile accessibility specialist ([pauljadam.com](https://pauljadam.com/)), are acknowledged as a reference and inspiration. Mentioning him does not imply that he wrote, reviewed or endorses this project. Curriculum themes additionally informed by industry-standard training paths (semantic HTML for designers, ARIA, NVDA, VoiceOver/TalkBack, accessibility audits, inclusive research, accessibility KPIs, handoff, typography, color palette, disability models, mobile, developer test tooling).
+
+### Usage modes and limits
+
+These instructions are agent-neutral. How you load them depends on the host:
+
+1. **Native skill** (host supports Agent Skills): this file is the core; `scripts/` and `data/` come from the same installed directory.
+2. **Files + execution**: if you can read files and run Python, run `python scripts/search.py …` from the skill root (the directory containing this file) instead of restating tables.
+3. **Manual context** (no native discovery or no execution): you only know what the user provided. Read the CSVs or sections they supplied; if you cannot run a query, say so, ask for the relevant data or give the exact command for the user to run. **Never invent search results**, file contents or criteria.
+
+Reading instructions and executing Python are separate capabilities; state which one is missing instead of assuming it.
+
+`scripts/search.py` needs **Python 3.10 or newer**; the standard library is enough (no packages to install). The optional MCP server `scripts/mcp-server.py` (requires the `mcp` Python package) is part of the public repository but is not included in the Agensi ZIP packages prepared from it.
 
 ---
 
@@ -78,6 +48,10 @@ CSV databases + a single Python CLI. Run from the skill root:
 python scripts/search.py wcag --level AA
 python scripts/search.py wcag --keyword contrast
 python scripts/search.py wcag --id 2.5.8            # WCAG 2.2 target size
+python scripts/search.py wcag --wcag-version 2.1    # records that belong to 2.1 (includes 4.1.1)
+python scripts/search.py wcag --wcag-version 2.2 --level AA   # exact AA records that belong to 2.2
+# --wcag-version selects what belongs to a version, not only what it added: the 24 AA records are all
+# in 2.2, so this equals --level AA. To list the 9 additions use --output json and keep versions == "2.2".
 
 # Legal framework
 python scripts/search.py legal --jurisdiction EU
@@ -119,7 +93,7 @@ python scripts/search.py resources --keyword WCAG
 
 | File | Contents |
 |------|----------|
-| `data/wcag-criteria.csv` | WCAG 2.1 A/AA + **WCAG 2.2** additions (2.4.11–2.4.13, 2.5.7–2.5.8, 3.2.6, 3.3.7–3.3.9) |
+| `data/wcag-criteria.csv` | 59 criteria: all Level A and AA of WCAG 2.1 plus the 9 added in **2.2** (2.4.11–2.4.13, 2.5.7–2.5.8, 3.2.6, 3.3.7–3.3.9); the 28 Level AAA criteria of 2.1 are not included; `versions` column; 4.1.1 is a historical 2.1 entry removed in 2.2 |
 | `data/aria-patterns.csv` | 25+ component patterns with required ARIA, keyboard, focus mgmt |
 | `data/testing-tools.csv` | 30+ tools by type, platform, browser, cost |
 | `data/screen-reader-keys.csv` | Shortcuts for NVDA, JAWS, VoiceOver (macOS/iOS), TalkBack, Narrator |
@@ -133,9 +107,10 @@ python scripts/search.py resources --keyword WCAG
 | `data/legal-framework.csv` | 25+ jurisdictions: laws, standards, effective dates |
 | `data/resources.csv` | 50+ authoritative books, blogs, research papers, tools, standards |
 | `scripts/search.py` | CLI search across all databases |
+| `references/form-labels-and-names.md` | Reviewing form labels, accessible names and input purpose without over-claiming |
 | `templates/audit-report.md` | Complete audit report template (fill-in) |
 | `templates/a11y-ci.yml` | GitHub Actions CI pipeline (axe + pa11y + Playwright + Lighthouse) |
-| `prompts/` | Ready-to-use Claude prompts (audit, ARIA, alt text, handoff, KPIs) |
+| `prompts/` | Ready-to-use prompts for any assistant (audit, ARIA, alt text, handoff, KPIs) |
 
 ---
 
@@ -194,12 +169,12 @@ Design decisions depend on which model of disability you implicitly assume. Pref
 | 1.3.1 | Info and Relationships | Semantic structure preserved programmatically |
 | 1.4.3 | Contrast (Minimum) | 4.5:1 text / 3:1 large (18pt or 14pt bold) |
 | 1.4.10 | Reflow | Usable at 320 CSS px with no horizontal scroll |
-| 1.4.11 | Non-text Contrast | 3:1 for UI components and graphics |
+| 1.4.11 | Non-text Contrast | 3:1 vs adjacent colors for visual info needed to identify UI components and states (e.g. an author-styled focus indicator) and graphics needed to understand content; exceptions: inactive components, user-agent default appearance not modified by the author, essential graphics |
 | 1.4.12 | Text Spacing | Supports line-height 1.5, paragraph 2×, letter 0.12×, word 0.16× |
 | 2.1.1 | Keyboard | All functionality operable by keyboard |
 | 2.1.2 | No Keyboard Trap | Focus must never get stuck |
 | 2.4.3 | Focus Order | Logical focus sequence |
-| 2.4.7 | Focus Visible | Focus indicator must be visible |
+| 2.4.7 | Focus Visible | A keyboard focus indicator must be visible (sets no contrast ratio; see 1.4.11 / 2.4.13) |
 | 3.3.1 | Error Identification | Errors described in text |
 | 4.1.2 | Name, Role, Value | Interactive elements expose name/role/state |
 | 4.1.3 | Status Messages | Dynamic updates announced without focus move |
@@ -208,9 +183,9 @@ Design decisions depend on which model of disability you implicitly assume. Pref
 
 | ID | Level | Criterion | What changed |
 |----|-------|-----------|--------------|
-| 2.4.11 | AA | **Focus Not Obscured (Minimum)** | Focused element can't be entirely hidden by sticky UI |
+| 2.4.11 | AA | **Focus Not Obscured (Minimum)** | Focused element can't be entirely hidden by author-created content such as sticky UI (no contrast requirement) |
 | 2.4.12 | AAA | Focus Not Obscured (Enhanced) | …or *partially* hidden |
-| 2.4.13 | AAA | Focus Appearance | ≥ 2 CSS px perimeter + 3:1 contrast |
+| 2.4.13 | AAA | Focus Appearance | Indicator area ≥ a 2 CSS px perimeter of the unfocused component, and 3:1 between the same pixels focused vs unfocused; exceptions: user-agent indicator, or indicator and its background not modified by the author |
 | 2.5.7 | AA | **Dragging Movements** | Drag operations need a single-pointer alternative |
 | 2.5.8 | AA | **Target Size (Minimum)** | Pointer targets ≥ 24×24 CSS px (exceptions apply) |
 | 3.2.6 | A | **Consistent Help** | Help mechanisms in consistent relative order |
@@ -218,7 +193,7 @@ Design decisions depend on which model of disability you implicitly assume. Pref
 | 3.3.8 | AA | **Accessible Authentication (Minimum)** | No cognitive-function tests (allow paste, password manager, WebAuthn) |
 | 3.3.9 | AAA | Accessible Authentication (Enhanced) | No cognitive-function tests at all |
 
-> Full criteria database: `data/wcag-criteria.csv`
+> Criteria catalog (59 rows, not complete: no 2.1 AAA criteria; `versions` shows 2.1 / 2.2; `--wcag-version 2.1|2.2` filters by it, and `--level AA` means exactly AA, not A+AA): `data/wcag-criteria.csv`
 
 ---
 
@@ -364,7 +339,7 @@ aria-owns="id"
 </button>
 ```
 - Targets ≥ **24×24 CSS px** (WCAG 2.5.8). 44×44 recommended for touch.
-- Visible focus ring, ≥ 3:1 vs adjacent colors (WCAG 2.4.11).
+- Visible focus ring (WCAG 2.4.7); if you style it, ≥ 3:1 vs adjacent colors (WCAG 1.4.11). 2.4.13 (AAA) adds size and focused-vs-unfocused contrast.
 - Never rely on color alone for state (e.g., disabled, selected).
 
 ### Accessible Drag & Drop (WCAG 2.5.7)
@@ -382,24 +357,28 @@ Always provide a non-drag alternative:
 
 ## 6. Accessible Typography
 
-| Rule | Recommendation | WCAG |
-|------|----------------|------|
-| Body size | ≥ 16 px / 1rem | 1.4.4 |
-| Line height | ≥ 1.5× font size | 1.4.12 |
-| Paragraph spacing | ≥ 2× font size | 1.4.12 |
-| Letter / word spacing | 0.12× / 0.16× supported | 1.4.12 |
-| Line length | 45–75 characters | 1.4.8 AAA |
-| Alignment | Left-align LTR; avoid justified | 1.4.8 AAA |
-| Reflow | Usable at 320 CSS px width | 1.4.10 |
-| Zoom | Works at 200% (AA) / 400% reflow | 1.4.4 / 1.4.10 |
-| Contrast | 4.5:1 body / 3:1 large | 1.4.3 |
-| Avoid all-caps for long copy | Reduces legibility & SR may spell | — |
-| Body weight ≥ 400 | Avoid 100–300 for paragraphs | 1.4.3 |
-| Dyslexia-friendly faces | Atkinson Hyperlegible, Lexend, Inter | — |
-| No text-in-images | Use real text (logos exempt) | 1.4.5 |
+Keep three things apart when reporting: **WCAG requirement** (normative text), **conformance technique** (how to meet it), and **design guidance** (useful, but not a pass/fail test). Do not fail content for missing a design guideline.
+
+| Topic | Type | Guidance | Source |
+|-------|------|----------|--------|
+| Resize text | Requirement (AA) | Text resizes up to 200% without assistive technology and without loss of content or functionality; exceptions: captions, images of text. Browser zoom or text-only resize may satisfy it; do not block it | [1.4.4](https://www.w3.org/TR/WCAG22/#resize-text) |
+| Body size (16 px / 1rem) | Design guidance | A common starting size, **not** a WCAG minimum. Smaller text is not a 1.4.4 failure by itself; rem does not guarantee accessibility | [Understanding 1.4.4](https://www.w3.org/WAI/WCAG22/Understanding/resize-text.html) |
+| Text spacing | Requirement (AA) | No loss of content or functionality when the **user** sets all four together: line height 1.5, spacing after paragraphs 2, letter 0.12, word 0.16 (× font size). Content need not start with these values and need not offer a spacing control. Languages and scripts that lack a property may conform with the properties they use | [1.4.12](https://www.w3.org/TR/WCAG22/#text-spacing) |
+| Line height / paragraph spacing as initial design | Design guidance | About 1.5 line height is a common start. A smaller initial value is not a 1.4.12 failure; content or functionality lost under the overrides is. Truncation with an ellipsis can still conform if the full content stays available through an accessible mechanism (e.g. revealed on focus or activation, or shown on a linked page); truncation with no such mechanism fails. Hover, `title` or `aria-label` alone are not a universal solution or sufficient proof | [Understanding 1.4.12](https://www.w3.org/WAI/WCAG22/Understanding/text-spacing.html) |
+| Line length | Design guidance; AAA | 45–75 characters is a common readability target, not WCAG. AAA 1.4.8 requires a *mechanism* (page or user agent) for width ≤ 80 characters (40 CJK) | [1.4.8](https://www.w3.org/TR/WCAG22/#visual-presentation) |
+| Alignment | Design guidance; AAA | Avoid fully justified blocks; align to the start edge of the writing direction (left in LTR, right in RTL). AAA 1.4.8 requires a mechanism so text is not justified, not a particular default look | [1.4.8](https://www.w3.org/TR/WCAG22/#visual-presentation) |
+| Reflow | Requirement (AA) | Usable at 320 CSS px width | 1.4.10 |
+| Contrast | Requirement (AA) | 4.5:1 body / 3:1 large (18pt, or 14pt bold) | [1.4.3](https://www.w3.org/TR/WCAG22/#contrast-minimum) |
+| Font weight | Design guidance | Prefer regular or heavier weights for body text. 1.4.3 sets no minimum weight. Size and bold together classify text as large (≥ 18 pt, or ≥ 14 pt bold; equivalent sizes for other fonts), so AA requires 4.5:1 for normal text and 3:1 for large text, subject to the criterion's exceptions. Very thin strokes may benefit from heavier strokes or more contrast: a legibility recommendation, not a mandatory weight or an automatic failure | [Understanding 1.4.3](https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html) |
+| Typeface | Design guidance | No WCAG criterion requires a specific face, and no font guarantees benefits for readers with dyslexia. Choose clearly distinguishable letterforms and test with your audience | — |
+| Avoid all-caps for long copy | Design guidance | Can reduce legibility; screen readers may spell some words | — |
+| No text-in-images | Requirement (AA) | Use real text (logos exempt) | 1.4.5 |
 
 ```css
-/* Text-spacing user override test — content must not be clipped */
+/* Manual test aid for 1.4.12, NOT production styles and NOT a complete check.
+   Apply all four together (and change nothing else), then look for clipped,
+   overlapping, truncated or hidden text and lost functionality. Truncated text is a
+   signal to review (is the full content still available?), not an automatic verdict. */
 * {
   line-height: 1.5 !important;
   letter-spacing: 0.12em !important;
@@ -407,6 +386,8 @@ Always provide a non-drag alternative:
 }
 p { margin-bottom: 2em !important; }
 ```
+
+Audit cases: text under 16 px, a weight under 400, or an initial line height under 1.5 are not failures by themselves — report a barrier only with evidence (e.g. content lost at 200% or under the 1.4.12 overrides). Under an AA target, do not apply the AAA conditions of 1.4.8 automatically.
 
 > Full ruleset: `data/typography-rules.csv`
 
@@ -422,7 +403,8 @@ p { margin-bottom: 2em !important; }
 | Large text (AA) — 18pt / 14pt bold | 3:1 |
 | Body text (AAA) | 7:1 |
 | UI components / icons / borders | 3:1 (1.4.11) |
-| Focus indicator vs adjacent | 3:1 (2.4.11 / 2.4.13) |
+| Author-styled focus indicator vs adjacent colors | 3:1 (1.4.11; 2.4.7 requires it to be visible) |
+| Focus indicator, same pixels focused vs unfocused (AAA) | 3:1 plus size rule (2.4.13) |
 
 ### Palette design workflow
 1. Define semantic tokens: `text`, `text-muted`, `bg`, `surface`, `border`, `primary`, `success`, `warning`, `error`, `focus`.
@@ -1212,7 +1194,7 @@ Key terms for Spanish-speaking teams:
 | `templates/a11y-ci.yml` | GitHub Actions pipeline: jest-axe + axe CLI + pa11y-ci + Playwright + Lighthouse |
 | `templates/vpat-2.5-template.md` | Official VPAT 2.5 Rev WCAG — covers WCAG 2.x (A/AA/AAA), Section 508, EN 301 549 |
 
-### Prompts for Claude (copy & paste)
+### Prompts (copy & paste into your assistant)
 
 | File | When to use |
 |------|-------------|
@@ -1614,7 +1596,7 @@ Cognitive, language, and learning disabilities affect ~15% of people. WCAG addre
 | Reduce cognitive load | ≤7 nav items; progressive disclosure; no autoplay | 3.2.2 |
 | Support memory | Pre-fill known data; breadcrumbs; undo; don't re-ask (3.3.7) | 3.3.7 (WCAG 2.2) |
 | Clear error recovery | Say what happened + exactly what to do; inline validation | 3.3.1 / 3.3.3 |
-| Visible labels | `<label>` always visible; placeholder ≠ label | 3.3.2 |
+| Visible labels | Prefer a persistent visible `<label>`; a placeholder alone is a weak label (disappears on input, low contrast): judge against 3.3.2, see `references/form-labels-and-names.md` | 3.3.2 |
 | No distractions | `prefers-reduced-motion`; no autoplay audio | 2.2.2 / 2.3.1 |
 | Consistent vocabulary | Same word for same thing; glossary available | 3.1.3 (AAA) |
 | Multiple input modes | Text + autocomplete; voice input; no drag-only (2.5.7) | 2.1.1 / 2.5.7 |
@@ -1639,54 +1621,31 @@ Cognitive, language, and learning disabilities affect ~15% of people. WCAG addre
 
 ---
 
-## 28. WCAG 3.0 — What's Coming
+## 28. WCAG 3.0 — Draft status
 
-WCAG 3.0 ("Silver") is under development by the W3C Accessibility Guidelines Working Group. It is **not yet a standard** — WCAG 2.1/2.2 AA remains the compliance target.
+WCAG 3.0 is an **incomplete W3C Working Draft** and **not a standard**. WCAG 2.1/2.2 AA remains the compliance target. The draft says it still has several years of work and that details will change; it also states that WCAG 3 does not replace WCAG 2, which will still be required in many places for a long time.
 
-### Key structural changes
+Sources (check them for the current status; reviewed 2026-10-01 against the 10 September 2026 Working Draft):
+- Draft: https://www.w3.org/TR/wcag-3.0/
+- Introduction: https://www.w3.org/WAI/standards-guidelines/wcag/wcag3-intro/
 
-| WCAG 2.x | WCAG 3.0 |
-|----------|-----------|
-| Success Criteria (pass/fail binary) | **Outcomes** with multiple "Methods" and "Tests" |
-| Level A / AA / AAA | Graduated score (Bronze / Silver / Gold) |
-| Focused on web content | Expanded to apps, emerging tech, XR, AI |
-| Static document | Living standard with modular updates |
-
-### APCA (Advanced Perceptual Contrast Algorithm)
-
-WCAG 3.0 will replace the current contrast ratio (WCAG 1.4.3) with APCA, which accounts for:
-- **Polarity**: light text on dark bg vs dark on light (treated differently)
-- **Font size AND weight together** (not just size threshold)
-- **Spatial frequency**: the visual complexity of the typeface
-
-**APCA key values (Lc = Lightness Contrast):**
-
-| Use case | APCA Lc threshold |
-|----------|------------------|
-| Body text (≥14pt regular) | Lc 75 |
-| Large heading (≥24pt regular) | Lc 60 |
-| Large bold heading (≥18pt bold) | Lc 45 |
-| UI components (borders, icons) | Lc 30 |
-| Decorative / disabled | Lc 0 (exempt) |
+### What not to state as fact
+- No WCAG 3 success criteria with fixed numbers (such as "3.1.1"): requirements in the draft are named (for example "Text contrast sufficient (minimum)") and may change.
+- Bronze, Silver and Gold **do** appear in section 4.1.4 of the draft, as the 4th–6th *reporting tiers* above conformance (the 3rd tier is conformance), but the number of supplemental requirements and assertions for each is still **TBD**. Section 4 is informative and exploratory, and the draft's editor's notes say the model is still under discussion (an alternative proposal uses scoring, with Bronze/Silver/Gold awarded after conformance). Present them as proposed reporting tiers in development, not as a finalized conformance target, and do not say what is required to reach them.
+- The draft does not use A/AA/AAA levels in the way WCAG 2 does; do not map WCAG 2 levels onto WCAG 3 tiers.
+- No contrast algorithm or thresholds: the draft says the contrast algorithm is yet to be determined. APCA is **not** confirmed as the WCAG 3 algorithm, so do not quote APCA Lc values as WCAG 3 requirements.
+- No finalization date.
 
 ### How to prepare now
-1. **Keep targeting WCAG 2.1/2.2 AA** — no migration needed until WCAG 3.0 is finalized (est. 2026–2028).
-2. **Audit with APCA as a supplement**: use the [APCA Contrast Calculator](https://www.myndex.com/APCA/) alongside your WCAG 1.4.3 checks. If something passes 2.x but feels wrong visually, APCA often explains why.
-3. **Modular thinking**: WCAG 3.0 allows teams to achieve "Bronze" quickly on the most impactful criteria before tackling Silver/Gold — plan your roadmap accordingly.
-4. **Track the draft**: https://www.w3.org/TR/wcag-3.0/
+1. **Keep targeting WCAG 2.1/2.2 AA.** Contrast compliance is measured with the WCAG 2.x ratios (1.4.3, 1.4.6, 1.4.11).
+2. **Follow the draft** at the links above before answering any WCAG 3 question, and label anything from it as draft.
+3. If a user asks about APCA, explain that it is a separate contrast model that is not part of WCAG 2.x conformance and not confirmed for WCAG 3.
 
-```js
-// APCA calculation (using the apca-w3 npm package)
-import { calcAPCA } from 'apca-w3';
-
-const lc = calcAPCA('#1a1a1a', '#ffffff'); // text color, bg color
-console.log(`APCA Lc: ${Math.abs(lc).toFixed(1)}`); // e.g. 108.1 (excellent)
-// Target: |Lc| >= 75 for body text
-```
+> The CLI command `python scripts/search.py wcag3` and the MCP resource `wcag://draft-wcag3` return only a draft-status notice with these links; they contain no criteria.
 
 ---
 
-## Notes for Claude
+## Notes for the agent
 
 1. **Default to WCAG 2.1 AA** and surface **WCAG 2.2 additions** when relevant (focus obscured, target size, drag alternatives, accessible auth, redundant entry, consistent help).
 2. **Semantic HTML first**; reach for ARIA only when native semantics are insufficient (Rule #1 of ARIA).
@@ -1701,7 +1660,8 @@ console.log(`APCA Lc: ${Math.abs(lc).toFixed(1)}`); // e.g. 108.1 (excellent)
 11. **Stack examples**: section 18 → Next.js, Angular, Svelte, Astro, SolidJS; section 19 → SwiftUI, Jetpack Compose; section 25 → Vue 3; section 26 → React Native.
 12. **Legal questions**: cite `data/legal-framework.csv`; always highlight the **EAA 28 June 2025** deadline for EU-facing products.
 13. **Cognitive accessibility**: when ADHD, dyslexia, memory, or anxiety is mentioned, use section 27 and `data/cognitive-accessibility.csv`.
-14. **WCAG 3.0**: mention only as "in development" — WCAG 2.1/2.2 AA is still the standard. Point to section 28 for APCA details.
+14. **WCAG 3.0**: mention only as an incomplete W3C draft — WCAG 2.1/2.2 AA is still the standard. Do not cite WCAG 3 criteria IDs, APCA thresholds or dates as fact, and treat Bronze/Silver/Gold only as proposed reporting tiers; point to section 28 and the W3C draft.
 15. **User preference media queries**: recommend prefers-reduced-motion, prefers-contrast, forced-colors, prefers-reduced-transparency in every animation/color/theme discussion — see section 20.
-16. **Templates & prompts**: point users to `templates/` and `prompts/` for ready-to-use assets. The 12 prompts in `prompts/` are designed to be pasted into Claude directly.
+16. **Templates & prompts**: point users to `templates/` and `prompts/` for ready-to-use assets. The 12 prompts in `prompts/` are designed to be pasted into an assistant directly; if it cannot read this repository's files, paste the relevant `data/` rows or sections along with the prompt.
 17. **External Resources**: refer users to [`RESOURCES.md`](./RESOURCES.md) for comprehensive curated bibliography of books, blogs, research papers, tools, and legal frameworks — updated 2025 with WCAG 2.2, EAA deadline, and peer-reviewed studies.
+18. **Reviewing code fragments** (forms, controls, icon buttons): read `references/form-labels-and-names.md`. Keep findings the code demonstrates apart from those that depend on context, need browser/keyboard/screen-reader/server verification, or are design recommendations; justify severity; do not report what a screen reader announced or an automated tool detected unless it was run; cite a criterion only with the reason it applies.

@@ -42,7 +42,7 @@
     {
       "id": 2,
       "prompt": "What's the minimum color contrast ratio required for normal body text under WCAG 2.1 AA? My text is #6b7280 on #ffffff background. Does it pass?",
-      "expected_output": "Should state 4.5:1 for normal text at AA. Should calculate or estimate the contrast of #6b7280 on #ffffff (approximately 4.61:1 or similar — just above the AA threshold). Should confirm it passes AA but may note it's close to the boundary.",
+      "expected_output": "Should state 4.5:1 as the AA minimum for normal text (SC 1.4.3). Should calculate the contrast of #6b7280 on #ffffff with the WCAG 2.x relative luminance formula: approximately 4.83:1 (4.8345 unrounded; rounding to 4.8 or 4.83 is fine). Should conclude that it passes AA for normal text, with a margin of about 0.33 above the threshold, and may note that it is close to the boundary and would not meet AAA (7:1). Must not report the 4.61:1 figure.",
       "assertions": [
         {
           "name": "states_correct_ratio",
@@ -57,10 +57,16 @@
           "value": ["1.4.3", "SC 1.4.3", "Success Criterion 1.4.3"]
         },
         {
-          "name": "evaluates_the_color",
-          "description": "Response evaluates #6b7280 on #ffffff",
+          "name": "calculates_pair_ratio",
+          "description": "Response gives the computed ratio of #6b7280 on #ffffff (about 4.83:1; 4.8 or 4.83 accepted)",
           "type": "contains_any",
-          "value": ["pass", "passes", "does pass", "4.6", "4.61", "4.5"]
+          "value": ["4.83", "4.8:1", "4.8 to 1"]
+        },
+        {
+          "name": "concludes_passes_aa",
+          "description": "Response concludes the pair passes AA for normal text",
+          "type": "contains_any",
+          "value": ["passes", "does pass", "meets", "satisfies"]
         }
       ]
     },
@@ -274,13 +280,31 @@
     {
       "id": 12,
       "prompt": "How should I structure headings on a webpage?",
-      "expected_output": "Should mention using exactly one H1, not skipping heading levels, and using them for structural hierarchy, not just visual styling.",
+      "expected_output": "Should recommend descriptive headings that state the topic or purpose of each section (WCAG 2.4.6, level AA), and a heading hierarchy (h1-h6) that reflects the structure of the content and is marked up with real heading elements rather than visual styling (1.3.1, level A). May recommend avoiding skipped heading levels as helpful guidance for navigation (W3C WAI says skipping ranks can be confusing and should be avoided where possible, and that it is fine to skip ranks when closing subsections), and may suggest a single main h1 as a common convention. Must not present 'exactly one H1' or 'never skip a heading level' as WCAG requirements.",
       "assertions": [
         {
-          "name": "mentions_no_skipping",
-          "description": "Mentions not skipping levels",
+          "name": "recommends_descriptive_headings",
+          "description": "Recommends headings that describe the topic or purpose of their section",
           "type": "contains_any",
-          "value": ["skip", "skipping", "sequential"]
+          "value": ["descriptive", "describe the topic", "describes the topic", "describe the purpose", "meaningful"]
+        },
+        {
+          "name": "hierarchy_reflects_structure",
+          "description": "Says the heading hierarchy should reflect the structure of the content",
+          "type": "contains_any",
+          "value": ["hierarchy", "structure", "outline", "nest"]
+        },
+        {
+          "name": "uses_semantic_headings",
+          "description": "Recommends real heading elements and a semantic hierarchy (h1-h6, heading elements or tags, semantic markup)",
+          "type": "contains_any",
+          "value": ["h1", "h2", "<h", "heading element", "heading tag", "semantic", "markup"]
+        },
+        {
+          "name": "references_related_sc",
+          "description": "Cites a related success criterion (1.3.1, 2.4.6 or 2.4.10)",
+          "type": "contains_any",
+          "value": ["1.3.1", "2.4.6", "2.4.10"]
         }
       ]
     },

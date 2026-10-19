@@ -12,6 +12,20 @@ from mcp.server.fastmcp import FastMCP
 ROOT_DIR = Path(__file__).parent.parent
 DATA_DIR = ROOT_DIR / "data"
 
+# Keep in sync with WCAG3_NOTICE in search.py (tests/test_search.py compares them).
+WCAG3_NOTICE = {
+    "status": "draft-records-retired",
+    "message": (
+        "WCAG 3 is an incomplete W3C Working Draft and not a standard; WCAG 2.x remains "
+        "the compliance target. The retired data file assigned fixed criterion IDs and APCA "
+        "thresholds that the W3C draft does not support (Bronze appears there only as a "
+        "proposed reporting tier), so no criteria are returned."
+    ),
+    "draft_url": "https://www.w3.org/TR/wcag-3.0/",
+    "intro_url": "https://www.w3.org/WAI/standards-guidelines/wcag/wcag3-intro/",
+    "records": [],
+}
+
 # Initialize FastMCP server
 mcp = FastMCP("WCAG Accessibility Skill Data")
 
@@ -33,9 +47,8 @@ def get_wcag_criteria() -> str:
 
 @mcp.resource("wcag://draft-wcag3")
 def get_wcag3_draft() -> str:
-    """Get WCAG 3.0 draft criteria."""
-    data = read_csv("wcag3-draft.csv")
-    return json.dumps(data, indent=2)
+    """WCAG 3.0 draft status notice with W3C links (no criteria)."""
+    return json.dumps(WCAG3_NOTICE, indent=2)
 
 @mcp.resource("wcag://aria-patterns")
 def get_aria_patterns() -> str:

@@ -1,7 +1,7 @@
 # Prompt: Step-by-step screen reader test script
 
 Use when you need to run a structured manual test with NVDA, VoiceOver, or TalkBack
-and want Claude to generate a reproducible test script.
+and want the assistant to generate a reproducible test script.
 
 ---
 

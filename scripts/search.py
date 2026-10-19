@@ -9,6 +9,7 @@ Usage:
   python search.py wcag --level AA
   python search.py wcag --keyword contrast --output json
   python search.py wcag --principle Perceivable --export results.json
+  python search.py wcag --wcag-version 2.2 --level AA
   python search.py aria --component modal --detail
   python search.py tools --type screen-reader --platform Windows --free
   python search.py keys --reader NVDA --action heading
@@ -33,7 +34,6 @@ if sys.stdout.encoding and sys.stdout.encoding.lower() not in ('utf-8', 'utf-8-s
 DATA_DIR = Path(__file__).parent.parent / "data"
 
 WCAG_CSV       = DATA_DIR / "wcag-criteria.csv"
-WCAG3_CSV      = DATA_DIR / "wcag3-draft.csv"
 ARIA_CSV       = DATA_DIR / "aria-patterns.csv"
 TOOLS_CSV      = DATA_DIR / "testing-tools.csv"
 KEYS_CSV       = DATA_DIR / "screen-reader-keys.csv"
@@ -51,7 +51,6 @@ COGNITIVE_CSV  = DATA_DIR / "cognitive-accessibility.csv"
 # All databases for cross-search
 ALL_DATABASES = {
     "wcag":        WCAG_CSV,
-    "wcag3":       WCAG3_CSV,
     "aria":        ARIA_CSV,
     "tools":       TOOLS_CSV,
     "keys":        KEYS_CSV,
@@ -88,9 +87,14 @@ def load_csv(path: Path) -> list[dict]:
         return list(csv.DictReader(f))
 
 
-def matches(row: dict, keyword: str) -> bool:
+# Metadato de versión del catálogo WCAG (`wcag-criteria.csv`): se expone en JSON, pero no
+# participa en `--keyword` (de lo contrario "2.1" o "2.2" coincidirían con casi todas las filas).
+WCAG_METADATA_FIELDS = ("versions",)
+
+
+def matches(row: dict, keyword: str, ignore: tuple[str, ...] = ()) -> bool:
     keyword = keyword.lower()
-    return any(keyword in str(v).lower() for v in row.values())
+    return any(keyword in str(v).lower() for k, v in row.items() if k not in ignore)
 
 
 # ── Output helpers ────────────────────────────────────────────────────────────
@@ -117,7 +121,7 @@ def print_table(rows: list[dict], columns: list[str], export: str | None = None)
         _export_rows(rows, export)
 
 
-def print_json(rows: list[dict], export: str | None = None) -> None:
+def print_json(rows: "list[dict] | dict", export: str | None = None) -> None:
     output = json.dumps(rows, ensure_ascii=False, indent=2)
     print(output)
     if export:
@@ -163,9 +167,15 @@ def cmd_wcag(args: argparse.Namespace) -> None:
     if args.principle:
         rows = [r for r in rows if args.principle.lower() in r["principle"].lower()]
     if args.keyword:
-        rows = [r for r in rows if matches(r, args.keyword)]
+        rows = [r for r in rows if matches(r, args.keyword, ignore=WCAG_METADATA_FIELDS)]
     if args.id:
         rows = [r for r in rows if r["id"].startswith(args.id)]
+    if args.wcag_version:
+        # Pertenencia exacta a la lista `versions` (p. ej. "2.1;2.2"); no se infiere del id.
+        rows = [r for r in rows if args.wcag_version in [v.strip() for v in r["versions"].split(";")]]
+        if args.level and args.level.upper() == "AAA":
+            print("note: the catalog does not include the AAA criteria inherited from WCAG 2.1, "
+                  "so --level AAA with --wcag-version is not a complete list.", file=sys.stderr)
 
     cols = ["id", "level", "principle", "criterion", "description"]
     render(rows, cols, args.output, args.export)
@@ -176,19 +186,41 @@ def cmd_wcag(args: argparse.Namespace) -> None:
             print(f"  {r['id']} → {green(r['url'])}")
 
 
-# ── WCAG 3.0 Draft ────────────────────────────────────────────────────────────
+# ── WCAG 3.0 Draft (status notice only) ──────────────────────────────────────
+
+WCAG3_DRAFT_URL = "https://www.w3.org/TR/wcag-3.0/"
+WCAG3_INTRO_URL = "https://www.w3.org/WAI/standards-guidelines/wcag/wcag3-intro/"
+WCAG3_NOTICE = {
+    "status": "draft-records-retired",
+    "message": (
+        "WCAG 3 is an incomplete W3C Working Draft and not a standard; WCAG 2.x remains "
+        "the compliance target. The retired data file assigned fixed criterion IDs and APCA "
+        "thresholds that the W3C draft does not support (Bronze appears there only as a "
+        "proposed reporting tier), so no criteria are returned."
+    ),
+    "draft_url": WCAG3_DRAFT_URL,
+    "intro_url": WCAG3_INTRO_URL,
+    "records": [],
+}
+
 
 def cmd_wcag3(args: argparse.Namespace) -> None:
-    rows = load_csv(WCAG3_CSV)
-    if args.level:
-        rows = [r for r in rows if r["level"].upper() == args.level.upper()]
-    if args.category:
-        rows = [r for r in rows if args.category.lower() in r["category"].lower()]
-    if args.keyword:
-        rows = [r for r in rows if matches(r, args.keyword)]
-
-    cols = ["id", "level", "category", "criterion", "description", "notes"]
-    render(rows, cols, args.output, args.export)
+    ignored = [f"--{n}" for n in ("level", "category", "keyword") if getattr(args, n)]
+    if args.output == "json":
+        print_json({**WCAG3_NOTICE, "ignored_arguments": ignored}, args.export)
+        return
+    if args.output == "csv":
+        cols = ["status", "message", "draft_url", "intro_url"]
+        print_csv_out([WCAG3_NOTICE], cols, args.export)
+        return
+    print(bold("WCAG 3: draft status (no criteria available)"))
+    print(WCAG3_NOTICE["message"])
+    if ignored:
+        print(f"Ignored arguments: {' '.join(ignored)}")
+    print(f"Draft:        {green(WCAG3_DRAFT_URL)}")
+    print(f"Introduction: {green(WCAG3_INTRO_URL)}")
+    if args.export:
+        _export_text(json.dumps(WCAG3_NOTICE, ensure_ascii=False, indent=2), args.export)
 
 
 # ── ARIA ──────────────────────────────────────────────────────────────────────
@@ -396,7 +428,8 @@ def cmd_all(args: argparse.Namespace) -> None:
     combined: list[dict] = []
     for db_name, csv_path in ALL_DATABASES.items():
         rows = load_csv(csv_path)
-        hits = [r for r in rows if matches(r, keyword)]
+        ignore = WCAG_METADATA_FIELDS if db_name == "wcag" else ()
+        hits = [r for r in rows if matches(r, keyword, ignore=ignore)]
         for r in hits:
             r["_database"] = db_name
         combined.extend(hits)
@@ -450,14 +483,17 @@ def main() -> None:
     p_wcag.add_argument("--principle", help="Perceivable / Operable / Understandable / Robust")
     p_wcag.add_argument("--keyword", help="Search across all fields")
     p_wcag.add_argument("--id", help="Criterion ID prefix (e.g. 1.4 or 2.1.1)")
+    p_wcag.add_argument("--wcag-version", dest="wcag_version", choices=["2.1", "2.2"],
+                        help="Only criteria tagged with this WCAG version in the `versions` column "
+                             "(2.1 includes 4.1.1; 2.2 includes the 2.2 additions). The catalog has no 2.1 AAA criteria")
     p_wcag.add_argument("--url", action="store_true", help="Show understanding URLs")
     add_common_args(p_wcag)
 
     # wcag3
-    p_wcag3 = sub.add_parser("wcag3", help="Search WCAG 3.0 draft criteria")
-    p_wcag3.add_argument("--level", help="Bronze / Silver / Gold")
-    p_wcag3.add_argument("--category", help="e.g. Visual Contrast, Focus, Keyboard")
-    p_wcag3.add_argument("--keyword", help="Search across all fields")
+    p_wcag3 = sub.add_parser("wcag3", help="WCAG 3.0 draft status and W3C links (no criteria)")
+    p_wcag3.add_argument("--level", help="Deprecated, ignored (draft records were retired)")
+    p_wcag3.add_argument("--category", help="Deprecated, ignored")
+    p_wcag3.add_argument("--keyword", help="Deprecated, ignored")
     add_common_args(p_wcag3)
 
     # aria
