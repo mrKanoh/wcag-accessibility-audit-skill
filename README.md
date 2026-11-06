@@ -237,6 +237,7 @@ Treat these as learning and adaptation examples. Before using them in a product,
 | [SKILL.md](./SKILL.md) | Agent instructions and entry point for hosts with skill support |
 | [Prompts](./prompts/) | Twelve task prompts for reviews, remediation, content, design handoffs, and test planning |
 | [Audit report](./templates/audit-report.md) | Starting point for documenting scope, findings, and evidence |
+| [Site audit procedure](./references/site-audit-procedure.md) and [workbook](./templates/site-audit-workbook.md) | Instructions and evidence template for a scoped site audit; they do not include a crawler or run any tests |
 | [CI template](./templates/a11y-ci.yml) | Example automated checks; adapt dependencies, commands, URLs, configuration paths, and failure handling to your project |
 | [VPAT reporting template](./templates/vpat-2.5-template.md) | Reporting aid; consult [ITI's official VPAT resources](https://www.itic.org/policy/accessibility/vpat) before preparing an Accessibility Conformance Report (ACR) |
 | [Bibliography](./RESOURCES.md) | Standards and additional reading |

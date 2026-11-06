@@ -4,17 +4,18 @@
 - Ninguno.
 
 ## Pendiente de Ariel
-- Decidir el destino de los 5 archivos con cambios sin commit (auditoría de sitios): `CHANGELOG.md`, `SKILL.md`, `templates/audit-report.md`, `references/site-audit-procedure.md` y `templates/site-audit-workbook.md`. No son de WCAG-SETUP-1 y no se tocaron.
 - Agregar `.env.*` (p. ej. `.env.local`) a `.gitignore`: hoy solo `.env` está ignorado.
 
 ## Para la próxima orden
-- La línea base de pruebas se tomó con esos archivos presentes en el árbol de trabajo (`SKILL.md` modificado); repetirla cuando se decida su destino.
+- M1 (preexistente): `SKILL.md` líneas ~534, 563 y 573 y `templates/a11y-ci.yml:72` usan `wcag2a,wcag2aa,wcag22aa` y les faltan `wcag21a,wcag21aa`, lo que contradice `references/site-audit-procedure.md`. Corregir en una orden aparte, con verificación contra la documentación de axe-core.
+- B2 (opcional): aclarar en `templates/site-audit-workbook.md` (~línea 39) que «three AAA entries» se refiere a los registros del dataset, no a todos los criterios AAA de WCAG 2.2.
 
 ## Terminados
+- 2026-11-06 WCAG-SITEAUDIT-1 — procedimiento (`references/site-audit-procedure.md`) y libro de evidencia (`templates/site-audit-workbook.md`) para auditoría de sitios, `templates/audit-report.md` adaptado, índices en `SKILL.md` y ambos README, entrada en `CHANGELOG.md`; correcciones de revisión: se quita la etiqueta inexistente `wcag22a` de axe-core y se aclara que 2.4.11 es solo de WCAG 2.2 · commits 5b6454c (etapa 2), b18e1fa (etapa 3) y la etapa 4 de cierre (HEAD de `tarea/wcag-siteaudit-1`, reformula la condición de 1.4.10 según la norma); la etapa 1 fue solo revisión, sin commit · rondas 0 · auditor Opus 0/1/3, 1 pasada · pendiente: M1 y B2 (ver «Para la próxima orden»)
 - 2026-11-06 WCAG-SETUP-1 — permisos versionados (`.claude/settings.json`), `AGENTS.md`, `CLAUDE.md`, `PROGRESS.md` y línea base de pruebas registrada · decisión de Ariel 2026-11-06: fusionar SÍ publica (`main` es lo que clonan los usuarios) · commits 1398d98 (etapa 1), 02c4e09 (etapa 2), 4b6c4d1 (etapa 3, corrección) y la etapa 4 de cierre (HEAD de `tarea/wcag-setup-1`) · rondas 1 · auditor Opus 0/3/4, 1 pasada · pendiente: `.env.local` sin ignorar; destino de los 5 archivos de Ariel
 
 ## Línea base de pruebas
-Fecha 2026-11-06, Windows, Python 3.12.10, pytest 8.3.3, rama `tarea/wcag-setup-1`, con los 5 archivos sin commit de Ariel presentes en el árbol de trabajo.
+Fecha 2026-11-06, Windows, Python 3.12.10, pytest 8.3.3. Corrida de WCAG-SETUP-1 en `tarea/wcag-setup-1`, con los 5 archivos de auditoría de sitios sin commit en el árbol; repetida en `tarea/wcag-siteaudit-1` con esos archivos ya commiteados: mismo resultado (90 passed en 11.18 s, los dos comandos de CI con salida 0).
 
 - `python -m pytest tests/ -v` → **90 passed, 0 failed** en 12.60 s (`tests/test_search.py`: 87 pruebas; `tests/test_skill_metadata.py`: 3 pruebas: `test_required_fields_present`, `test_name_follows_spec`, `test_description_within_1024_chars`). Sin fallos que listar.
 - `python scripts/search.py wcag --level AA --output json` → salida 0 (paso de integridad de CSV de la CI).

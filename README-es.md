@@ -237,6 +237,7 @@ El repositorio incluye ocho ejemplos HTML: [calendario](./examples/components/da
 | [SKILL.md](./SKILL.md) | Instrucciones para el agente y entrada para aplicaciones con soporte de skills |
 | [Prompts](./prompts/) | Doce instrucciones para revisión, corrección, contenido, entregas de diseño y planificación de pruebas |
 | [Informe de auditoría](./templates/audit-report.md) | Punto de partida para documentar alcance, hallazgos y evidencia |
+| [Procedimiento de auditoría de sitios](./references/site-audit-procedure.md) y [libro de evidencia](./templates/site-audit-workbook.md) | Instrucciones y plantilla de evidencia para una auditoría de sitio acotada; no incluyen un rastreador ni ejecutan pruebas |
 | [Plantilla de integración continua](./templates/a11y-ci.yml) | Ejemplo de comprobaciones automáticas; adapta dependencias, comandos, URL, rutas de configuración y tratamiento de fallos a tu proyecto |
 | [Plantilla de informe VPAT](./templates/vpat-2.5-template.md) | Apoyo para informes; consulta los [recursos oficiales de VPAT de ITI](https://www.itic.org/policy/accessibility/vpat) antes de preparar un informe de conformidad de accesibilidad (ACR) |
 | [Bibliografía](./RESOURCES.md) | Estándares y lecturas adicionales |

@@ -2,6 +2,8 @@
 
 > **Template** — delete this line before publishing. Fill every `[PLACEHOLDER]` section.
 
+Use the [execution procedure](../references/site-audit-procedure.md) and [workbook](site-audit-workbook.md) to establish coverage and evidence before writing conclusions. Example tools and pairings below are not performed tests; replace them with actual runs or mark them not evaluated.
+
 ---
 
 ## Cover
@@ -31,7 +33,9 @@
 | Minor | [n] |
 | **Total** | **[n]** |
 
-**Overall conformance**: Partially Conforms / Does Not Conform / Fully Conforms to WCAG [version] Level AA.
+**Conclusion for the evaluated scope**: [Describe confirmed barriers, coverage and limits. A sampled diagnostic is not a full-site conformance claim. State exclusions affecting full pages and complete processes; do not infer conformity from a clean scan.]
+
+**Evidence gaps**: [Blocked pages, untested states/criteria, pending manual or institutional verification.]
 
 ---
 
@@ -46,6 +50,16 @@
 | Manual SC checks | 1.3.1, 2.4.3, 2.4.11, 2.5.3, 2.5.8, 3.1.1, 3.3.x |
 
 **Pages sampled**: [n] of [total] (representative templates selected).
+
+**Inventory and selection**: [Link page/state inventory, automatic coverage, manual sample, selection rationale and complete-process coverage.]
+
+## Optional Inclusion Profile
+
+Include only when contracted. Keep WCAG requirements, supplemental guidance and agreed institutional indicators distinct. Do not treat absence in reviewed pages as proof of institutional absence.
+
+| Dimension | Agreed basis | Evaluated coverage | Outcome and evidence IDs | Pending institutional verification |
+|----------|--------------|--------------------|--------------------------|------------------------------------|
+| [Language, cognitive clarity, readability, employment, contact, commitment, etc.] | [Source/indicator] | [Pages/corpus] | [Passes / Fails / Requires review / Not evaluated / Not applicable, with rationale] | [Record] |
 
 ---
 
@@ -77,6 +91,9 @@
 | **Severity** | [Critical / Serious / Moderate / Minor] |
 | **Affects** | [e.g. Screen reader users, Keyboard-only users] |
 | **Tool found** | [axe / Manual / NVDA / VoiceOver] |
+| **State / test / evidence IDs** | [Link reproducible test and sanitized evidence] |
+| **Evidence provenance** | [Observed in browser / tool output / static inspection / institution-reported / unverified] |
+| **Outcome and basis** | [Confirmed failure / requires review; WCAG requirement or supplemental indicator] |
 
 **Description**
 
@@ -135,13 +152,13 @@
 
 ---
 
-## WCAG 2.1 AA Conformance Summary
+## WCAG [version] [level] Evaluation Summary
 
-> Only list criteria that were evaluated. Mark untested as N/T.
+> Expand this illustrative subset to the complete target criterion matrix, including A for an AA target. Record passes, fails, requires review, not evaluated or justified not applicable, and link evidence/coverage from the workbook. A pass needs the applicable checks for the stated scope; excluded content is not a pass.
 
 | SC | Criterion | Result |
 |----|-----------|--------|
-| 1.1.1 | Non-text Content | ✅ Pass / ⚠️ Partial / ❌ Fail / N/T |
+| 1.1.1 | Non-text Content | [Outcome, coverage and evidence IDs] |
 | 1.3.1 | Info and Relationships | |
 | 1.4.3 | Contrast (Minimum) | |
 | 1.4.10 | Reflow | |
@@ -194,6 +211,8 @@ After remediation, retest:
 | Chrome DevTools | [version] | Focus / accessibility tree inspection |
 
 ### Screen Reader Pairings Tested
+
+Replace example rows with actual pairings and evidence IDs, or state not evaluated. An accessibility-tree inspection alone is not a screen-reader test.
 
 | Reader | Browser | OS |
 |--------|---------|-----|
