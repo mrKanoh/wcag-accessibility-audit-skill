@@ -109,7 +109,9 @@ python scripts/search.py resources --keyword WCAG
 | `scripts/search.py` | CLI search across all databases |
 | `references/form-labels-and-names.md` | Reviewing form labels, accessible names and input purpose without over-claiming |
 | `references/authentication-and-modal-focus.md` | What 3.3.8 / 3.3.9 require, and how to choose initial and return focus in modal dialogs |
+| `references/site-audit-procedure.md` | Scoped site-audit procedure: inventory, automatic checks, manual protocols, evidence status |
 | `templates/audit-report.md` | Complete audit report template (fill-in) |
+| `templates/site-audit-workbook.md` | Site-audit evidence workbook: scope, inventory, criterion matrix, findings |
 | `templates/a11y-ci.yml` | GitHub Actions CI pipeline (axe + pa11y + Playwright + Lighthouse) |
 | `prompts/` | Ready-to-use prompts for any assistant (audit, ARIA, alt text, handoff, KPIs) |
 
@@ -448,6 +450,8 @@ Audit cases: text under 16 px, a weight under 400, or an initial line height und
 ---
 
 ## 9. Audit Methodology
+
+For a site audit, read [the audit execution procedure](references/site-audit-procedure.md) and fill [the audit workbook](templates/site-audit-workbook.md). They define scope, page/state inventory, manual protocols and evidence status. Include the optional institutional inclusion review only when requested. These resources guide an auditor; they do not add a crawler, run axe or operate a screen reader.
 
 Structured audit framework (matches professional curriculum):
 
@@ -1193,6 +1197,7 @@ Key terms for Spanish-speaking teams:
 | File | Purpose |
 |------|---------|
 | `templates/audit-report.md` | Complete audit report with finding blocks, severity scale, conformance table, retest plan |
+| `templates/site-audit-workbook.md` | Site-audit evidence workbook: scope, page/state inventory, criterion matrix, findings (see `references/site-audit-procedure.md`) |
 | `templates/a11y-ci.yml` | GitHub Actions pipeline: jest-axe + axe CLI + pa11y-ci + Playwright + Lighthouse |
 | `templates/vpat-2.5-template.md` | Official VPAT 2.5 Rev WCAG — covers WCAG 2.x (A/AA/AAA), Section 508, EN 301 549 |
 

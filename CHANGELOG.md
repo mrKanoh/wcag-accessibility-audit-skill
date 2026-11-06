@@ -10,6 +10,11 @@ This project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ## [Unreleased]
 
 ### Added
+- A scoped site-audit procedure and evidence workbook covering page/state inventory,
+  cumulative WCAG A/AA scan configuration, manual protocols, support-control comparisons
+  and optional institutional inclusion review. Linked from `SKILL.md` and both READMEs; the audit report
+  now records evidence gaps and limits conclusions to evaluated coverage. These are
+  instructions and templates, not a crawler, INFLESZ calculator or executed audit.
 - `python scripts/search.py wcag --wcag-version 2.1|2.2`: filters by exact membership in the
   existing `versions` column (2.1: 50 records, 2.2: 58). Combines with `--id`, `--keyword`,
   `--level` and `--principle`; not available in `all` or the MCP server; without it results
