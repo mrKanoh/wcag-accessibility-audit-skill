@@ -1,7 +1,7 @@
 # Accessible Component Examples
 
 Reference and learning HTML components demonstrating WCAG 2.1/2.2 AA accessibility patterns.
-Each file is self-contained (no external dependencies). No keyboard or screen-reader verification is recorded for these examples; test and review them before using any of them in production.
+Each file is self-contained, except the demo poster and video of `media-player.html`, which load from external hosts. No keyboard or screen-reader verification is recorded for these examples; test and review them before using any of them in production.
 
 ---
 

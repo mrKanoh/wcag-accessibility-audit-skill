@@ -828,8 +828,9 @@ export function ThemeToggle() {
   const [isDark, setIsDark] = createSignal(false);
 
   const toggle = () => {
-    setIsDark(d => !d);
-    document.documentElement.dataset.theme = isDark() ? 'light' : 'dark';
+    const next = !isDark();
+    setIsDark(next);
+    document.documentElement.dataset.theme = next ? 'dark' : 'light';
   };
 
   return (

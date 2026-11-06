@@ -26,6 +26,7 @@ This project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   toggles in `SKILL.md` use a fixed "Dark mode" label with `aria-pressed`, and Play/Pause and
   Mute/Unmute in `examples/components/media-player.html` change only their label. Added a short
   rule to the button guidance in `SKILL.md` (source: WAI-ARIA APG button pattern).
+- SolidJS theme toggle in `SKILL.md` computed the theme from the already-updated signal and inverted it; it now uses a local `next` value.
 - `examples/components/README.md` no longer claims the examples are production-ready or
   keyboard and screen-reader tested; no such testing is recorded.
 - `data/aria-patterns.csv` Tooltip row: Escape dismisses without moving focus, adds WCAG 1.4.13,
