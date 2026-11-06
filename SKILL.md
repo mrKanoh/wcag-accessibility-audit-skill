@@ -532,7 +532,7 @@ Measure what you ship, not only what you scan.
 
 ```bash
 # axe-core CLI
-npx @axe-core/cli https://example.com --tags wcag2a,wcag2aa,wcag22aa
+npx @axe-core/cli https://example.com --tags wcag2a,wcag2aa,wcag21a,wcag21aa,wcag22aa
 
 # pa11y (wraps axe + HTML_CodeSniffer)
 npx pa11y https://example.com --standard WCAG2AA
@@ -561,7 +561,7 @@ import AxeBuilder from '@axe-core/playwright';
 test('homepage passes WCAG 2.2 AA', async ({ page }) => {
   await page.goto('/');
   const results = await new AxeBuilder({ page })
-    .withTags(['wcag2a', 'wcag2aa', 'wcag22aa'])
+    .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'])
     .analyze();
   expect(results.violations).toEqual([]);
 });
@@ -571,7 +571,7 @@ test('homepage passes WCAG 2.2 AA', async ({ page }) => {
 ```js
 cy.visit('/');
 cy.injectAxe();
-cy.checkA11y(null, { runOnly: { type: 'tag', values: ['wcag2a', 'wcag2aa', 'wcag22aa'] } });
+cy.checkA11y(null, { runOnly: { type: 'tag', values: ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'] } });
 ```
 
 ### Storybook a11y addon

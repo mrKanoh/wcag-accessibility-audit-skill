@@ -22,6 +22,18 @@ This project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   2.1 AAA criteria. Covered by new tests.
 
 ### Fixed
+- Toggle buttons no longer change label and `aria-pressed` together: the SolidJS and Vue theme
+  toggles in `SKILL.md` use a fixed "Dark mode" label with `aria-pressed`, and Play/Pause and
+  Mute/Unmute in `examples/components/media-player.html` change only their label. Added a short
+  rule to the button guidance in `SKILL.md` (source: WAI-ARIA APG button pattern).
+- `examples/components/README.md` no longer claims the examples are production-ready or
+  keyboard and screen-reader tested; no such testing is recorded.
+- `data/aria-patterns.csv` Tooltip row: Escape dismisses without moving focus, adds WCAG 1.4.13,
+  and distinguishes name (`aria-labelledby`) from description (`aria-describedby`); notes that the
+  APG tooltip pattern is work in progress.
+- axe-core tag sets in `SKILL.md` and `templates/a11y-ci.yml` now include `wcag21a,wcag21aa`
+  next to `wcag2a,wcag2aa,wcag22aa`, matching `references/site-audit-procedure.md`
+  (source: axe-core `doc/API.md`).
 - Reviews of form fragments over-claimed: a missing `<label>` was reported as a certain 4.1.2/1.3.1/3.3.2/2.4.6
   failure, `type="text"` was tied to 1.3.5, server behavior was inferred, and severity was automatic.
   Added `references/form-labels-and-names.md` (evidence categories, accessible-name sources, what each
