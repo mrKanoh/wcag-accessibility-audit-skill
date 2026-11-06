@@ -331,7 +331,7 @@ aria-owns="id"
 
 ### Accessible Button vs. Link (WCAG 2.2 friendly)
 ```html
-<!-- Action → button -->
+<!-- Action → button. Toggle: fixed label + aria-pressed -->
 <button type="button" aria-pressed="false">Like</button>
 
 <!-- Navigation → link -->
@@ -342,6 +342,7 @@ aria-owns="id"
   <svg aria-hidden="true" focusable="false">…</svg>
 </button>
 ```
+- Toggle buttons use ONE form: a fixed label with `aria-pressed`, or a label that changes with no `aria-pressed`. Don't change the label and the state at the same time ([APG button pattern](https://www.w3.org/WAI/ARIA/apg/patterns/button/)).
 - Targets ≥ **24×24 CSS px** (WCAG 2.5.8). 44×44 recommended for touch.
 - Visible focus ring (WCAG 2.4.7); if you style it, ≥ 3:1 vs adjacent colors (WCAG 1.4.11). 2.4.13 (AAA) adds size and focused-vs-unfocused contrast.
 - Never rely on color alone for state (e.g., disabled, selected).
@@ -531,7 +532,7 @@ Measure what you ship, not only what you scan.
 
 ```bash
 # axe-core CLI
-npx @axe-core/cli https://example.com --tags wcag2a,wcag2aa,wcag22aa
+npx @axe-core/cli https://example.com --tags wcag2a,wcag2aa,wcag21a,wcag21aa,wcag22aa
 
 # pa11y (wraps axe + HTML_CodeSniffer)
 npx pa11y https://example.com --standard WCAG2AA
@@ -560,7 +561,7 @@ import AxeBuilder from '@axe-core/playwright';
 test('homepage passes WCAG 2.2 AA', async ({ page }) => {
   await page.goto('/');
   const results = await new AxeBuilder({ page })
-    .withTags(['wcag2a', 'wcag2aa', 'wcag22aa'])
+    .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'])
     .analyze();
   expect(results.violations).toEqual([]);
 });
@@ -570,7 +571,7 @@ test('homepage passes WCAG 2.2 AA', async ({ page }) => {
 ```js
 cy.visit('/');
 cy.injectAxe();
-cy.checkA11y(null, { runOnly: { type: 'tag', values: ['wcag2a', 'wcag2aa', 'wcag22aa'] } });
+cy.checkA11y(null, { runOnly: { type: 'tag', values: ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'] } });
 ```
 
 ### Storybook a11y addon
@@ -827,18 +828,18 @@ export function ThemeToggle() {
   const [isDark, setIsDark] = createSignal(false);
 
   const toggle = () => {
-    setIsDark(d => !d);
-    document.documentElement.dataset.theme = isDark() ? 'light' : 'dark';
+    const next = !isDark();
+    setIsDark(next);
+    document.documentElement.dataset.theme = next ? 'dark' : 'light';
   };
 
   return (
     <button
       type="button"
       aria-pressed={isDark()}
-      aria-label={isDark() ? 'Switch to light mode' : 'Switch to dark mode'}
       onClick={toggle}
     >
-      {isDark() ? '☀️' : '🌙'}
+      <span aria-hidden="true">{isDark() ? '☀️' : '🌙'}</span> Dark mode
     </button>
   );
 }
@@ -1404,10 +1405,9 @@ function toggle() {
   <button
     type="button"
     :aria-pressed="isDark"
-    :aria-label="isDark ? 'Switch to light mode' : 'Switch to dark mode'"
     @click="toggle"
   >
-    {{ isDark ? '☀️' : '🌙' }}
+    <span aria-hidden="true">{{ isDark ? '☀️' : '🌙' }}</span> Dark mode
   </button>
 </template>
 ```

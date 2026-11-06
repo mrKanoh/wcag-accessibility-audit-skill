@@ -69,7 +69,7 @@ jobs:
           axe http://localhost:3000 \
               http://localhost:3000/login \
               http://localhost:3000/dashboard \
-              --tags wcag2a,wcag2aa,wcag22aa \
+              --tags wcag2a,wcag2aa,wcag21a,wcag21aa,wcag22aa \
               --reporter json \
               --exit \
               --stdout > axe-report.json

@@ -72,7 +72,8 @@
   3. 2.1.1 Keyboard: Custom controls are fully keyboard accessible (buttons, ranges).
   4. 2.4.7 Focus Visible: High contrast focus rings on all controls.
   5. 4.1.2 Name, Role, Value: Buttons have aria-labels, sliders have aria-valuetext.
-  6. aria-pressed state on toggle buttons (CC, AD, Mute).
+  6. Toggle buttons use ONE form: fixed label + aria-pressed (CC, AD), or a label that
+     changes with no aria-pressed (Play/Pause, Mute/Unmute). Never both at once.
 -->
 
 <div class="player-wrapper" role="region" aria-label="Video Player">
@@ -86,7 +87,7 @@
   </video>
 
   <div class="controls">
-    <button id="play-btn" class="player-btn" aria-label="Play" aria-pressed="false">▶</button>
+    <button id="play-btn" class="player-btn" aria-label="Play">▶</button>
     
     <div class="slider-container">
       <input type="range" id="seek-slider" min="0" max="100" value="0" step="1" aria-label="Seek time" aria-valuetext="0 percent">
@@ -96,7 +97,7 @@
       <span id="current-time">0:00</span> / <span id="duration">0:00</span>
     </div>
 
-    <button id="mute-btn" class="player-btn" aria-label="Mute" aria-pressed="false">🔊</button>
+    <button id="mute-btn" class="player-btn" aria-label="Mute">🔊</button>
     
     <div class="slider-container" style="max-width:80px">
       <input type="range" id="volume-slider" min="0" max="100" value="100" step="1" aria-label="Volume" aria-valuetext="100 percent">
@@ -145,12 +146,10 @@
       video.play();
       playBtn.textContent = '⏸';
       playBtn.setAttribute('aria-label', 'Pause');
-      playBtn.setAttribute('aria-pressed', 'true');
     } else {
       video.pause();
       playBtn.textContent = '▶';
       playBtn.setAttribute('aria-label', 'Play');
-      playBtn.setAttribute('aria-pressed', 'false');
     }
   });
 
@@ -161,7 +160,6 @@
 
   muteBtn.addEventListener('click', () => {
     video.muted = !video.muted;
-    muteBtn.setAttribute('aria-pressed', video.muted ? 'true' : 'false');
     muteBtn.textContent = video.muted ? '🔇' : '🔊';
     muteBtn.setAttribute('aria-label', video.muted ? 'Unmute' : 'Mute');
     if(video.muted) {
@@ -177,7 +175,6 @@
     video.volume = volumeSlider.value / 100;
     video.muted = video.volume === 0;
     volumeSlider.setAttribute('aria-valuetext', `${volumeSlider.value} percent`);
-    muteBtn.setAttribute('aria-pressed', video.muted ? 'true' : 'false');
     muteBtn.textContent = video.muted ? '🔇' : '🔊';
     muteBtn.setAttribute('aria-label', video.muted ? 'Unmute' : 'Mute');
   });
