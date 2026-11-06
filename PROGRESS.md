@@ -8,10 +8,10 @@
 - Agregar `.env.*` (p. ej. `.env.local`) a `.gitignore`: hoy solo `.env` está ignorado.
 
 ## Para la próxima orden
-- Repetir la línea base de pruebas se tomó con esos archivos presentes en el árbol de trabajo (`SKILL.md` modificado); repetirla cuando se decida su destino.
+- La línea base de pruebas se tomó con esos archivos presentes en el árbol de trabajo (`SKILL.md` modificado); repetirla cuando se decida su destino.
 
 ## Terminados
-- 2026-11-06 WCAG-SETUP-1 — permisos versionados (`.claude/settings.json`), `AGENTS.md`, `CLAUDE.md`, `PROGRESS.md` y línea base de pruebas registrada · decisión de Ariel 2026-11-06: fusionar SÍ publica (`main` es lo que clonan los usuarios) · commits 1398d98 (etapa 1), 02c4e09 (etapa 2) y etapa 3 (corrección, HEAD de `tarea/wcag-setup-1`) · rondas 1 · auditor pendiente · pendiente: `.env.local` sin ignorar; destino de los 5 archivos de Ariel
+- 2026-11-06 WCAG-SETUP-1 — permisos versionados (`.claude/settings.json`), `AGENTS.md`, `CLAUDE.md`, `PROGRESS.md` y línea base de pruebas registrada · decisión de Ariel 2026-11-06: fusionar SÍ publica (`main` es lo que clonan los usuarios) · commits 1398d98 (etapa 1), 02c4e09 (etapa 2), 4b6c4d1 (etapa 3, corrección) y la etapa 4 de cierre (HEAD de `tarea/wcag-setup-1`) · rondas 1 · auditor Opus 0/3/4, 1 pasada · pendiente: `.env.local` sin ignorar; destino de los 5 archivos de Ariel
 
 ## Línea base de pruebas
 Fecha 2026-11-06, Windows, Python 3.12.10, pytest 8.3.3, rama `tarea/wcag-setup-1`, con los 5 archivos sin commit de Ariel presentes en el árbol de trabajo.
