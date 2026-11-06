@@ -22,6 +22,16 @@ This project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   2.1 AAA criteria. Covered by new tests.
 
 ### Fixed
+- `examples/components/carousel.html`: starts paused (Play visible), no longer resumes on
+  `focusout`/`mouseleave` (only the user restarts it, per APG and WCAG 2.2.2), arrow keys on a dot
+  advance one slide instead of two (single `keydown` handler), dots are plain buttons with
+  `aria-current="true"` instead of `role="tab"` + `aria-selected`, and the header no longer
+  claims a Space handler (Space/Enter work natively on the buttons).
+- `examples/components/toast-notifications.html`: error toasts no longer use
+  `role="alertdialog"` + `aria-modal="false"` without moving focus (plain group inside the live
+  region); assertive region uses `aria-atomic="false"`; the "Session expiring" toast that asks for
+  action persists until dismissed; the progress bar and timer now really pause on hover/focus and
+  resume with the time left; the README cites 2.2.1 (Understanding Timing Adjustable) instead of 2.2.2.
 - Toggle buttons no longer change label and `aria-pressed` together: the SolidJS and Vue theme
   toggles in `SKILL.md` use a fixed "Dark mode" label with `aria-pressed`, and Play/Pause and
   Mute/Unmute in `examples/components/media-player.html` change only their label. Added a short

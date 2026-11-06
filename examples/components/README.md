@@ -23,14 +23,14 @@ Each file is self-contained, except the demo poster and video of `media-player.h
 
 ### 🔔 [toast-notifications.html](./toast-notifications.html)
 **Pattern:** Live Region / Status Message  
-**WCAG SCs:** 1.3.3, 2.2.2, 4.1.3
+**WCAG SCs:** 1.3.3, 2.2.1, 4.1.3
 
 | Feature | Implementation |
 |---------|---------------|
 | Polite region | `role="status"` + `aria-live="polite"` for success, info, warning |
-| Assertive region | `role="alert"` + `aria-live="assertive"` for errors only |
+| Assertive region | `role="alert"` + `aria-live="assertive"` for errors only; `aria-atomic="false"` so each new toast is announced alone. Error toasts are plain groups: no `alertdialog`, focus never moves (APG alert) |
 | Dismiss | Every toast has a dismiss button with accessible name |
-| Pause on hover/focus | Timers pause on hover and focus (WCAG 2.2.2) |
+| Time limit | Informational toasts auto-dismiss after 5 s and pause (timer and progress bar) on hover and focus. The "Session expiring" toast asks for action, so it has no timer and stays until dismissed. Relevant criterion: 2.2.1 Timing Adjustable. Its Understanding page uses a 5-second toast as an example of a message that does not count as a time limit only when the user can learn the information another way (it is not 2.2.2, which covers moving or auto-updating content) |
 | Reduced motion | Slide animation disabled when `prefers-reduced-motion: reduce` |
 
 ---
@@ -41,10 +41,11 @@ Each file is self-contained, except the demo poster and video of `media-player.h
 
 | Feature | Implementation |
 |---------|---------------|
-| Play/Pause | Required by WCAG 2.2.2 — button always visible; pauses auto-rotation |
+| Play/Pause | Required by WCAG 2.2.2 — button always visible; the carousel starts paused and only the user starts it |
 | ARIA | `role="region"` + `aria-roledescription="carousel"` on container; `role="group"` + `aria-roledescription="slide"` on slides |
-| Auto-pause | Rotation pauses on hover, focus-in, and when `prefers-reduced-motion` is set |
-| Dot navigation | `role="tablist"` + `role="tab"` dots with `aria-current` and roving tabindex |
+| Auto-pause | Rotation stops on hover and focus-in and never resumes by itself (APG: only the user restarts it) |
+| Dot navigation | Native `<button>`s in a labelled `role="group"`, `aria-current="true"` on the active one (APG "grouped" style: one tab stop per dot) |
+| Keyboard | Left/Right arrows change slide from anywhere in the carousel (single handler); Play/Pause, dots and arrows are native buttons (Enter/Space) |
 | Announcements | `aria-live="polite"` on slide area (only when paused to avoid verbosity) |
 
 ---
