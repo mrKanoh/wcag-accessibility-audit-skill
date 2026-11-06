@@ -7,12 +7,11 @@
 - Decidir el destino de los 5 archivos con cambios sin commit (auditoría de sitios): `CHANGELOG.md`, `SKILL.md`, `templates/audit-report.md`, `references/site-audit-procedure.md` y `templates/site-audit-workbook.md`. No son de WCAG-SETUP-1 y no se tocaron.
 - Agregar `.env.*` (p. ej. `.env.local`) a `.gitignore`: hoy solo `.env` está ignorado.
 
-## Pendientes
-- Para la próxima orden: los 5 archivos sin commit de Ariel (auditoría de sitios) esperan su destino (commit, rama propia o descarte); ver «Pendiente de Ariel».
-- Para la próxima orden: la línea base de pruebas se tomó con esos archivos presentes en el árbol de trabajo (`SKILL.md` modificado); repetirla cuando se decida su destino.
+## Para la próxima orden
+- Repetir la línea base de pruebas se tomó con esos archivos presentes en el árbol de trabajo (`SKILL.md` modificado); repetirla cuando se decida su destino.
 
 ## Terminados
-- 2026-11-06 WCAG-SETUP-1 — permisos versionados (`.claude/settings.json`), `AGENTS.md`, `CLAUDE.md`, `PROGRESS.md` y línea base de pruebas registrada · commits 1398d98 (etapa 1) y el commit de etapa 2 (HEAD de `tarea/wcag-setup-1`) · rondas 0 · auditor pendiente · pendiente: `.env.local` sin ignorar; destino de los 5 archivos de Ariel
+- 2026-11-06 WCAG-SETUP-1 — permisos versionados (`.claude/settings.json`), `AGENTS.md`, `CLAUDE.md`, `PROGRESS.md` y línea base de pruebas registrada · decisión de Ariel 2026-11-06: fusionar SÍ publica (`main` es lo que clonan los usuarios) · commits 1398d98 (etapa 1), 02c4e09 (etapa 2) y etapa 3 (corrección, HEAD de `tarea/wcag-setup-1`) · rondas 1 · auditor pendiente · pendiente: `.env.local` sin ignorar; destino de los 5 archivos de Ariel
 
 ## Línea base de pruebas
 Fecha 2026-11-06, Windows, Python 3.12.10, pytest 8.3.3, rama `tarea/wcag-setup-1`, con los 5 archivos sin commit de Ariel presentes en el árbol de trabajo.

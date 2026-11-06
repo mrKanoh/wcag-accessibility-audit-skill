@@ -5,7 +5,7 @@ Skill WCAG de accesibilidad (`SKILL.md`, `references/`, `templates/`, `data/*.cs
 ## Repositorio
 
 - Ruta real: `D:\Proyectos\wcag-accesibility-skill`
-- Remoto: `mrKanoh/wcag-accessibility-audit-skill` (según CONTRIBUTING.md). Rama principal: `main`.
+- Remoto canónico: `mrKanoh/wcag-accessibility-audit-skill`. `git remote -v` aún usa el nombre anterior `claude-wcag-accessibility-skill`; GitHub redirige al canónico. Rama principal: `main`.
 - Convención de commits: Conventional Commits (`feat:`, `fix:`, `docs:`, `data:`, `test:`, `chore:`), ver CONTRIBUTING.md. Si el commit es de etapa, pon la etapa al final.
 - Cambios de la skill se documentan en `CHANGELOG.md` bajo `[Unreleased]`.
 
@@ -21,8 +21,9 @@ La CI (`.github/workflows/test.yml`, Python 3.10/3.11/3.12) ejecuta esos tres co
 
 ## Qué publica
 
-- Fusionar publica en producción: no
-- La CI solo corre pruebas; no hay deploy. `dist/` está en `.gitignore` y ningún workflow lo publica.
+- Fusionar publica en producción: sí
+- `main` es lo que clonan los usuarios (el README manda clonar `main`), así que fusionar a `main` publica. Existe además un canal manual por ZIP en `dist/agensi/` (ignorado por Git). No hay deploy en CI: `.github/workflows/test.yml` solo corre pruebas.
+- Fusiona Ariel; nadie más fusiona (por eso `settings.json` niega `gh pr merge *`).
 
 ## Qué no tocar
 
