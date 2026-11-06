@@ -1,7 +1,7 @@
 # Accessible Component Examples
 
-Production-ready HTML components demonstrating WCAG 2.1/2.2 AA accessibility patterns.
-Each file is self-contained (no external dependencies) and keyboard + screen-reader tested.
+Reference and learning HTML components demonstrating WCAG 2.1/2.2 AA accessibility patterns.
+Each file is self-contained (no external dependencies). No keyboard or screen-reader verification is recorded for these examples; test and review them before using any of them in production.
 
 ---
 
@@ -86,7 +86,7 @@ Each file is self-contained (no external dependencies) and keyboard + screen-rea
 | Captions | Embedded `<track kind="captions">` with toggle button |
 | Audio Description | Embedded `<track kind="descriptions">` with toggle button |
 | Keyboard | Space/Enter plays/pauses; Arrow keys scrub video and adjust volume |
-| ARIA states | `aria-pressed` for Play/Pause, CC, AD, Mute toggles |
+| ARIA states | Fixed label + `aria-pressed` for CC and AD; Play/Pause and Mute/Unmute change their label and do not use `aria-pressed` (never both) |
 | ARIA values | `aria-valuetext` on sliders for screen readers to read percentages |
 
 ---

@@ -331,7 +331,7 @@ aria-owns="id"
 
 ### Accessible Button vs. Link (WCAG 2.2 friendly)
 ```html
-<!-- Action → button -->
+<!-- Action → button. Toggle: fixed label + aria-pressed -->
 <button type="button" aria-pressed="false">Like</button>
 
 <!-- Navigation → link -->
@@ -342,6 +342,7 @@ aria-owns="id"
   <svg aria-hidden="true" focusable="false">…</svg>
 </button>
 ```
+- Toggle buttons use ONE form: a fixed label with `aria-pressed`, or a label that changes with no `aria-pressed`. Don't change the label and the state at the same time ([APG button pattern](https://www.w3.org/WAI/ARIA/apg/patterns/button/)).
 - Targets ≥ **24×24 CSS px** (WCAG 2.5.8). 44×44 recommended for touch.
 - Visible focus ring (WCAG 2.4.7); if you style it, ≥ 3:1 vs adjacent colors (WCAG 1.4.11). 2.4.13 (AAA) adds size and focused-vs-unfocused contrast.
 - Never rely on color alone for state (e.g., disabled, selected).
@@ -835,10 +836,9 @@ export function ThemeToggle() {
     <button
       type="button"
       aria-pressed={isDark()}
-      aria-label={isDark() ? 'Switch to light mode' : 'Switch to dark mode'}
       onClick={toggle}
     >
-      {isDark() ? '☀️' : '🌙'}
+      <span aria-hidden="true">{isDark() ? '☀️' : '🌙'}</span> Dark mode
     </button>
   );
 }
@@ -1404,10 +1404,9 @@ function toggle() {
   <button
     type="button"
     :aria-pressed="isDark"
-    :aria-label="isDark ? 'Switch to light mode' : 'Switch to dark mode'"
     @click="toggle"
   >
-    {{ isDark ? '☀️' : '🌙' }}
+    <span aria-hidden="true">{{ isDark ? '☀️' : '🌙' }}</span> Dark mode
   </button>
 </template>
 ```
