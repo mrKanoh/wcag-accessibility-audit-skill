@@ -32,6 +32,16 @@ This project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   region); assertive region uses `aria-atomic="false"`; the "Session expiring" toast that asks for
   action persists until dismissed; the progress bar and timer now really pause on hover/focus and
   resume with the time left; the README cites 2.2.1 (Understanding Timing Adjustable) instead of 2.2.2.
+- `examples/components/data-grid.html`: sortable headers are now `<th aria-sort><button>` (native
+  Enter/Space) instead of `<th tabindex="0">` with custom key handling; removed the table
+  `aria-label` that overrode the `<caption>` and the search `aria-label` that did not contain the
+  visible "Search:" label (2.5.3); header and comments no longer describe an `aria-label` on sort
+  buttons or cell navigation with Tab that the code does not have.
+- `examples/components/media-player.html`: CC and AD names now contain their visible text
+  (2.5.3); the Play/Pause label follows the video's `play`, `pause` and `ended` events; header,
+  comments and README no longer claim Space/Enter/arrow shortcuts that are only native control behavior.
+- `examples/components/tree-view.html`: removed `aria-pressed` from node buttons and `aria-selected`
+  from `<button>` (not allowed there); selection stays on the `treeitem` and the selected style now applies.
 - Toggle buttons no longer change label and `aria-pressed` together: the SolidJS and Vue theme
   toggles in `SKILL.md` use a fixed "Dark mode" label with `aria-pressed`, and Play/Pause and
   Mute/Unmute in `examples/components/media-player.html` change only their label. Added a short

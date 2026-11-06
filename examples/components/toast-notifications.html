@@ -101,9 +101,9 @@
   1. role="status" with aria-live="polite" for non-critical messages (success, info, warning)
   2. role="alert"  with aria-live="assertive" for critical errors
   3. aria-atomic="false" on both regions: each new toast is announced on its own, not the whole accumulated region
-  4a. The "Session expiring" toast asks for action, so it has no timer: it stays until the user dismisses it (WCAG 2.2.1)
   4. aria-label on the region for landmark navigation
   5. Each toast has a dismiss button with an accessible name that includes the message context
+  6. The "Session expiring" toast asks for action, so it has no timer: it stays until the user dismisses it (WCAG 2.2.1)
 -->
 
 <!-- Polite region: success, info, warning -->

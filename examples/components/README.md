@@ -80,14 +80,15 @@ Each file is self-contained, except the demo poster and video of `media-player.h
 
 ### 🎥 [media-player.html](./media-player.html)
 **Pattern:** Custom Media Player  
-**WCAG SCs:** 1.2.2, 1.2.3, 1.2.5, 2.1.1, 2.4.7, 4.1.2
+**WCAG SCs:** 1.2.2, 1.2.3, 1.2.5, 2.1.1, 2.4.7, 2.5.3, 4.1.2
 
 | Feature | Implementation |
 |---------|---------------|
 | Captions | Embedded `<track kind="captions">` with toggle button |
 | Audio Description | Embedded `<track kind="descriptions">` with toggle button |
-| Keyboard | Space/Enter plays/pauses; Arrow keys scrub video and adjust volume |
-| ARIA states | Fixed label + `aria-pressed` for CC and AD; Play/Pause and Mute/Unmute change their label and do not use `aria-pressed` (never both) |
+| Keyboard | Native behavior only, no custom shortcuts: Tab between controls, Space/Enter activate the focused button, arrow keys move the focused slider (seek or volume) |
+| ARIA states | Fixed label + `aria-pressed` for CC and AD (names `CC (closed captions)` / `AD (audio descriptions)` contain the visible text, 2.5.3); Play/Pause and Mute/Unmute change their label and do not use `aria-pressed` (never both) |
+| Play/Pause label | Follows the video's `play`, `pause` and `ended` events, not only clicks |
 | ARIA values | `aria-valuetext` on sliders for screen readers to read percentages |
 
 ---
