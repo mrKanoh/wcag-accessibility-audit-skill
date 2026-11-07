@@ -10,6 +10,15 @@ This project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ## [Unreleased]
 
 ### Added
+- `SKILL.md` §5: «Before you build a custom component» (design guidance from *Inclusive Components*,
+  labelled as such, not WCAG requirements: tooltip, tabs, modal, carousel, menu), and a «Tooltip and
+  toggletip (last resort)» recipe that meets WCAG 1.4.13 (Esc dismiss, hoverable, persistent); notes
+  that the APG tooltip pattern is still work in progress. The toggletip also closes on a click
+  outside. Code written for this skill and run in the built-in browser; no screen readers tested.
+- `SKILL.md` §4/§8: `role="menu"` is for application menus, not site navigation (`nav` + links with
+  `aria-expanded` disclosure buttons, per APG Disclosure Navigation), and a `<select>` that navigates
+  on change causes a change of context that fails 3.2.2 unless the user is told beforehand (G13;
+  a «Go» button, G80, is the robust option).
 - A scoped site-audit procedure and evidence workbook covering page/state inventory,
   cumulative WCAG A/AA scan configuration, manual protocols, support-control comparisons
   and optional institutional inclusion review. Linked from `SKILL.md` and both READMEs; the audit report
@@ -22,6 +31,16 @@ This project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   2.1 AAA criteria. Covered by new tests.
 
 ### Fixed
+- `SKILL.md` Next.js example: no longer titled «focus management» while only adding a live region;
+  now notes Next.js's built-in route announcer (avoid duplicating it) and shows an optional
+  focus-to-`<h1>` component (compares the previous pathname, so React Strict Mode does not move
+  focus on first load), with `app/layout.tsx` kept a Server Component.
+- «production-ready» claims removed from `prompts/generate-aria-pattern.md` and the `SKILL.md`
+  prompt index (the output is reference code to review and test); the Playwright+axe test is
+  renamed to «no axe violations for the selected rules» since axe cannot prove WCAG conformance.
+- `data/cognitive-accessibility.csv` COG008: no longer recommends the `title` attribute for tooltips
+  (not keyboard/touch accessible; 1.4.13 user-agent tooltip exception); prefers visible labels.
+- «Dark mode» toggle icon (SolidJS, Vue) now shows the current state instead of the opposite.
 - `examples/components/carousel.html`: starts paused (Play visible), no longer resumes on
   `focusout`/`mouseleave` (only the user restarts it, per APG and WCAG 2.2.2), arrow keys on a dot
   advance one slide instead of two (single `keydown` handler), dots are plain buttons with

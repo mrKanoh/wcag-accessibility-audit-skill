@@ -248,6 +248,7 @@ role="progressbar" role="slider" role="switch"
 role="tree" role="treeitem"
 role="menu" role="menuitem"
 ```
+`role="menu"` is for application menus; for site navigation use `nav` + a list of links, with a disclosure button (`aria-expanded`, `aria-controls`) for submenus ([APG Disclosure Navigation](https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/examples/disclosure-navigation/): the menu role implies complex, application-style keyboard behaviour that assistive technology expects and that site navigation neither provides nor needs). A `<select>` that navigates as soon as its value changes causes a change of context that fails 3.2.2 unless the user is told beforehand ([G13](https://www.w3.org/WAI/WCAG22/Techniques/general/G13)); a «Go» submit button ([G80](https://www.w3.org/WAI/WCAG22/Techniques/general/G80)) is the robust option. See [Understanding 3.2.2](https://www.w3.org/WAI/WCAG22/Understanding/on-input.html).
 
 ### Essential properties & states
 ```html
@@ -276,6 +277,14 @@ aria-owns="id"
 ---
 
 ## 5. Accessible Components
+
+### Before you build a custom component
+Design guidance, not WCAG requirements (source: Heydon Pickering, *Inclusive Components*, 2018–2019; the chapter is cited per item). Ask first whether a simpler, native pattern does the job:
+- **Tooltip** (book chapter «Tooltips & Toggletips»): last resort. Show the information as visible text instead. If you need one, use the recipe in «Tooltip and toggletip (last resort)» below.
+- **Tabs** («Tabbed Interfaces»): avoid when there are more than about four, or when nothing needs them; use an accordion (disclosure buttons) or plain headed sections. The APG tabs pattern gives the `tabpanel` `tabindex="0"` when its first content is not focusable; the book documents a variant of panel focus, and this skill follows the APG.
+- **Modal dialog** («Modal Dialogs»): only for something urgent or critical. Consider `confirm()` (the book) or native `<dialog>` (this skill, see below) first, or inline content.
+- **Carousel** («Content Slider»): prefer a scrollable or stepped slider that never moves by itself. A scrolling slider must be keyboard-reachable (a named region with `tabindex="0"` if it overflows). WCAG 2.2.2 applies to content that starts automatically, moves for more than 5 seconds and appears alongside other content: it needs pause, stop or hide.
+- **Menu** («Menus & Menu Buttons»): `role="menu"` is for application actions, not site navigation; use `nav` with a list of links (see §4).
 
 ### Modal Dialog
 ```html
@@ -357,6 +366,55 @@ Always provide a non-drag alternative:
   </li>
 </ul>
 ```
+
+### Tooltip and toggletip (last resort)
+Prefer visible text (see «Before you build a custom component»). The `title` attribute is not a substitute: it is not keyboard- or touch-accessible, and browser-controlled tooltips fall under the 1.4.13 exception, so they are not covered by its protections.
+
+**Tooltip** = supplementary description of a focusable control. The control keeps its own accessible name; the tip is its description (`aria-describedby`). Use `aria-labelledby` only when the tip is the control's name (icon-only control without other text). Requirements ([WCAG 1.4.13](https://www.w3.org/WAI/WCAG22/Understanding/content-on-hover-or-focus.html), checked 2026-11-06): dismissible without moving pointer or focus (Esc), hoverable (the pointer can move onto the tip), persistent (stays until hover/focus leaves or the user dismisses). Appear on focus **and** hover; no interactive content inside. The [APG tooltip pattern](https://www.w3.org/WAI/ARIA/apg/patterns/tooltip/) is marked work in progress (no task-force consensus yet), so treat it as provisional.
+```html
+<span class="tip-wrap">
+  <button type="button" aria-describedby="tip-save">Save</button>
+  <span role="tooltip" id="tip-save" hidden>Saves a draft. Nothing is published.</span>
+</span>
+<script>
+document.querySelectorAll('.tip-wrap').forEach((wrap) => {
+  const tip = wrap.querySelector('[role="tooltip"]');
+  let hovered = false, focused = false;
+  const update = () => { tip.hidden = !(hovered || focused); };
+  wrap.addEventListener('mouseenter', () => { hovered = true; update(); });
+  wrap.addEventListener('mouseleave', () => { hovered = false; update(); });
+  wrap.addEventListener('focusin',    () => { focused = true; update(); });
+  wrap.addEventListener('focusout',   () => { focused = false; update(); });
+  document.addEventListener('keydown', (e) => {   // Esc hides it; focus does not move
+    if (e.key === 'Escape' && !tip.hidden) { hovered = focused = false; tip.hidden = true; }
+  });
+});
+</script>
+```
+Position the tip touching or overlapping the trigger (no gap), so the pointer can reach it without leaving `.tip-wrap`. If the control sits inside a dialog, Esc can close both the tip and the dialog; closing only the tip requires listening in the capture phase (`addEventListener('keydown', fn, true)`) and calling `stopPropagation()` only while the tip is visible.
+
+**Toggletip** = a button that reveals information that is not the control's label, announced through a live region. The `role="status"` container exists in the DOM before the content is inserted. Closes with Esc, when focus leaves, or on a click outside (some browsers, e.g. Safari on macOS, do not focus a button on click, so no blur fires).
+```html
+<span class="toggletip">
+  <button type="button" aria-label="More about password rules">i</button>
+  <span role="status"></span>
+</span>
+<script>
+document.querySelectorAll('.toggletip').forEach((box) => {
+  const btn = box.querySelector('button');
+  const live = box.querySelector('[role="status"]');
+  btn.addEventListener('click', () => {
+    live.textContent = '';  // re-insert so a repeat click is announced again
+    setTimeout(() => { live.textContent = 'Use at least 12 characters.'; }, 100);
+  });
+  const close = () => { live.textContent = ''; };
+  btn.addEventListener('blur', close);
+  box.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
+  document.addEventListener('click', (e) => { if (!box.contains(e.target)) close(); });
+});
+</script>
+```
+Pointer persistence also applies to a toggletip if it opens on hover; opening on click avoids that. Screen reader announcement of live regions varies; test with your target pairs.
 
 ---
 
@@ -441,7 +499,7 @@ Audit cases: text under 16 px, a weight under 400, or an initial line height und
 | Select / Listbox | Tab, Arrows, Home/End, type-ahead |
 | Combobox | Tab, Arrows, Enter, Esc |
 | Tabs | Tab to list; Arrow keys switch; Enter/Space activate |
-| Menu / Menu bar | Arrow keys, Enter, Esc, Tab exits |
+| Menu / Menu bar (application menus only; not site navigation, see §4) | Arrow keys, Enter, Esc, Tab exits |
 | Dialog | Tab cycles inside; Esc closes |
 | Tree | Arrows (→ expand, ← collapse), Enter activates |
 | Grid / Data table | Arrow keys between cells; Enter activates cell editor |
@@ -558,7 +616,7 @@ test('modal has no a11y violations', async () => {
 import { test } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 
-test('homepage passes WCAG 2.2 AA', async ({ page }) => {
+test('homepage has no axe violations for the selected rules', async ({ page }) => {
   await page.goto('/');
   const results = await new AxeBuilder({ page })
     .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'])
@@ -697,38 +755,40 @@ export default { addons: ['@storybook/addon-a11y'] };
 ## 18. Stack-Specific Code Examples
 
 ### Next.js App Router — Focus management on navigation
+Next.js already ships a route announcer for client-side transitions (`next/link`): it reads `document.title`, then the `<h1>`, then the pathname (<https://nextjs.org/docs/architecture/accessibility>, checked 2026-11-06). Do not add a second live region for the same announcement. Give every page a unique, descriptive title; that is what gets announced. If you also want focus to move to the new page's heading (a design choice, not a WCAG requirement), use a small client component and test with a screen reader that title announcement plus the heading read-out is not too verbose:
 ```tsx
-// app/layout.tsx — announce route changes to screen readers
+// app/route-focus.tsx — render <RouteFocus /> once inside <body> in app/layout.tsx
 'use client';
 import { usePathname } from 'next/navigation';
 import { useEffect, useRef } from 'react';
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export function RouteFocus() {
   const pathname = usePathname();
-  const announceRef = useRef<HTMLParagraphElement>(null);
+  const prevPathname = useRef(pathname);
 
   useEffect(() => {
-    if (announceRef.current) {
-      announceRef.current.textContent = `Navigated to ${document.title}`;
+    // Only act when the path actually changed; this also survives React Strict Mode,
+    // which runs effects twice in development and would defeat a "first render" flag.
+    if (prevPathname.current === pathname) return;
+    prevPathname.current = pathname;
+    const h1 = document.querySelector<HTMLElement>('main h1');
+    if (h1) {
+      h1.setAttribute('tabindex', '-1'); // focusable by script, not in the tab order
+      h1.focus();
     }
   }, [pathname]);
 
-  return (
-    <html lang="en">
-      <body>
-        {/* Visually hidden live region for route announcements */}
-        <p
-          ref={announceRef}
-          aria-live="polite"
-          aria-atomic="true"
-          className="sr-only"
-        />
-        <a href="#main-content" className="skip-link">Skip to main content</a>
-        {children}
-      </body>
-    </html>
-  );
+  return null;
 }
+```
+The component assumes each page renders a `<main id="main-content">` containing one `<h1>`, with the skip link before it; `app/layout.tsx` stays a Server Component so it can still export `metadata`:
+```tsx
+// app/layout.tsx (excerpt)
+<body>
+  <a href="#main-content" className="skip-link">Skip to main content</a>
+  <RouteFocus />
+  <main id="main-content">{children}</main> {/* each page renders its own <h1> */}
+</body>
 ```
 
 ### Angular — Accessible reactive form
@@ -839,7 +899,7 @@ export function ThemeToggle() {
       aria-pressed={isDark()}
       onClick={toggle}
     >
-      <span aria-hidden="true">{isDark() ? '☀️' : '🌙'}</span> Dark mode
+      <span aria-hidden="true">{isDark() ? '🌙' : '☀️'}</span> Dark mode
     </button>
   );
 }
@@ -1211,7 +1271,7 @@ Key terms for Spanish-speaking teams:
 | `prompts/generate-alt-text.md` | Draft alt text for informative or complex images |
 | `prompts/review-figma-handoff.md` | Review a design handoff for a11y gaps before dev |
 | `prompts/summarize-audit-findings.md` | Exec-friendly summary of raw findings with 90-day plan |
-| `prompts/generate-aria-pattern.md` | Generate production-ready accessible widget in any framework |
+| `prompts/generate-aria-pattern.md` | Generate reference code for an accessible widget in any framework (review and test before shipping) |
 | `prompts/remediate-legacy-code.md` | Audit + fix legacy HTML/jQuery/Bootstrap code for accessibility |
 | `prompts/generate-vpat-entry.md` | Translate audit findings into VPAT ACR language |
 | `prompts/test-with-screen-reader.md` | Generate step-by-step NVDA/VoiceOver/TalkBack test scripts |
@@ -1407,7 +1467,7 @@ function toggle() {
     :aria-pressed="isDark"
     @click="toggle"
   >
-    <span aria-hidden="true">{{ isDark ? '☀️' : '🌙' }}</span> Dark mode
+    <span aria-hidden="true">{{ isDark ? '🌙' : '☀️' }}</span> Dark mode
   </button>
 </template>
 ```
