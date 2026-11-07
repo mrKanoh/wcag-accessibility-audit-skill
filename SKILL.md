@@ -248,7 +248,7 @@ role="progressbar" role="slider" role="switch"
 role="tree" role="treeitem"
 role="menu" role="menuitem"
 ```
-`role="menu"` is for application menus; for site navigation use `nav` + a list of links, with a disclosure button (`aria-expanded`, `aria-controls`) for submenus ([APG Disclosure Navigation](https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/examples/disclosure-navigation/): the menu role does not give the behaviour assistive technology expects, and site navigation does not need menu keyboard interaction). A `<select>` that navigates as soon as its value changes is a change of context on input (3.2.2; see [Understanding 3.2.2](https://www.w3.org/WAI/WCAG22/Understanding/on-input.html)): add a submit/«Go» button instead.
+`role="menu"` is for application menus; for site navigation use `nav` + a list of links, with a disclosure button (`aria-expanded`, `aria-controls`) for submenus ([APG Disclosure Navigation](https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/examples/disclosure-navigation/): the menu role implies complex, application-style keyboard behaviour that assistive technology expects and that site navigation neither provides nor needs). A `<select>` that navigates as soon as its value changes causes a change of context that fails 3.2.2 unless the user is told beforehand ([G13](https://www.w3.org/WAI/WCAG22/Techniques/general/G13)); a «Go» submit button ([G80](https://www.w3.org/WAI/WCAG22/Techniques/general/G80)) is the robust option. See [Understanding 3.2.2](https://www.w3.org/WAI/WCAG22/Understanding/on-input.html).
 
 ### Essential properties & states
 ```html
@@ -280,11 +280,11 @@ aria-owns="id"
 
 ### Before you build a custom component
 Design guidance, not WCAG requirements (source: Heydon Pickering, *Inclusive Components*, 2018–2019; the chapter is cited per item). Ask first whether a simpler, native pattern does the job:
-- **Tooltip** (ch. 4): last resort. Show the information as visible text instead. If you need one, use the recipe in «Tooltip and toggletip (last resort)» below.
-- **Tabs** (ch. 6): avoid when there are more than about four, or when nothing needs them; use an accordion (disclosure buttons) or plain headed sections. The APG tabs pattern gives the `tabpanel` `tabindex="0"` when its first content is not focusable; the book documents a variant of panel focus, and this skill follows the APG.
-- **Modal dialog** (ch. 11): only for something urgent or critical. Consider `confirm()` or native `<dialog>` first, or inline content.
-- **Carousel** (ch. 8): prefer a scrollable or stepped slider that never moves by itself; if content must auto-advance, WCAG 2.2.2 requires pause/stop.
-- **Menu** (ch. 3): `role="menu"` is for application actions, not site navigation; use `nav` with a list of links (see §4).
+- **Tooltip** (book chapter «Tooltips & Toggletips»): last resort. Show the information as visible text instead. If you need one, use the recipe in «Tooltip and toggletip (last resort)» below.
+- **Tabs** («Tabbed Interfaces»): avoid when there are more than about four, or when nothing needs them; use an accordion (disclosure buttons) or plain headed sections. The APG tabs pattern gives the `tabpanel` `tabindex="0"` when its first content is not focusable; the book documents a variant of panel focus, and this skill follows the APG.
+- **Modal dialog** («Modal Dialogs»): only for something urgent or critical. Consider `confirm()` (the book) or native `<dialog>` (this skill, see below) first, or inline content.
+- **Carousel** («Content Slider»): prefer a scrollable or stepped slider that never moves by itself. A scrolling slider must be keyboard-reachable (a named region with `tabindex="0"` if it overflows). WCAG 2.2.2 applies to content that starts automatically, moves for more than 5 seconds and appears alongside other content: it needs pause, stop or hide.
+- **Menu** («Menus & Menu Buttons»): `role="menu"` is for application actions, not site navigation; use `nav` with a list of links (see §4).
 
 ### Modal Dialog
 ```html
@@ -391,9 +391,9 @@ document.querySelectorAll('.tip-wrap').forEach((wrap) => {
 });
 </script>
 ```
-Position the tip touching or overlapping the trigger (no gap), so the pointer can reach it without leaving `.tip-wrap`. Esc also closes any dialog the control sits in: if that matters, stop propagation only while a tip is open.
+Position the tip touching or overlapping the trigger (no gap), so the pointer can reach it without leaving `.tip-wrap`. If the control sits inside a dialog, Esc can close both the tip and the dialog; closing only the tip requires listening in the capture phase (`addEventListener('keydown', fn, true)`) and calling `stopPropagation()` only while the tip is visible.
 
-**Toggletip** = a button that reveals information that is not the control's label, announced through a live region. The `role="status"` container exists in the DOM before the content is inserted. Closes with Esc or when focus leaves.
+**Toggletip** = a button that reveals information that is not the control's label, announced through a live region. The `role="status"` container exists in the DOM before the content is inserted. Closes with Esc, when focus leaves, or on a click outside (some browsers, e.g. Safari on macOS, do not focus a button on click, so no blur fires).
 ```html
 <span class="toggletip">
   <button type="button" aria-label="More about password rules">i</button>
@@ -410,6 +410,7 @@ document.querySelectorAll('.toggletip').forEach((box) => {
   const close = () => { live.textContent = ''; };
   btn.addEventListener('blur', close);
   box.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
+  document.addEventListener('click', (e) => { if (!box.contains(e.target)) close(); });
 });
 </script>
 ```
@@ -763,10 +764,13 @@ import { useEffect, useRef } from 'react';
 
 export function RouteFocus() {
   const pathname = usePathname();
-  const isFirstRender = useRef(true);
+  const prevPathname = useRef(pathname);
 
   useEffect(() => {
-    if (isFirstRender.current) { isFirstRender.current = false; return; } // keep native focus on initial load
+    // Only act when the path actually changed; this also survives React Strict Mode,
+    // which runs effects twice in development and would defeat a "first render" flag.
+    if (prevPathname.current === pathname) return;
+    prevPathname.current = pathname;
     const h1 = document.querySelector<HTMLElement>('main h1');
     if (h1) {
       h1.setAttribute('tabindex', '-1'); // focusable by script, not in the tab order
@@ -777,7 +781,15 @@ export function RouteFocus() {
   return null;
 }
 ```
-Keep the skip link (`<a href="#main-content">`) in the layout as before; `app/layout.tsx` stays a Server Component so it can still export `metadata`.
+The component assumes each page renders a `<main id="main-content">` containing one `<h1>`, with the skip link before it; `app/layout.tsx` stays a Server Component so it can still export `metadata`:
+```tsx
+// app/layout.tsx (excerpt)
+<body>
+  <a href="#main-content" className="skip-link">Skip to main content</a>
+  <RouteFocus />
+  <main id="main-content">{children}</main> {/* each page renders its own <h1> */}
+</body>
+```
 
 ### Angular — Accessible reactive form
 ```typescript
