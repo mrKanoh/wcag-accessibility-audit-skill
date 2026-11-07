@@ -32,7 +32,7 @@
 </head>
 <body>
 <h1>Accessible Carousel</h1>
-<p class="desc">WCAG 2.1/2.2 AA. Keyboard: Arrow keys navigate, Space pauses. Auto-rotation pauses on hover, focus, or with prefers-reduced-motion.</p>
+<p class="desc">WCAG 2.1/2.2 AA. Keyboard: Left/Right arrow keys change slide; the Play/Pause button works with Enter or Space (native button behavior). Auto-rotation starts paused and only the user starts or resumes it with Play. It stops while the pointer is over the carousel and when keyboard focus enters it.</p>
 
 <div class="carousel" id="my-carousel" role="region" aria-roledescription="carousel" aria-label="Accessibility tips">
   <div class="carousel-slides" id="carousel-slides" aria-live="off" aria-atomic="false">
@@ -59,15 +59,15 @@
   </div>
 
   <div class="carousel-controls">
-    <button id="carousel-pause" class="carousel-pause" type="button" aria-label="Pause auto-rotation">
-      <span aria-hidden="true">⏸</span> Pause
+    <button id="carousel-pause" class="carousel-pause" type="button" aria-label="Play auto-rotation">
+      <span aria-hidden="true">▶</span> Play
     </button>
     <div style="display:flex;align-items:center;gap:.75rem">
-      <div class="carousel-dots" role="tablist" aria-label="Slides">
-        <button class="dot" role="tab" aria-controls="slide-1" aria-label="Slide 1" aria-current="true" aria-selected="true" tabindex="0"></button>
-        <button class="dot" role="tab" aria-controls="slide-2" aria-label="Slide 2" aria-current="false" aria-selected="false" tabindex="-1"></button>
-        <button class="dot" role="tab" aria-controls="slide-3" aria-label="Slide 3" aria-current="false" aria-selected="false" tabindex="-1"></button>
-        <button class="dot" role="tab" aria-controls="slide-4" aria-label="Slide 4" aria-current="false" aria-selected="false" tabindex="-1"></button>
+      <div class="carousel-dots" role="group" aria-label="Choose slide">
+        <button class="dot" type="button" aria-label="Slide 1" aria-current="true"></button>
+        <button class="dot" type="button" aria-label="Slide 2" aria-current="false"></button>
+        <button class="dot" type="button" aria-label="Slide 3" aria-current="false"></button>
+        <button class="dot" type="button" aria-label="Slide 4" aria-current="false"></button>
       </div>
       <button id="carousel-prev" class="carousel-btn" type="button" aria-label="Previous slide">&#8592;</button>
       <button id="carousel-next" class="carousel-btn" type="button" aria-label="Next slide">&#8594;</button>
@@ -80,8 +80,7 @@
 (function () {
   const TOTAL = 4;
   const DELAY = 5000;
-  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  let current = 0, isPlaying = !reduceMotion, timer = null;
+  let current = 0, isPlaying = false, timer = null;  // starts paused: the user chooses Play
 
   const slidesEl = document.getElementById('carousel-slides');
   const pauseBtn = document.getElementById('carousel-pause');
@@ -98,8 +97,6 @@
     dots.forEach((d, i) => {
       const a = i === current;
       d.setAttribute('aria-current', String(a));
-      d.setAttribute('aria-selected', String(a));
-      d.setAttribute('tabindex', a ? '0' : '-1');
     });
     if (announce !== false) {
       statusEl.textContent = '';
@@ -130,24 +127,22 @@
   nextBtn.addEventListener('click', () => { setPaused(true); goTo(current + 1); });
 
   dots.forEach((dot, i) => {
-    dot.addEventListener('click', () => { setPaused(true); goTo(i); dot.focus(); });
-    dot.addEventListener('keydown', e => {
-      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') { e.preventDefault(); const n = (i + 1) % TOTAL; setPaused(true); goTo(n); dots[n].focus(); }
-      if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   { e.preventDefault(); const p = (i - 1 + TOTAL) % TOTAL; setPaused(true); goTo(p); dots[p].focus(); }
-    });
+    dot.addEventListener('click', () => { setPaused(true); goTo(i); });
   });
 
-  document.getElementById('my-carousel').addEventListener('keydown', e => {
+  // One keydown handler for the whole carousel (also receives events from the dots).
+  const root = document.getElementById('my-carousel');
+  root.addEventListener('keydown', e => {
+    if (e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) return; // keep Alt+Left (Back) etc.
     if (e.key === 'ArrowRight') { e.preventDefault(); setPaused(true); goTo(current + 1); }
     if (e.key === 'ArrowLeft')  { e.preventDefault(); setPaused(true); goTo(current - 1); }
   });
-  document.getElementById('my-carousel').addEventListener('focusin',  () => { if (isPlaying) stopTimer(); });
-  document.getElementById('my-carousel').addEventListener('focusout', e => { if (isPlaying && !document.getElementById('my-carousel').contains(e.relatedTarget)) startTimer(); });
-  document.getElementById('my-carousel').addEventListener('mouseenter', () => { if (isPlaying) stopTimer(); });
-  document.getElementById('my-carousel').addEventListener('mouseleave', () => { if (isPlaying) startTimer(); });
+  // Hover or focus pauses; nothing resumes automatically (WCAG 2.2.2). Only the Play button does.
+  root.addEventListener('focusin',    () => { if (isPlaying) setPaused(true); });
+  root.addEventListener('mouseenter', () => { if (isPlaying) setPaused(true); });
 
   goTo(0, false);
-  if (isPlaying) startTimer(); else setPaused(true);
+  setPaused(true);
 })();
 </script>
 </body>

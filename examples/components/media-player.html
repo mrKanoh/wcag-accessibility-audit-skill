@@ -61,7 +61,8 @@
 
 <h1>Accessible Media Player</h1>
 <p class="desc">
-  WCAG 2.1/2.2 AA. Keyboard: <kbd>Space</kbd>/<kbd>Enter</kbd> play/pause · <kbd>←</kbd><kbd>→</kbd> scrub · <kbd>↑</kbd><kbd>↓</kbd> volume.
+  WCAG 2.1/2.2 AA. Keyboard: native behavior only, no custom shortcuts. <kbd>Tab</kbd> moves between controls ·
+  <kbd>Space</kbd>/<kbd>Enter</kbd> activate the focused button · <kbd>←</kbd><kbd>→</kbd> (or <kbd>↑</kbd><kbd>↓</kbd>) change the focused slider (seek or volume).
   Includes Captions (CC) and Audio Description (AD) toggles.
 </p>
 
@@ -69,9 +70,11 @@
   WCAG KEY POINTS:
   1. 1.2.2 Captions (Prerecorded): <track kind="captions"> provided.
   2. 1.2.3 / 1.2.5 Audio Description: Secondary audio track or text-based AD provided.
-  3. 2.1.1 Keyboard: Custom controls are fully keyboard accessible (buttons, ranges).
+  3. 2.1.1 Keyboard: Custom controls are native buttons and ranges, so they work with the keyboard
+     (no custom Space/Enter/arrow shortcuts on the player itself).
   4. 2.4.7 Focus Visible: High contrast focus rings on all controls.
   5. 4.1.2 Name, Role, Value: Buttons have aria-labels, sliders have aria-valuetext.
+     2.5.3 Label in Name: CC and AD accessible names start with their visible text.
   6. Toggle buttons use ONE form: fixed label + aria-pressed (CC, AD), or a label that
      changes with no aria-pressed (Play/Pause, Mute/Unmute). Never both at once.
 -->
@@ -103,8 +106,8 @@
       <input type="range" id="volume-slider" min="0" max="100" value="100" step="1" aria-label="Volume" aria-valuetext="100 percent">
     </div>
 
-    <button id="cc-btn" class="player-btn toggle-btn" aria-label="Closed Captions" aria-pressed="true">CC</button>
-    <button id="ad-btn" class="player-btn toggle-btn" aria-label="Audio Descriptions" aria-pressed="false">AD</button>
+    <button id="cc-btn" class="player-btn toggle-btn" aria-label="CC (closed captions)" aria-pressed="true">CC</button>
+    <button id="ad-btn" class="player-btn toggle-btn" aria-label="AD (audio descriptions)" aria-pressed="false">AD</button>
   </div>
 </div>
 
@@ -141,16 +144,19 @@
     seekSlider.setAttribute('aria-valuetext', `${Math.round(val)} percent`);
   });
 
+  // The button follows the video's real state (play, pause, ended), not just clicks.
+  function syncPlayBtn() {
+    const playing = !video.paused && !video.ended;
+    playBtn.textContent = playing ? '⏸' : '▶';
+    playBtn.setAttribute('aria-label', playing ? 'Pause' : 'Play');
+  }
+  video.addEventListener('play', syncPlayBtn);
+  video.addEventListener('pause', syncPlayBtn);
+  video.addEventListener('ended', syncPlayBtn);
+
   playBtn.addEventListener('click', () => {
-    if (video.paused) {
-      video.play();
-      playBtn.textContent = '⏸';
-      playBtn.setAttribute('aria-label', 'Pause');
-    } else {
-      video.pause();
-      playBtn.textContent = '▶';
-      playBtn.setAttribute('aria-label', 'Play');
-    }
+    if (video.paused) video.play().catch(syncPlayBtn);
+    else video.pause();
   });
 
   seekSlider.addEventListener('input', () => {

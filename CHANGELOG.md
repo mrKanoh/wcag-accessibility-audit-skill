@@ -22,6 +22,30 @@ This project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   2.1 AAA criteria. Covered by new tests.
 
 ### Fixed
+- `examples/components/carousel.html`: starts paused (Play visible), no longer resumes on
+  `focusout`/`mouseleave` (only the user restarts it, per APG and WCAG 2.2.2), arrow keys on a dot
+  advance one slide instead of two (single `keydown` handler), dots are plain buttons with
+  `aria-current="true"` instead of `role="tab"` + `aria-selected`, and the header no longer
+  claims a Space handler (Space/Enter work natively on the buttons); the arrow handler ignores
+  Alt/Ctrl/Meta/Shift so browser shortcuts such as Alt+Left keep working.
+- `examples/components/toast-notifications.html`: error toasts no longer use
+  `role="alertdialog"` + `aria-modal="false"` without moving focus (plain group inside the live
+  region); assertive region uses `aria-atomic="false"`; error toasts and the "Session expiring"
+  toast persist until dismissed (APG alert: avoid alerts that disappear on their own), while
+  success/info toasts stay timed and their progress bar and timer really pause on hover/focus (a
+  courtesy, not a 2.2.1 option); the README cites 2.2.1 (Understanding Timing Adjustable) instead of 2.2.2.
+- `examples/components/data-grid.html`: sortable headers are now `<th aria-sort><button>` (native
+  Enter/Space) instead of `<th tabindex="0">` with custom key handling; removed the table
+  `aria-label` that overrode the `<caption>` and the search `aria-label` that did not contain the
+  visible "Search:" label (2.5.3); header and comments no longer describe an `aria-label` on sort
+  buttons or cell navigation with Tab that the code does not have; the sort announcement uses the
+  visible header text; `examples/components/README.md` now lists the data grid, and its tree-view
+  and carousel rows were corrected to match the code and the APG.
+- `examples/components/media-player.html`: CC and AD names now contain their visible text
+  (2.5.3); the Play/Pause label follows the video's `play`, `pause` and `ended` events; header,
+  comments and README no longer claim Space/Enter/arrow shortcuts that are only native control behavior.
+- `examples/components/tree-view.html`: removed `aria-pressed` from node buttons and `aria-selected`
+  from `<button>` (not allowed there); selection stays on the `treeitem` and the selected style now applies.
 - Toggle buttons no longer change label and `aria-pressed` together: the SolidJS and Vue theme
   toggles in `SKILL.md` use a fixed "Dark mode" label with `aria-pressed`, and Play/Pause and
   Mute/Unmute in `examples/components/media-player.html` change only their label. Added a short

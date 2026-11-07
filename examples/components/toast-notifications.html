@@ -77,7 +77,7 @@
 <h1>Accessible Toast / Notification System</h1>
 <p style="margin-bottom:1.5rem">
   Live regions announce messages to screen readers without moving focus.
-  Toasts are dismissible by keyboard and auto-dismiss after 5s.
+  Toasts are dismissible by keyboard. Success and info toasts auto-dismiss after 5s (paused on hover or focus); errors and the session-expiring toast ask for action and stay until dismissed.
   Reduced motion is respected.
 </p>
 
@@ -88,7 +88,7 @@
   <button onclick="showToast('error','Upload failed','The file exceeds the 10 MB limit. Choose a smaller file.')" style="background:#fee2e2;color:#991b1b">
     ❌ Error
   </button>
-  <button onclick="showToast('warning','Session expiring','Your session will expire in 5 minutes. Save your work.')" style="background:#fef9c3;color:#92400e">
+  <button onclick="showToast('warning','Session expiring','Your session will expire in 5 minutes. Save your work.', 0)" style="background:#fef9c3;color:#92400e">
     ⚠️ Warning
   </button>
   <button onclick="showToast('info','Update available','A new version is available. Refresh to update.')" style="background:#dbeafe;color:#1e40af">
@@ -100,9 +100,12 @@
   WCAG KEY POINTS:
   1. role="status" with aria-live="polite" for non-critical messages (success, info, warning)
   2. role="alert"  with aria-live="assertive" for critical errors
-  3. aria-atomic="true" so the FULL message is re-announced on update
+  3. aria-atomic="false" on both regions: each new toast is announced on its own, not the whole accumulated region
   4. aria-label on the region for landmark navigation
   5. Each toast has a dismiss button with an accessible name that includes the message context
+  6. Errors and the "Session expiring" toast ask for action, so they have no timer: they stay until the user
+     dismisses them (APG alert: avoid alerts that disappear on their own; WCAG 2.2.1)
+  7. Success/info toasts are timed (5s) and pause on hover/focus as a courtesy
 -->
 
 <!-- Polite region: success, info, warning -->
@@ -122,7 +125,7 @@
   style="bottom: calc(1.5rem + 80px)"
   role="alert"
   aria-live="assertive"
-  aria-atomic="true"
+  aria-atomic="false"
   aria-label="Error notifications"
 ></div>
 
@@ -135,7 +138,8 @@
 
   let toastCount = 0;
 
-  window.showToast = function (type, title, message, duration = AUTO_DISMISS_MS) {
+  // Errors persist by default (they ask for action); success/info are timed. Pass 0 to persist any toast.
+  window.showToast = function (type, title, message, duration = type === 'error' ? 0 : AUTO_DISMISS_MS) {
     const id = `toast-${++toastCount}`;
     const isError = type === 'error';
     const region = document.getElementById(
@@ -147,8 +151,9 @@
     toast.className = 'toast';
     toast.id = id;
     toast.setAttribute('data-type', type);
-    toast.setAttribute('role', isError ? 'alertdialog' : 'group');
-    if (isError) toast.setAttribute('aria-modal', 'false');
+    // No dialog role and no focus move: the live region (container) does the announcing.
+    // A plain group keeps the toast and its dismiss button as one unit.
+    toast.setAttribute('role', 'group');
     // Don't add aria-labelledby here: the live region re-announces everything
 
     toast.innerHTML = `
@@ -171,19 +176,7 @@
     const progress = toast.querySelector('.toast-progress');
     const shouldAnimate = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    let timeoutId;
-    if (shouldAnimate) {
-      progress.style.transition = `transform ${duration}ms linear`;
-      requestAnimationFrame(() => { progress.style.transform = 'scaleX(1)'; });
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => { progress.style.transform = 'scaleX(0)'; });
-      });
-    }
-
-    // Auto-dismiss
-    if (duration > 0) {
-      timeoutId = setTimeout(() => dismissToast(toast), duration);
-    }
+    let timeoutId, remaining = duration, startedAt = 0, hovered = false, focused = false;
 
     // Dismiss button
     toast.querySelector('.toast-dismiss').addEventListener('click', () => {
@@ -191,18 +184,45 @@
       dismissToast(toast);
     });
 
-    // Pause auto-dismiss on hover / focus
-    toast.addEventListener('mouseenter', () => {
+    // duration 0 = persistent toast (errors and anything that asks for action): no timer, no progress bar.
+    if (!(duration > 0)) { progress.remove(); return; }
+
+    // Auto-dismiss with a real pause: the timer and the progress bar share `remaining`.
+    function run() {
+      startedAt = performance.now();
+      timeoutId = setTimeout(() => dismissToast(toast), remaining);
+      if (shouldAnimate) {
+        progress.style.transition = `transform ${remaining}ms linear`;
+        progress.style.transform = 'scaleX(0)';
+      }
+    }
+    function pause() {
       clearTimeout(timeoutId);
-      if (progress) progress.style.animationPlayState = 'paused';
-    });
-    toast.addEventListener('mouseleave', () => {
-      timeoutId = setTimeout(() => dismissToast(toast), 1000);
-    });
-    toast.addEventListener('focusin', () => clearTimeout(timeoutId));
-    toast.addEventListener('focusout', () => {
-      timeoutId = setTimeout(() => dismissToast(toast), 1000);
-    });
+      remaining = Math.max(0, remaining - (performance.now() - startedAt));
+      if (shouldAnimate) {
+        // Freeze the bar where it is right now.
+        progress.style.transform = getComputedStyle(progress).transform;
+        progress.style.transition = 'none';
+      }
+    }
+
+    if (shouldAnimate) {
+      progress.style.transform = 'scaleX(1)';
+      progress.getBoundingClientRect(); // commit the start state before transitioning
+    }
+    run();
+
+    // Courtesy for informational toasts: pause on hover / focus and resume with the time left.
+    // (Pausing is not one of the 2.2.1 options; these toasts are low-stakes, see the README.)
+    function update() {
+      const shouldPause = hovered || focused;
+      if (shouldPause && startedAt) { pause(); startedAt = 0; }
+      else if (!shouldPause && !startedAt) { progress.getBoundingClientRect(); run(); }
+    }
+    toast.addEventListener('mouseenter', () => { hovered = true;  update(); });
+    toast.addEventListener('mouseleave', () => { hovered = false; update(); });
+    toast.addEventListener('focusin',    () => { focused = true;  update(); });
+    toast.addEventListener('focusout',   () => { focused = false; update(); });
   };
 
   function dismissToast(toast) {
