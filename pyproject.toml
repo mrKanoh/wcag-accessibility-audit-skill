@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "wcag-accessibility-skill"
-version = "2.2.0"
+version = "2.3.0"
 description = "CLI tool and database for WCAG accessibility queries"
 authors = [
     { name = "mrKanoh" }
