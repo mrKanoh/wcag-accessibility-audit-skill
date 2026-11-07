@@ -10,6 +10,14 @@ This project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ## [Unreleased]
 
 ### Added
+- `SKILL.md` §5: «Before you build a custom component» (design guidance from *Inclusive Components*,
+  labelled as such, not WCAG requirements: tooltip, tabs, modal, carousel, menu), and a «Tooltip and
+  toggletip (last resort)» recipe that meets WCAG 1.4.13 (Esc dismiss, hoverable, persistent); notes
+  that the APG tooltip pattern is still work in progress. Code written for this skill and run in the
+  built-in browser; no screen readers tested.
+- `SKILL.md` §4/§8: `role="menu"` is for application menus, not site navigation (`nav` + links with
+  `aria-expanded` disclosure buttons, per APG Disclosure Navigation), and a `<select>` that navigates
+  on change is a change of context on input (3.2.2).
 - A scoped site-audit procedure and evidence workbook covering page/state inventory,
   cumulative WCAG A/AA scan configuration, manual protocols, support-control comparisons
   and optional institutional inclusion review. Linked from `SKILL.md` and both READMEs; the audit report

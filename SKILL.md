@@ -248,6 +248,7 @@ role="progressbar" role="slider" role="switch"
 role="tree" role="treeitem"
 role="menu" role="menuitem"
 ```
+`role="menu"` is for application menus; for site navigation use `nav` + a list of links, with a disclosure button (`aria-expanded`, `aria-controls`) for submenus ([APG Disclosure Navigation](https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/examples/disclosure-navigation/): the menu role does not give the behaviour assistive technology expects, and site navigation does not need menu keyboard interaction). A `<select>` that navigates as soon as its value changes is a change of context on input (3.2.2; see F37 and SCR19 in Understanding 3.2.2): add a submit/«Go» button instead.
 
 ### Essential properties & states
 ```html
@@ -276,6 +277,14 @@ aria-owns="id"
 ---
 
 ## 5. Accessible Components
+
+### Before you build a custom component
+Design guidance, not WCAG requirements (source: Heydon Pickering, *Inclusive Components*, 2018–2019; the chapter is cited per item). Ask first whether a simpler, native pattern does the job:
+- **Tooltip** (ch. 4): last resort. Show the information as visible text instead. If you need one, use the recipe in «Tooltip and toggletip (last resort)» below.
+- **Tabs** (ch. 6): avoid when there are more than about four, or when nothing needs them; use an accordion (disclosure buttons) or plain headed sections. The APG tabs pattern gives the `tabpanel` `tabindex="0"` when its first content is not focusable; the book documents a variant of panel focus, and this skill follows the APG.
+- **Modal dialog** (ch. 11): only for something urgent or critical. Consider `confirm()` or native `<dialog>` first, or inline content.
+- **Carousel** (ch. 8): prefer a scrollable or stepped slider that never moves by itself; if content must auto-advance, WCAG 2.2.2 requires pause/stop.
+- **Menu** (ch. 3): `role="menu"` is for application actions, not site navigation; use `nav` with a list of links (see §4).
 
 ### Modal Dialog
 ```html
@@ -357,6 +366,54 @@ Always provide a non-drag alternative:
   </li>
 </ul>
 ```
+
+### Tooltip and toggletip (last resort)
+Prefer visible text (see «Before you build a custom component»). The `title` attribute is not a substitute: it is not keyboard- or touch-accessible, and browser-controlled tooltips fall under the 1.4.13 exception, so they are not covered by its protections.
+
+**Tooltip** = supplementary description of a focusable control. The control keeps its own accessible name; the tip is its description (`aria-describedby`). Use `aria-labelledby` only when the tip is the control's name (icon-only control without other text). Requirements ([WCAG 1.4.13](https://www.w3.org/WAI/WCAG22/Understanding/content-on-hover-or-focus.html), checked 2026-11-06): dismissible without moving pointer or focus (Esc), hoverable (the pointer can move onto the tip), persistent (stays until hover/focus leaves or the user dismisses). Appear on focus **and** hover; no interactive content inside. The [APG tooltip pattern](https://www.w3.org/WAI/ARIA/apg/patterns/tooltip/) is marked work in progress (no task-force consensus yet), so treat it as provisional.
+```html
+<span class="tip-wrap">
+  <button type="button" aria-describedby="tip-save">Save</button>
+  <span role="tooltip" id="tip-save" hidden>Saves a draft. Nothing is published.</span>
+</span>
+<script>
+document.querySelectorAll('.tip-wrap').forEach((wrap) => {
+  const tip = wrap.querySelector('[role="tooltip"]');
+  let hovered = false, focused = false;
+  const update = () => { tip.hidden = !(hovered || focused); };
+  wrap.addEventListener('mouseenter', () => { hovered = true; update(); });
+  wrap.addEventListener('mouseleave', () => { hovered = false; update(); });
+  wrap.addEventListener('focusin',    () => { focused = true; update(); });
+  wrap.addEventListener('focusout',   () => { focused = false; update(); });
+  document.addEventListener('keydown', (e) => {   // Esc hides it; focus does not move
+    if (e.key === 'Escape' && !tip.hidden) { hovered = focused = false; tip.hidden = true; }
+  });
+});
+</script>
+```
+Position the tip touching or overlapping the trigger (no gap), so the pointer can reach it without leaving `.tip-wrap`. Esc also closes any dialog the control sits in: if that matters, stop propagation only while a tip is open.
+
+**Toggletip** = a button that reveals information that is not the control's label, announced through a live region. The `role="status"` container exists in the DOM before the content is inserted. Closes with Esc or when focus leaves.
+```html
+<span class="toggletip">
+  <button type="button" aria-label="More about password rules">i</button>
+  <span role="status"></span>
+</span>
+<script>
+document.querySelectorAll('.toggletip').forEach((box) => {
+  const btn = box.querySelector('button');
+  const live = box.querySelector('[role="status"]');
+  btn.addEventListener('click', () => {
+    live.textContent = '';  // re-insert so a repeat click is announced again
+    setTimeout(() => { live.textContent = 'Use at least 12 characters.'; }, 100);
+  });
+  const close = () => { live.textContent = ''; };
+  btn.addEventListener('blur', close);
+  box.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
+});
+</script>
+```
+Pointer persistence also applies to a toggletip if it opens on hover; opening on click avoids that. Screen reader announcement of live regions varies; test with your target pairs.
 
 ---
 
@@ -441,7 +498,7 @@ Audit cases: text under 16 px, a weight under 400, or an initial line height und
 | Select / Listbox | Tab, Arrows, Home/End, type-ahead |
 | Combobox | Tab, Arrows, Enter, Esc |
 | Tabs | Tab to list; Arrow keys switch; Enter/Space activate |
-| Menu / Menu bar | Arrow keys, Enter, Esc, Tab exits |
+| Menu / Menu bar (application menus only; not site navigation, see §4) | Arrow keys, Enter, Esc, Tab exits |
 | Dialog | Tab cycles inside; Esc closes |
 | Tree | Arrows (→ expand, ← collapse), Enter activates |
 | Grid / Data table | Arrow keys between cells; Enter activates cell editor |
