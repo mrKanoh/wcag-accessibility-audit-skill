@@ -558,7 +558,7 @@ test('modal has no a11y violations', async () => {
 import { test } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 
-test('homepage passes WCAG 2.2 AA', async ({ page }) => {
+test('homepage has no axe violations for the selected rules', async ({ page }) => {
   await page.goto('/');
   const results = await new AxeBuilder({ page })
     .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'])
@@ -697,39 +697,30 @@ export default { addons: ['@storybook/addon-a11y'] };
 ## 18. Stack-Specific Code Examples
 
 ### Next.js App Router — Focus management on navigation
+Next.js already ships a route announcer for client-side transitions (`next/link`): it reads `document.title`, then the `<h1>`, then the pathname (<https://nextjs.org/docs/architecture/accessibility>, checked 2026-11-06). Do not add a second live region for the same announcement. Give every page a unique, descriptive title; that is what gets announced. If you also want focus to move to the new page's heading (a design choice, not a WCAG requirement), use a small client component and test with a screen reader that title announcement plus the heading read-out is not too verbose:
 ```tsx
-// app/layout.tsx — announce route changes to screen readers
+// app/route-focus.tsx — render <RouteFocus /> once inside <body> in app/layout.tsx
 'use client';
 import { usePathname } from 'next/navigation';
 import { useEffect, useRef } from 'react';
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export function RouteFocus() {
   const pathname = usePathname();
-  const announceRef = useRef<HTMLParagraphElement>(null);
+  const isFirstRender = useRef(true);
 
   useEffect(() => {
-    if (announceRef.current) {
-      announceRef.current.textContent = `Navigated to ${document.title}`;
+    if (isFirstRender.current) { isFirstRender.current = false; return; } // keep native focus on initial load
+    const h1 = document.querySelector<HTMLElement>('main h1');
+    if (h1) {
+      h1.setAttribute('tabindex', '-1'); // focusable by script, not in the tab order
+      h1.focus();
     }
   }, [pathname]);
 
-  return (
-    <html lang="en">
-      <body>
-        {/* Visually hidden live region for route announcements */}
-        <p
-          ref={announceRef}
-          aria-live="polite"
-          aria-atomic="true"
-          className="sr-only"
-        />
-        <a href="#main-content" className="skip-link">Skip to main content</a>
-        {children}
-      </body>
-    </html>
-  );
+  return null;
 }
 ```
+Keep the skip link (`<a href="#main-content">`) in the layout as before; `app/layout.tsx` stays a Server Component so it can still export `metadata`.
 
 ### Angular — Accessible reactive form
 ```typescript
@@ -839,7 +830,7 @@ export function ThemeToggle() {
       aria-pressed={isDark()}
       onClick={toggle}
     >
-      <span aria-hidden="true">{isDark() ? '☀️' : '🌙'}</span> Dark mode
+      <span aria-hidden="true">{isDark() ? '🌙' : '☀️'}</span> Dark mode
     </button>
   );
 }
@@ -1211,7 +1202,7 @@ Key terms for Spanish-speaking teams:
 | `prompts/generate-alt-text.md` | Draft alt text for informative or complex images |
 | `prompts/review-figma-handoff.md` | Review a design handoff for a11y gaps before dev |
 | `prompts/summarize-audit-findings.md` | Exec-friendly summary of raw findings with 90-day plan |
-| `prompts/generate-aria-pattern.md` | Generate production-ready accessible widget in any framework |
+| `prompts/generate-aria-pattern.md` | Generate reference code for an accessible widget in any framework (review and test before shipping) |
 | `prompts/remediate-legacy-code.md` | Audit + fix legacy HTML/jQuery/Bootstrap code for accessibility |
 | `prompts/generate-vpat-entry.md` | Translate audit findings into VPAT ACR language |
 | `prompts/test-with-screen-reader.md` | Generate step-by-step NVDA/VoiceOver/TalkBack test scripts |
@@ -1407,7 +1398,7 @@ function toggle() {
     :aria-pressed="isDark"
     @click="toggle"
   >
-    <span aria-hidden="true">{{ isDark ? '☀️' : '🌙' }}</span> Dark mode
+    <span aria-hidden="true">{{ isDark ? '🌙' : '☀️' }}</span> Dark mode
   </button>
 </template>
 ```

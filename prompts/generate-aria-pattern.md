@@ -1,13 +1,13 @@
 # Prompt: Generate an accessible ARIA pattern
 
-Use when you need complete, production-ready code for a complex accessible widget.
+Use when you need complete reference code for a complex accessible widget. Review and test the output (keyboard, screen reader) before shipping it.
 
 ---
 
 ## Prompt (copy & paste)
 
 ```
-Write a production-ready, fully accessible [COMPONENT] in [HTML+JS / React / Vue 3 / Svelte / Angular].
+Write reference code for an accessible [COMPONENT] in [HTML+JS / React / Vue 3 / Svelte / Angular].
 
 Requirements:
 1. Follow the WAI-ARIA Authoring Practices Guide (APG) pattern for [COMPONENT]
