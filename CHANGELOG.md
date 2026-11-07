@@ -9,6 +9,8 @@ This project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [2.3.0] - 2026-11-06
+
 ### Added
 - `SKILL.md` §5: «Before you build a custom component» (design guidance from *Inclusive Components*,
   labelled as such, not WCAG requirements: tooltip, tabs, modal, carousel, menu), and a «Tooltip and
