@@ -248,7 +248,7 @@ role="progressbar" role="slider" role="switch"
 role="tree" role="treeitem"
 role="menu" role="menuitem"
 ```
-`role="menu"` is for application menus; for site navigation use `nav` + a list of links, with a disclosure button (`aria-expanded`, `aria-controls`) for submenus ([APG Disclosure Navigation](https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/examples/disclosure-navigation/): the menu role does not give the behaviour assistive technology expects, and site navigation does not need menu keyboard interaction). A `<select>` that navigates as soon as its value changes is a change of context on input (3.2.2; see F37 and SCR19 in Understanding 3.2.2): add a submit/«Go» button instead.
+`role="menu"` is for application menus; for site navigation use `nav` + a list of links, with a disclosure button (`aria-expanded`, `aria-controls`) for submenus ([APG Disclosure Navigation](https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/examples/disclosure-navigation/): the menu role does not give the behaviour assistive technology expects, and site navigation does not need menu keyboard interaction). A `<select>` that navigates as soon as its value changes is a change of context on input (3.2.2; see [Understanding 3.2.2](https://www.w3.org/WAI/WCAG22/Understanding/on-input.html)): add a submit/«Go» button instead.
 
 ### Essential properties & states
 ```html
