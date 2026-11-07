@@ -30,7 +30,7 @@ Each file is self-contained, except the demo poster and video of `media-player.h
 | Polite region | `role="status"` + `aria-live="polite"` for success, info, warning |
 | Assertive region | `role="alert"` + `aria-live="assertive"` for errors only; `aria-atomic="false"` so each new toast is announced alone. Error toasts are plain groups: no `alertdialog`, focus never moves (APG alert) |
 | Dismiss | Every toast has a dismiss button with accessible name |
-| Time limit | Informational toasts auto-dismiss after 5 s and pause (timer and progress bar) on hover and focus. The "Session expiring" toast asks for action, so it has no timer and stays until dismissed. Relevant criterion: 2.2.1 Timing Adjustable. Its Understanding page uses a 5-second toast as an example of a message that does not count as a time limit only when the user can learn the information another way (it is not 2.2.2, which covers moving or auto-updating content) |
+| Time limit | Success and info toasts are timed (5 s) and pause (timer and progress bar) on hover and focus as a courtesy. Errors and anything that asks for action (the "Session expiring" toast) have no timer and stay until dismissed: the APG alert pattern advises avoiding alerts that disappear on their own, and the 2.2.1 Understanding page treats a 5-second toast as exempt only when the user can learn the information another way. Relevant criterion: 2.2.1 Timing Adjustable (not 2.2.2, which covers moving or auto-updating content) |
 | Reduced motion | Slide animation disabled when `prefers-reduced-motion: reduce` |
 
 ---
@@ -43,8 +43,8 @@ Each file is self-contained, except the demo poster and video of `media-player.h
 |---------|---------------|
 | Play/Pause | Required by WCAG 2.2.2 — button always visible; the carousel starts paused and only the user starts it |
 | ARIA | `role="region"` + `aria-roledescription="carousel"` on container; `role="group"` + `aria-roledescription="slide"` on slides |
-| Auto-pause | Rotation stops on hover and focus-in and never resumes by itself (APG: only the user restarts it) |
-| Dot navigation | Native `<button>`s in a labelled `role="group"`, `aria-current="true"` on the active one (APG "grouped" style: one tab stop per dot) |
+| Auto-pause | Rotation stops when keyboard focus enters the carousel and does not restart unless the user asks (APG). It also stops while the pointer is over it; this example does not resume it on pointer leave either (a stricter choice than the APG requires) |
+| Dot navigation | Native `<button>`s in a labelled `role="group"` with `aria-current="true"` on the active one (the APG grouped style marks the current picker with `aria-disabled` instead; this example's choice). One tab stop per dot |
 | Keyboard | Left/Right arrows change slide from anywhere in the carousel (single handler); Play/Pause, dots and arrows are native buttons (Enter/Space) |
 | Announcements | `aria-live="polite"` on slide area (only when paused to avoid verbosity) |
 
@@ -57,9 +57,10 @@ Each file is self-contained, except the demo poster and video of `media-player.h
 | Feature | Implementation |
 |---------|---------------|
 | ARIA structure | `role="tree"` → `role="treeitem"` → `role="group"` (nested) |
-| Expand/collapse | `aria-expanded` on parent nodes; `aria-hidden` on nested groups |
-| Roving tabindex | Only focused node has `tabindex="0"` |
-| Keyboard | ↑↓ navigate; → expand or enter child; ← collapse or exit to parent; Home/End jump; `*` expands all siblings |
+| Expand/collapse | `aria-expanded` on parent nodes; the `hidden` attribute on collapsed nested groups |
+| Selection | Enter/Space (or click) select a node and toggle it if it has children; `aria-selected="true"` on the selected `treeitem` (single-select) |
+| Focus | The `treeitem` carries `tabindex` 0/-1, but each node also holds a `<button>` that Tab can reach, so this is not a clean roving tabindex yet |
+| Keyboard | ↑↓ navigate; → expand or enter child; ← collapse or exit to parent; Home/End jump; `*` expands all visible nodes at the same level, even under other parents (the APG says siblings) |
 | Position | `aria-level`, `aria-setsize`, `aria-posinset` on every node |
 
 ---
@@ -90,6 +91,22 @@ Each file is self-contained, except the demo poster and video of `media-player.h
 | ARIA states | Fixed label + `aria-pressed` for CC and AD (names `CC (closed captions)` / `AD (audio descriptions)` contain the visible text, 2.5.3); Play/Pause and Mute/Unmute change their label and do not use `aria-pressed` (never both) |
 | Play/Pause label | Follows the video's `play`, `pause` and `ended` events, not only clicks |
 | ARIA values | `aria-valuetext` on sliders for screen readers to read percentages |
+
+---
+
+### 📊 [data-grid.html](./data-grid.html)
+**Pattern:** Sortable, filterable data table (native `<table>`, not an ARIA grid)
+
+**WCAG SCs:** 1.3.1, 2.1.1, 2.5.3, 4.1.2, 4.1.3
+
+| Feature | Implementation |
+|---------|---------------|
+| Name | Named by its `<caption>` (no `aria-label` on the table) |
+| Sorting | `<th scope="col" aria-sort>` containing a native `<button>`; Enter/Space sort and `aria-sort` toggles ascending/descending; a status region announces the result |
+| Search | Visible `<label>` "Search:" is the field's name (name matches label, 2.5.3); result count in a live region |
+| Row controls | Native checkboxes and buttons with row context in their names; select-all with `indeterminate` state |
+| Keyboard | Native behavior only: Tab through the controls, Enter/Space on buttons, Space on checkboxes. No cell-by-cell grid navigation |
+| Not verified | The `overflow-x:auto` wrapper has no `tabindex`, role or name; see `PROGRESS.md` |
 
 ---
 

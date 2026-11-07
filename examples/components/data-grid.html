@@ -312,7 +312,8 @@
     th.querySelector('.sort-icon').textContent = sortDir === 'ascending' ? '↑' : '↓';
     page = 1;
     render();
-    status.textContent = `Sorted by ${col} ${sortDir}`;
+    const label = th.querySelector('.sort-btn').firstChild.textContent.trim(); // visible header text
+    status.textContent = `Sorted by ${label} ${sortDir}`;
   }
 
   /* ── Search ── */

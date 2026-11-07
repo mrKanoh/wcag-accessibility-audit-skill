@@ -32,7 +32,7 @@
 </head>
 <body>
 <h1>Accessible Carousel</h1>
-<p class="desc">WCAG 2.1/2.2 AA. Keyboard: Left/Right arrow keys change slide; the Play/Pause button works with Enter or Space (native button behavior). Auto-rotation starts paused, stops on hover or focus, and only the user resumes it with Play.</p>
+<p class="desc">WCAG 2.1/2.2 AA. Keyboard: Left/Right arrow keys change slide; the Play/Pause button works with Enter or Space (native button behavior). Auto-rotation starts paused and only the user starts or resumes it with Play. It stops while the pointer is over the carousel and when keyboard focus enters it.</p>
 
 <div class="carousel" id="my-carousel" role="region" aria-roledescription="carousel" aria-label="Accessibility tips">
   <div class="carousel-slides" id="carousel-slides" aria-live="off" aria-atomic="false">
@@ -133,6 +133,7 @@
   // One keydown handler for the whole carousel (also receives events from the dots).
   const root = document.getElementById('my-carousel');
   root.addEventListener('keydown', e => {
+    if (e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) return; // keep Alt+Left (Back) etc.
     if (e.key === 'ArrowRight') { e.preventDefault(); setPaused(true); goTo(current + 1); }
     if (e.key === 'ArrowLeft')  { e.preventDefault(); setPaused(true); goTo(current - 1); }
   });

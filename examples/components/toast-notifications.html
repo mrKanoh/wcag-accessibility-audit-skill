@@ -77,7 +77,7 @@
 <h1>Accessible Toast / Notification System</h1>
 <p style="margin-bottom:1.5rem">
   Live regions announce messages to screen readers without moving focus.
-  Toasts are dismissible by keyboard. Informational toasts auto-dismiss after 5s (paused on hover or focus); the session-expiring toast asks for action and stays until dismissed.
+  Toasts are dismissible by keyboard. Success and info toasts auto-dismiss after 5s (paused on hover or focus); errors and the session-expiring toast ask for action and stay until dismissed.
   Reduced motion is respected.
 </p>
 
@@ -103,7 +103,9 @@
   3. aria-atomic="false" on both regions: each new toast is announced on its own, not the whole accumulated region
   4. aria-label on the region for landmark navigation
   5. Each toast has a dismiss button with an accessible name that includes the message context
-  6. The "Session expiring" toast asks for action, so it has no timer: it stays until the user dismisses it (WCAG 2.2.1)
+  6. Errors and the "Session expiring" toast ask for action, so they have no timer: they stay until the user
+     dismisses them (APG alert: avoid alerts that disappear on their own; WCAG 2.2.1)
+  7. Success/info toasts are timed (5s) and pause on hover/focus as a courtesy
 -->
 
 <!-- Polite region: success, info, warning -->
@@ -136,7 +138,8 @@
 
   let toastCount = 0;
 
-  window.showToast = function (type, title, message, duration = AUTO_DISMISS_MS) {
+  // Errors persist by default (they ask for action); success/info are timed. Pass 0 to persist any toast.
+  window.showToast = function (type, title, message, duration = type === 'error' ? 0 : AUTO_DISMISS_MS) {
     const id = `toast-${++toastCount}`;
     const isError = type === 'error';
     const region = document.getElementById(
@@ -181,7 +184,7 @@
       dismissToast(toast);
     });
 
-    // duration 0 = persistent toast (asks for action): no timer, no progress bar.
+    // duration 0 = persistent toast (errors and anything that asks for action): no timer, no progress bar.
     if (!(duration > 0)) { progress.remove(); return; }
 
     // Auto-dismiss with a real pause: the timer and the progress bar share `remaining`.
@@ -209,7 +212,8 @@
     }
     run();
 
-    // Pause on hover / focus (WCAG 2.2.1: the user can stop the time limit); resume with the time left.
+    // Courtesy for informational toasts: pause on hover / focus and resume with the time left.
+    // (Pausing is not one of the 2.2.1 options; these toasts are low-stakes, see the README.)
     function update() {
       const shouldPause = hovered || focused;
       if (shouldPause && startedAt) { pause(); startedAt = 0; }
