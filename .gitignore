@@ -10,6 +10,8 @@ env/
 venv/
 ENV/
 .env
+.env.*
+!.env.example
 
 # Distribution / packaging
 dist/
