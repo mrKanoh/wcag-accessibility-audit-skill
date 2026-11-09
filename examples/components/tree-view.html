@@ -16,18 +16,19 @@
     [role="tree"] { list-style: none; }
     [role="treeitem"] { list-style: none; }
 
-    /* Node button — the clickable/focusable part */
-    .node-btn {
+    /* Node row — the visible part of a treeitem. The treeitem <li> itself is the
+       focus target (roving tabindex), so the focus ring is drawn on its row. */
+    [role="treeitem"] { outline: none; }
+    .node-row {
       display: flex; align-items: center; gap: .5rem;
       padding: .4rem .6rem; border-radius: 6px;
-      background: none; border: none; cursor: pointer;
-      font-size: 1rem; width: 100%; text-align: left;
+      cursor: pointer; font-size: 1rem; width: 100%;
       color: #111827;
       min-height: 36px;
     }
-    .node-btn:hover { background: #f3f4f6; }
-    .node-btn:focus-visible { outline: 3px solid #1d4ed8; outline-offset: 1px; }
-    [role="treeitem"][aria-selected="true"] > .node-btn { background: #dbeafe; color: #1e40af; }
+    .node-row:hover { background: #f3f4f6; }
+    [role="treeitem"]:focus-visible > .node-row { outline: 3px solid #1d4ed8; outline-offset: 1px; }
+    [role="treeitem"][aria-selected="true"] > .node-row { background: #dbeafe; color: #1e40af; }
 
     /* Expand icon */
     .expand-icon { width: 1.1rem; font-size: .75rem; display: inline-block; text-align: center; flex-shrink: 0; color: #6b7280; }
@@ -61,9 +62,12 @@
     3. role="group" on nested <ul> (child items)
     4. aria-expanded="true|false" on treeitem that HAS children
     5. No aria-expanded on leaf nodes
-    6. aria-selected on the selected node
+    6. aria-selected="true" on the selected node, "false" on the other selectable ones;
+       the first node starts selected so the initial state matches the tab stop (APG single-select)
     7. aria-level, aria-setsize, aria-posinset on each node
-    8. Roving tabindex: only focused node has tabindex="0"
+    8. Roving tabindex on the treeitem itself: only the focused node has tabindex="0".
+       No <button> or other focusable element inside, so Tab enters and leaves the tree in one stop.
+       Parent items use aria-labelledby on their own label so their name does not include the children.
     9. Keyboard: Up/Down move focus, Right expands/enters, Left collapses/exits, Home/End jump
     10. aria-labelledby on the tree pointing to a visible heading
   -->
@@ -72,83 +76,83 @@
   </h2>
   <ul role="tree" aria-labelledby="tree-label" id="my-tree">
 
-    <li role="treeitem" aria-expanded="true" aria-level="1" aria-setsize="3" aria-posinset="1" tabindex="0">
-      <button class="node-btn" type="button">
+    <li role="treeitem" aria-selected="true" aria-expanded="true" aria-labelledby="lbl-src" aria-level="1" aria-setsize="3" aria-posinset="1" tabindex="0">
+      <div class="node-row">
         <span class="expand-icon" aria-hidden="true">▾</span>
         <span class="node-icon" aria-hidden="true">📂</span>
-        <span class="node-label">src</span>
-      </button>
+        <span class="node-label" id="lbl-src">src</span>
+      </div>
       <ul role="group">
-        <li role="treeitem" aria-expanded="false" aria-level="2" aria-setsize="2" aria-posinset="1" tabindex="-1">
-          <button class="node-btn" type="button">
+        <li role="treeitem" aria-selected="false" aria-expanded="false" aria-labelledby="lbl-components" aria-level="2" aria-setsize="2" aria-posinset="1" tabindex="-1">
+          <div class="node-row">
             <span class="expand-icon" aria-hidden="true">▸</span>
             <span class="node-icon" aria-hidden="true">📂</span>
-            <span class="node-label">components</span>
-          </button>
+            <span class="node-label" id="lbl-components">components</span>
+          </div>
           <ul role="group" hidden>
-            <li role="treeitem" aria-level="3" aria-setsize="3" aria-posinset="1" tabindex="-1">
-              <button class="node-btn" type="button">
+            <li role="treeitem" aria-selected="false" aria-level="3" aria-setsize="3" aria-posinset="1" tabindex="-1">
+              <div class="node-row">
                 <span class="expand-icon" aria-hidden="true"></span>
                 <span class="node-icon" aria-hidden="true">📄</span>
                 <span class="node-label">Button.tsx</span>
-              </button>
+              </div>
             </li>
-            <li role="treeitem" aria-level="3" aria-setsize="3" aria-posinset="2" tabindex="-1">
-              <button class="node-btn" type="button">
+            <li role="treeitem" aria-selected="false" aria-level="3" aria-setsize="3" aria-posinset="2" tabindex="-1">
+              <div class="node-row">
                 <span class="expand-icon" aria-hidden="true"></span>
                 <span class="node-icon" aria-hidden="true">📄</span>
                 <span class="node-label">Modal.tsx</span>
-              </button>
+              </div>
             </li>
-            <li role="treeitem" aria-level="3" aria-setsize="3" aria-posinset="3" tabindex="-1">
-              <button class="node-btn" type="button">
+            <li role="treeitem" aria-selected="false" aria-level="3" aria-setsize="3" aria-posinset="3" tabindex="-1">
+              <div class="node-row">
                 <span class="expand-icon" aria-hidden="true"></span>
                 <span class="node-icon" aria-hidden="true">📄</span>
                 <span class="node-label">DatePicker.tsx</span>
-              </button>
+              </div>
             </li>
           </ul>
         </li>
-        <li role="treeitem" aria-level="2" aria-setsize="2" aria-posinset="2" tabindex="-1">
-          <button class="node-btn" type="button">
+        <li role="treeitem" aria-selected="false" aria-level="2" aria-setsize="2" aria-posinset="2" tabindex="-1">
+          <div class="node-row">
             <span class="expand-icon" aria-hidden="true"></span>
             <span class="node-icon" aria-hidden="true">📄</span>
             <span class="node-label">index.ts</span>
-          </button>
+          </div>
         </li>
       </ul>
     </li>
 
-    <li role="treeitem" aria-expanded="false" aria-level="1" aria-setsize="3" aria-posinset="2" tabindex="-1">
-      <button class="node-btn" type="button">
+    <li role="treeitem" aria-selected="false" aria-expanded="false" aria-labelledby="lbl-tests" aria-level="1" aria-setsize="3" aria-posinset="2" tabindex="-1">
+      <div class="node-row">
         <span class="expand-icon" aria-hidden="true">▸</span>
         <span class="node-icon" aria-hidden="true">📂</span>
-        <span class="node-label">tests</span>
-      </button>
+        <span class="node-label" id="lbl-tests">tests</span>
+      </div>
       <ul role="group" hidden>
-        <li role="treeitem" aria-level="2" aria-setsize="2" aria-posinset="1" tabindex="-1">
-          <button class="node-btn" type="button">
+        <li role="treeitem" aria-selected="false" aria-level="2" aria-setsize="2" aria-posinset="1" tabindex="-1">
+          <div class="node-row">
             <span class="expand-icon" aria-hidden="true"></span>
             <span class="node-icon" aria-hidden="true">📄</span>
             <span class="node-label">Button.test.tsx</span>
-          </button>
+          </div>
         </li>
-        <li role="treeitem" aria-level="2" aria-setsize="2" aria-posinset="2" tabindex="-1">
-          <button class="node-btn" type="button">
+        <li role="treeitem" aria-selected="false" aria-level="2" aria-setsize="2" aria-posinset="2" tabindex="-1">
+          <div class="node-row">
             <span class="expand-icon" aria-hidden="true"></span>
             <span class="node-icon" aria-hidden="true">📄</span>
             <span class="node-label">Modal.test.tsx</span>
-          </button>
+          </div>
         </li>
       </ul>
     </li>
 
-    <li role="treeitem" aria-level="1" aria-setsize="3" aria-posinset="3" tabindex="-1">
-      <button class="node-btn" type="button">
+    <li role="treeitem" aria-selected="false" aria-level="1" aria-setsize="3" aria-posinset="3" tabindex="-1">
+      <div class="node-row">
         <span class="expand-icon" aria-hidden="true"></span>
         <span class="node-icon" aria-hidden="true">📄</span>
         <span class="node-label">package.json</span>
-      </button>
+      </div>
     </li>
 
   </ul>
@@ -210,7 +214,7 @@
 
   /** Select an item (single-select) */
   function selectItem(item) {
-    // aria-selected lives on the treeitem (APG), never on the inner <button>
+    // aria-selected lives on the treeitem (APG), never on the inner row
     tree.querySelectorAll('[role="treeitem"]').forEach(ti => ti.setAttribute('aria-selected', 'false'));
     item.setAttribute('aria-selected', 'true');
   }
@@ -272,12 +276,10 @@
         break;
 
       case 'Enter':
-      case ' ':
+      case ' ': // Space also selects here (single-select; the APG's Space = toggle applies to multi-select)
+        // APG: in a single-select tree where selection does not follow focus,
+        // Enter selects the focused node. Opening/closing is done with the arrow keys.
         e.preventDefault();
-        if (hasChildren(focused)) {
-          if (focused.getAttribute('aria-expanded') === 'true') collapse(focused);
-          else expand(focused);
-        }
         selectItem(focused);
         break;
 
@@ -293,7 +295,7 @@
 
   // Click to expand/collapse and select
   tree.addEventListener('click', e => {
-    const btn = e.target.closest('.node-btn');
+    const btn = e.target.closest('.node-row');
     if (!btn) return;
     const item = btn.closest('[role="treeitem"]');
     if (!item) return;

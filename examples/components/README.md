@@ -58,8 +58,8 @@ Each file is self-contained, except the demo poster and video of `media-player.h
 |---------|---------------|
 | ARIA structure | `role="tree"` → `role="treeitem"` → `role="group"` (nested) |
 | Expand/collapse | `aria-expanded` on parent nodes; the `hidden` attribute on collapsed nested groups |
-| Selection | Enter/Space (or click) select a node and toggle it if it has children; `aria-selected="true"` on the selected `treeitem` (single-select) |
-| Focus | The `treeitem` carries `tabindex` 0/-1, but each node also holds a `<button>` that Tab can reach, so this is not a clean roving tabindex yet |
+| Selection | Enter/Space select the focused node (arrows open and close); a click selects and toggles it. `aria-selected="true"` on the selected `treeitem`, `"false"` on the others; the first node starts selected (single-select) |
+| Focus | Roving tabindex on the `treeitem` itself (0/-1); no `<button>` or other focusable element inside, so Tab enters and leaves the tree in one stop. Parent items are named by `aria-labelledby` on their own label |
 | Keyboard | ↑↓ navigate; → expand or enter child; ← collapse or exit to parent; Home/End jump; `*` expands all visible nodes at the same level, even under other parents (the APG says siblings) |
 | Position | `aria-level`, `aria-setsize`, `aria-posinset` on every node |
 
@@ -104,9 +104,11 @@ Each file is self-contained, except the demo poster and video of `media-player.h
 | Name | Named by its `<caption>` (no `aria-label` on the table) |
 | Sorting | `<th scope="col" aria-sort>` containing a native `<button>`; Enter/Space sort and `aria-sort` toggles ascending/descending; a status region announces the result |
 | Search | Visible `<label>` "Search:" is the field's name (name matches label, 2.5.3); result count in a live region |
-| Row controls | Native checkboxes and buttons with row context in their names; select-all with `indeterminate` state |
-| Keyboard | Native behavior only: Tab through the controls, Enter/Space on buttons, Space on checkboxes. No cell-by-cell grid navigation |
-| Not verified | The `overflow-x:auto` wrapper has no `tabindex`, role or name; see `PROGRESS.md` |
+| Row controls | Native checkboxes and buttons with row context in their names; select-all uses the native `indeterminate` property (no `aria-checked`) |
+| Scroll container | The `overflow-x:auto` wrapper is `role="region"` named by the page heading, with `tabindex="0"` so keyboard users can scroll it. It holds focusable children, so Chrome 132+ would not focus it by default ([source](https://developer.chrome.com/blog/keyboard-focusable-scrollers)) |
+| Search row | Plain group, no `role="toolbar"`: the APG asks for 3+ controls with arrow-key navigation, and a text box conflicts with Left/Right |
+| Keyboard | Native behavior only: Tab through the controls, Enter/Space on buttons, Space on checkboxes; arrows scroll the focused region. No cell-by-cell grid navigation |
+| Not verified | Scroll region focus in Firefox and Safari, and screen reader output |
 
 ---
 

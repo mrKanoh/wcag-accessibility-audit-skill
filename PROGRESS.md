@@ -1,7 +1,18 @@
 # PROGRESS
 
-## Trabajo actual
-- Ninguno.
+## Trabajo actual: WCAG-MIN-1 puntos menores de «Para la próxima orden»  (rama tarea/wcag-min-1)
+- Etapas: [x] 1 R1 tree-view y R2 data-grid (commit de la etapa 1, `fix(examples): … (etapa 1)`) · [ ] 2 R3 carrusel, R4 toast, R5 reproductor · [ ] 3 R6-R9 y PR en borrador
+- Ciclo: etapas aprobadas 0, auditoría pendiente, rondas 0
+- Línea base de pruebas: 90 passed (ver «Línea base de pruebas»)
+- Pendiente / bloqueos: ninguno. Firefox, Safari y lectores de pantalla sin verificar.
+### Orden completa
+Proyecto: wcag-accesibility-skill — D:\Proyectos\wcag-accesibility-skill · Id: WCAG-MIN-1 · Tamaño normal · sin etiqueta antes-de-* · implementación.
+Autorizado: editar, verificar, commit local por etapa en tarea/wcag-min-1, push de esa rama y PR en borrador, borrar tarea/wcag-min-1 y la rama claude/… ya fusionadas. No autorizado: fusionar, `gh pr ready`, tags, releases, borrar otras ramas, tocar el worktree de Codex ni la rama codex/readme-docs, cambiar `.claude/settings*.json`.
+Objetivo: cerrar los puntos menores de «Para la próxima orden»: ejemplos de componentes, ejemplo de pestañas de SKILL.md y libro de evidencia conformes con APG/WCAG 2.2 vigentes (o con su limitación dicha con honestidad); PROGRESS.md sin pendientes obsoletos.
+Alcance: R1 tree-view (patrón APG completo, roving tabindex sin `<button>` interno, flechas, Home/End, Enter/Espacio, aria-expanded, aria-selected inicial coherente; README). R2 data-grid (contenedor con scroll: tabindex="0", role="region" y nombre; quitar aria-checked redundante; toolbar con flechas o sin rol; aria-sort="none" se menciona). R3 carousel (una sola región viva, justificada con el APG; puntos 2.5.8). R4 toast (comentario que llama landmark a role="status"). R5 media-player (botón AD con efecto real, o quitarlo, o texto veraz; póster de via.placeholder.com sin dependencia externa). R6 SKILL.md §5 pestañas (tabindex="0" en el tabpanel si su primer contenido no es enfocable). R7 aria-label y traducción (solo con evidencia citada; si es contradictoria, no editar y reportar). R8 templates/site-audit-workbook.md (~l. 39) «three AAA entries» = registros del dataset. R9 CHANGELOG `[Unreleased]` y PROGRESS.md (vaciar «Para la próxima orden», corregir «Pendiente de Ariel»: solo tag v2.3.0 y release, más la decisión sobre la rama codex/readme-docs con worktree de Codex y cambios sin commit en README.md, README-es.md y CONTRIBUTING.md).
+No incluye: aviso de jerarquía tipográfica de tree-view, rediseños, otros ejemplos, README raíz salvo enlace roto, publicar versión.
+Etapas: 1 R1 y R2 · 2 R3, R4 y R5 · 3 R6-R9 con cierre de PROGRESS.md y luego push y `gh pr create --draft` con aviso inicial de que fusionar publica en producción. Cada etapa se detiene y espera «Aprobado. Sigue con la etapa N».
+Restricciones: sin `.env`/secretos, sin `git add -A`, sin dependencias externas nuevas, sin refactors fuera de alcance. Cada detalle técnico se contrasta con fuente oficial vigente y se cita. Verificación rápida por etapa: pytest (base 90 passed), los dos comandos de `search.py`, `git diff --check`, prueba en navegador integrado con teclado real.
 
 ## Pendiente de Ariel
 - Crear el tag `v2.3.0` y la release en GitHub cuando decidas publicar (la orden WCAG-REL-1 no lo hace). Fusionar `tarea/wcag-rel-1` también publica en `main`.
