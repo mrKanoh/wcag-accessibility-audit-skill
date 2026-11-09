@@ -24,9 +24,11 @@
     .carousel-btn:hover { background: #1e40af; }
     .carousel-btn:focus-visible { outline: 3px solid #1d4ed8; outline-offset: 3px; }
     .carousel-dots { display: flex; gap: .5rem; align-items: center; }
-    .dot { width: 10px; height: 10px; border-radius: 50%; border: 2px solid #1d4ed8; background: transparent; cursor: pointer; padding: 0; }
-    .dot[aria-current="true"] { background: #1d4ed8; }
-    .dot:focus-visible { outline: 3px solid #1d4ed8; outline-offset: 4px; }
+    /* Target Size (Minimum) 2.5.8: the button is 24×24 CSS px; the visible 10 px dot is drawn by ::before */
+    .dot { width: 24px; height: 24px; border-radius: 50%; border: 0; background: transparent; cursor: pointer; padding: 0; display: flex; align-items: center; justify-content: center; }
+    .dot::before { content: ""; width: 10px; height: 10px; border-radius: 50%; border: 2px solid #1d4ed8; background: transparent; box-sizing: border-box; }
+    .dot[aria-current="true"]::before { background: #1d4ed8; }
+    .dot:focus-visible { outline: 3px solid #1d4ed8; outline-offset: 1px; }
     .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
   </style>
 </head>
@@ -35,7 +37,10 @@
 <p class="desc">WCAG 2.1/2.2 AA. Keyboard: Left/Right arrow keys change slide; the Play/Pause button works with Enter or Space (native button behavior). Auto-rotation starts paused and only the user starts or resumes it with Play. It stops while the pointer is over the carousel and when keyboard focus enters it.</p>
 
 <div class="carousel" id="my-carousel" role="region" aria-roledescription="carousel" aria-label="Accessibility tips">
-  <div class="carousel-slides" id="carousel-slides" aria-live="off" aria-atomic="false">
+  <!-- The ONLY live region. APG Carousel: aria-live on the element wrapping the slides, aria-atomic="false",
+       "off" while auto-rotating and "polite" when not (the script switches it in startTimer/stopTimer).
+       A separate status region would announce every change twice. -->
+  <div class="carousel-slides" id="carousel-slides" aria-live="polite" aria-atomic="false">
     <div class="carousel-slide" role="group" aria-roledescription="slide" aria-label="1 of 4" id="slide-1">
       <span class="slide-emoji" aria-hidden="true">🎹</span>
       <h2 class="slide-title">Keyboard First</h2>
@@ -73,7 +78,6 @@
       <button id="carousel-next" class="carousel-btn" type="button" aria-label="Next slide">&#8594;</button>
     </div>
   </div>
-  <div id="carousel-status" class="sr-only" aria-live="polite" aria-atomic="true"></div>
 </div>
 
 <script>
@@ -86,11 +90,10 @@
   const pauseBtn = document.getElementById('carousel-pause');
   const prevBtn  = document.getElementById('carousel-prev');
   const nextBtn  = document.getElementById('carousel-next');
-  const statusEl = document.getElementById('carousel-status');
   const dots     = [...document.querySelectorAll('.dot')];
   const slides   = [...document.querySelectorAll('.carousel-slide')];
 
-  function goTo(index, announce) {
+  function goTo(index) {
     current = ((index % TOTAL) + TOTAL) % TOTAL;
     slidesEl.style.transform = `translateX(-${current * 100}%)`;
     slides.forEach((s, i) => s.setAttribute('aria-hidden', i === current ? 'false' : 'true'));
@@ -98,18 +101,14 @@
       const a = i === current;
       d.setAttribute('aria-current', String(a));
     });
-    if (announce !== false) {
-      statusEl.textContent = '';
-      requestAnimationFrame(() => {
-        statusEl.textContent = `Slide ${current + 1} of ${TOTAL}: ${slides[current].querySelector('.slide-title').textContent}`;
-      });
-    }
+    // No manual announcement: the slides container is aria-live="polite" when paused,
+    // so changing the visible slide (aria-hidden) is announced by the browser/AT.
   }
 
   function startTimer() {
     if (timer) clearInterval(timer);
     slidesEl.setAttribute('aria-live', 'off');
-    timer = setInterval(() => goTo(current + 1, false), DELAY);
+    timer = setInterval(() => goTo(current + 1), DELAY);
   }
   function stopTimer() {
     if (timer) { clearInterval(timer); timer = null; }
@@ -141,7 +140,7 @@
   root.addEventListener('focusin',    () => { if (isPlaying) setPaused(true); });
   root.addEventListener('mouseenter', () => { if (isPlaying) setPaused(true); });
 
-  goTo(0, false);
+  goTo(0);
   setPaused(true);
 })();
 </script>

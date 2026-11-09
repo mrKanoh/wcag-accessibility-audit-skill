@@ -1,7 +1,7 @@
 # Accessible Component Examples
 
 Reference and learning HTML components demonstrating WCAG 2.1/2.2 AA accessibility patterns.
-Each file is self-contained, except the demo poster and video of `media-player.html`, which load from external hosts. No keyboard or screen-reader verification is recorded for these examples; test and review them before using any of them in production.
+Each file is self-contained, except the demo video of `media-player.html`, which loads from an external host (its poster is an inline SVG). No keyboard or screen-reader verification is recorded for these examples; test and review them before using any of them in production.
 
 ---
 
@@ -46,7 +46,8 @@ Each file is self-contained, except the demo poster and video of `media-player.h
 | Auto-pause | Rotation stops when keyboard focus enters the carousel and does not restart unless the user asks (APG). It also stops while the pointer is over it; this example does not resume it on pointer leave either (a stricter choice than the APG requires) |
 | Dot navigation | Native `<button>`s in a labelled `role="group"` with `aria-current="true"` on the active one (the APG grouped style marks the current picker with `aria-disabled` instead; this example's choice). One tab stop per dot |
 | Keyboard | Left/Right arrows change slide from anywhere in the carousel (single handler); Play/Pause, dots and arrows are native buttons (Enter/Space) |
-| Announcements | `aria-live="polite"` on slide area (only when paused to avoid verbosity) |
+| Announcements | One live region only: `aria-live` on the element wrapping the slides, `aria-atomic="false"`, `off` while auto-rotating and `polite` when stopped (APG Carousel). No separate status region, which announced every change twice. Not verified with a screen reader |
+| Dots | Each button is 24×24 CSS px (WCAG 2.5.8); the visible 10 px dot is a pseudo-element |
 
 ---
 
@@ -86,7 +87,7 @@ Each file is self-contained, except the demo poster and video of `media-player.h
 | Feature | Implementation |
 |---------|---------------|
 | Captions | Embedded `<track kind="captions">` with toggle button |
-| Audio Description | Embedded `<track kind="descriptions">` with toggle button |
+| Audio Description | Text alternative only: the AD toggle shows the active `<track kind="descriptions">` cue in a visible box and announces it (browsers do not play that track kind). No narrated audio; the sample cue is a placeholder, not a description of the demo video |
 | Keyboard | Native behavior only, no custom shortcuts: Tab between controls, Space/Enter activate the focused button, arrow keys move the focused slider (seek or volume) |
 | ARIA states | Fixed label + `aria-pressed` for CC and AD (names `CC (closed captions)` / `AD (audio descriptions)` contain the visible text, 2.5.3); Play/Pause and Mute/Unmute change their label and do not use `aria-pressed` (never both) |
 | Play/Pause label | Follows the video's `play`, `pause` and `ended` events, not only clicks |

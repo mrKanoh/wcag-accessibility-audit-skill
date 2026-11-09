@@ -1,8 +1,8 @@
 # PROGRESS
 
 ## Trabajo actual: WCAG-MIN-1 puntos menores de «Para la próxima orden»  (rama tarea/wcag-min-1)
-- Etapas: [x] 1 R1 tree-view y R2 data-grid (commit de la etapa 1, `fix(examples): … (etapa 1)`) · [ ] 2 R3 carrusel, R4 toast, R5 reproductor · [ ] 3 R6-R9 y PR en borrador
-- Ciclo: etapas aprobadas 0, auditoría pendiente, rondas 0
+- Etapas: [x] 1 R1 tree-view y R2 data-grid (commit de la etapa 1, `fix(examples): … (etapa 1)`) · [x] 2 R3 carrusel, R4 toast, R5 reproductor, y renumeración del comentario de data-grid (commit de la etapa 2, `fix(examples): … (etapa 2)`) · [ ] 3 R6-R9 y PR en borrador
+- Ciclo: etapas aprobadas 1, auditoría pendiente, rondas 0
 - Línea base de pruebas: 90 passed (ver «Línea base de pruebas»)
 - Pendiente / bloqueos: ninguno. Firefox, Safari y lectores de pantalla sin verificar.
 ### Orden completa

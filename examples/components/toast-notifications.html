@@ -101,7 +101,8 @@
   1. role="status" with aria-live="polite" for non-critical messages (success, info, warning)
   2. role="alert"  with aria-live="assertive" for critical errors
   3. aria-atomic="false" on both regions: each new toast is announced on its own, not the whole accumulated region
-  4. aria-label on the region for landmark navigation
+  4. aria-label on the region gives the live region an accessible name. role="status" and role="alert" are
+     live region roles, NOT landmarks, so they do not appear in landmark navigation
   5. Each toast has a dismiss button with an accessible name that includes the message context
   6. Errors and the "Session expiring" toast ask for action, so they have no timer: they stay until the user
      dismisses them (APG alert: avoid alerts that disappear on their own; WCAG 2.2.1)
