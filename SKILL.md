@@ -307,10 +307,11 @@ Design guidance, not WCAG requirements (source: Heydon Pickering, *Inclusive Com
   <button role="tab" id="t1" aria-selected="true"  aria-controls="p1">Profile</button>
   <button role="tab" id="t2" aria-selected="false" aria-controls="p2" tabindex="-1">Security</button>
 </div>
-<div role="tabpanel" id="p1" aria-labelledby="t1">…</div>
-<div role="tabpanel" id="p2" aria-labelledby="t2" hidden>…</div>
+<div role="tabpanel" id="p1" aria-labelledby="t1" tabindex="0">…</div>
+<div role="tabpanel" id="p2" aria-labelledby="t2" tabindex="0" hidden>…</div>
 ```
 - Arrow keys switch tabs; Home/End jump to first/last
+- `tabindex="0"` on each `tabpanel` puts the panel in the page's Tab sequence ([APG Tabs](https://www.w3.org/WAI/ARIA/apg/patterns/tabs/), checked 2026-11-09: set it when the panel has no focusable content or its first content is not focusable). If the first element inside the panel is focusable (a button, link or field), omit it
 - Active tab `tabindex="0"`; inactive `tabindex="-1"` (roving tabindex)
 
 ### Accessible Form Validation
