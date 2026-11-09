@@ -39,7 +39,8 @@
 <div class="carousel" id="my-carousel" role="region" aria-roledescription="carousel" aria-label="Accessibility tips">
   <!-- The ONLY live region. APG Carousel: aria-live on the element wrapping the slides, aria-atomic="false",
        "off" while auto-rotating and "polite" when not (the script switches it in startTimer/stopTimer).
-       A separate status region would announce every change twice. -->
+       Hypothesis, not verified with a screen reader: a second region (e.g. a separate status element)
+       alongside this one could be announced twice. -->
   <div class="carousel-slides" id="carousel-slides" aria-live="polite" aria-atomic="false">
     <div class="carousel-slide" role="group" aria-roledescription="slide" aria-label="1 of 4" id="slide-1">
       <span class="slide-emoji" aria-hidden="true">🎹</span>
@@ -102,7 +103,8 @@
       d.setAttribute('aria-current', String(a));
     });
     // No manual announcement: the slides container is aria-live="polite" when paused,
-    // so changing the visible slide (aria-hidden) is announced by the browser/AT.
+    // so changing the visible slide (aria-hidden) is expected to be announced (APG technique),
+    // not verified with a screen reader.
   }
 
   function startTimer() {

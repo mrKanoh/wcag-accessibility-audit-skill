@@ -66,7 +66,7 @@
   WCAG 2.1/2.2 AA. Keyboard: native behavior only, no custom shortcuts. <kbd>Tab</kbd> moves between controls ·
   <kbd>Space</kbd>/<kbd>Enter</kbd> activate the focused button · <kbd>←</kbd><kbd>→</kbd> (or <kbd>↑</kbd><kbd>↓</kbd>) change the focused slider (seek or volume).
   Includes Captions (CC) and Audio Description (AD) toggles.
-  Limitation: the demo video has no narrated description track and browsers do not play <code>kind="descriptions"</code> tracks,
+  Limitation: the demo video has no narrated description track and browsers do not voice or display <code>kind="descriptions"</code> cues by default (not verified across all browsers),
   so AD shows the description cues as text (a text alternative); the sample cue is a placeholder, not a description of the demo video.
 </p>
 
@@ -205,7 +205,8 @@
     announcer.textContent = !isShowing ? "Captions enabled" : "Captions disabled";
   });
 
-  // Toggling AD. Browsers do not render or voice <track kind="descriptions">, so the AD button
+  // Toggling AD. Browsers do not voice or display <track kind="descriptions"> cues by default
+  // (not verified across all browsers; the HTML Standard only says they are intended for audio synthesis), so the AD button
   // switches a TEXT alternative on: the active description cue is shown in a visible box and sent
   // to the live region. It is not a narrated audio track (see the note in the page).
   const adTrack = video.textTracks[1]; // Assuming AD is second track
