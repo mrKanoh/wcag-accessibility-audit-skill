@@ -1,7 +1,7 @@
 # Accessible Component Examples
 
 Reference and learning HTML components demonstrating WCAG 2.1/2.2 AA accessibility patterns.
-Each file is self-contained, except the demo poster and video of `media-player.html`, which load from external hosts. No keyboard or screen-reader verification is recorded for these examples; test and review them before using any of them in production.
+Each file is self-contained, except the demo video of `media-player.html`, which loads from an external host (its poster is an inline SVG). No keyboard or screen-reader verification is recorded for these examples; test and review them before using any of them in production.
 
 ---
 
@@ -46,7 +46,8 @@ Each file is self-contained, except the demo poster and video of `media-player.h
 | Auto-pause | Rotation stops when keyboard focus enters the carousel and does not restart unless the user asks (APG). It also stops while the pointer is over it; this example does not resume it on pointer leave either (a stricter choice than the APG requires) |
 | Dot navigation | Native `<button>`s in a labelled `role="group"` with `aria-current="true"` on the active one (the APG grouped style marks the current picker with `aria-disabled` instead; this example's choice). One tab stop per dot |
 | Keyboard | Left/Right arrows change slide from anywhere in the carousel (single handler); Play/Pause, dots and arrows are native buttons (Enter/Space) |
-| Announcements | `aria-live="polite"` on slide area (only when paused to avoid verbosity) |
+| Announcements | One live region only: `aria-live` on the element wrapping the slides, `aria-atomic="false"`, `off` while auto-rotating and `polite` when stopped (APG Carousel). No separate status region, since a second region could be announced twice (hypothesis). The change of visible slide is expected to be announced (APG technique); not verified with a screen reader |
+| Dots | Each button is 24×24 CSS px (WCAG 2.5.8); the visible 10 px dot is a pseudo-element |
 
 ---
 
@@ -58,8 +59,8 @@ Each file is self-contained, except the demo poster and video of `media-player.h
 |---------|---------------|
 | ARIA structure | `role="tree"` → `role="treeitem"` → `role="group"` (nested) |
 | Expand/collapse | `aria-expanded` on parent nodes; the `hidden` attribute on collapsed nested groups |
-| Selection | Enter/Space (or click) select a node and toggle it if it has children; `aria-selected="true"` on the selected `treeitem` (single-select) |
-| Focus | The `treeitem` carries `tabindex` 0/-1, but each node also holds a `<button>` that Tab can reach, so this is not a clean roving tabindex yet |
+| Selection | Enter/Space select the focused node (arrows open and close); a click selects and toggles it. `aria-selected="true"` on the selected `treeitem`, `"false"` on the others; the first node starts selected (single-select) |
+| Focus | Roving tabindex on the `treeitem` itself (0/-1); no `<button>` or other focusable element inside, so Tab enters and leaves the tree in one stop. Parent items are named by `aria-labelledby` on their own label |
 | Keyboard | ↑↓ navigate; → expand or enter child; ← collapse or exit to parent; Home/End jump; `*` expands all visible nodes at the same level, even under other parents (the APG says siblings) |
 | Position | `aria-level`, `aria-setsize`, `aria-posinset` on every node |
 
@@ -86,7 +87,7 @@ Each file is self-contained, except the demo poster and video of `media-player.h
 | Feature | Implementation |
 |---------|---------------|
 | Captions | Embedded `<track kind="captions">` with toggle button |
-| Audio Description | Embedded `<track kind="descriptions">` with toggle button |
+| Audio Description | Text alternative only: the AD toggle shows the active `<track kind="descriptions">` cue in a visible box and announces it (browsers do not voice or display `kind="descriptions"` cues by default; not verified across all browsers. The HTML Standard and MDN only say these cues are intended for audio synthesis). No narrated audio; the sample cue is a placeholder, not a description of the demo video |
 | Keyboard | Native behavior only, no custom shortcuts: Tab between controls, Space/Enter activate the focused button, arrow keys move the focused slider (seek or volume) |
 | ARIA states | Fixed label + `aria-pressed` for CC and AD (names `CC (closed captions)` / `AD (audio descriptions)` contain the visible text, 2.5.3); Play/Pause and Mute/Unmute change their label and do not use `aria-pressed` (never both) |
 | Play/Pause label | Follows the video's `play`, `pause` and `ended` events, not only clicks |
@@ -104,9 +105,11 @@ Each file is self-contained, except the demo poster and video of `media-player.h
 | Name | Named by its `<caption>` (no `aria-label` on the table) |
 | Sorting | `<th scope="col" aria-sort>` containing a native `<button>`; Enter/Space sort and `aria-sort` toggles ascending/descending; a status region announces the result |
 | Search | Visible `<label>` "Search:" is the field's name (name matches label, 2.5.3); result count in a live region |
-| Row controls | Native checkboxes and buttons with row context in their names; select-all with `indeterminate` state |
-| Keyboard | Native behavior only: Tab through the controls, Enter/Space on buttons, Space on checkboxes. No cell-by-cell grid navigation |
-| Not verified | The `overflow-x:auto` wrapper has no `tabindex`, role or name; see `PROGRESS.md` |
+| Row controls | Native checkboxes and buttons with row context in their names; select-all uses the native `indeterminate` property (no `aria-checked`) |
+| Scroll container | The `overflow-x:auto` wrapper is `role="region"` named by the page heading, with `tabindex="0"` so keyboard users can scroll it. It holds focusable children, so Chrome 132+ would not focus it by default ([source](https://developer.chrome.com/blog/keyboard-focusable-scrollers)) |
+| Search row | Plain group, no `role="toolbar"`: the APG asks for 3+ controls with arrow-key navigation, and a text box conflicts with Left/Right |
+| Keyboard | Native behavior only: Tab through the controls, Enter/Space on buttons, Space on checkboxes; arrows scroll the focused region. No cell-by-cell grid navigation |
+| Not verified | Scroll region focus in Firefox and Safari, and screen reader output |
 
 ---
 

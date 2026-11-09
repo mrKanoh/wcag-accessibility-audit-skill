@@ -54,6 +54,8 @@
     .toggle-btn { font-size: .85rem; font-weight: 700; }
     .toggle-btn[aria-pressed="true"] { color: #60a5fa; border-color: #60a5fa; background: rgba(96,165,250,.1); }
 
+    .ad-box { background: #1f2937; color: #fff; padding: .6rem 1rem; font-size: .9rem; border-top: 1px solid #374151; }
+
     .sr-only { position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0; }
   </style>
 </head>
@@ -64,12 +66,17 @@
   WCAG 2.1/2.2 AA. Keyboard: native behavior only, no custom shortcuts. <kbd>Tab</kbd> moves between controls ·
   <kbd>Space</kbd>/<kbd>Enter</kbd> activate the focused button · <kbd>←</kbd><kbd>→</kbd> (or <kbd>↑</kbd><kbd>↓</kbd>) change the focused slider (seek or volume).
   Includes Captions (CC) and Audio Description (AD) toggles.
+  Limitation: the demo video has no narrated description track and browsers do not voice or display <code>kind="descriptions"</code> cues by default (not verified across all browsers),
+  so AD shows the description cues as text (a text alternative); the sample cue is a placeholder, not a description of the demo video.
 </p>
 
 <!--
   WCAG KEY POINTS:
   1. 1.2.2 Captions (Prerecorded): <track kind="captions"> provided.
-  2. 1.2.3 / 1.2.5 Audio Description: Secondary audio track or text-based AD provided.
+  2. 1.2.3 / 1.2.5 Audio Description: text-based AD only. The AD button shows the active cue of the
+     descriptions track in a visible box and announces it; there is no narrated audio track, and the
+     sample cue does not describe the demo video. A real implementation needs a described audio/video version.
+     The poster is an inline SVG (no third-party host).
   3. 2.1.1 Keyboard: Custom controls are native buttons and ranges, so they work with the keyboard
      (no custom Space/Enter/arrow shortcuts on the player itself).
   4. 2.4.7 Focus Visible: High contrast focus rings on all controls.
@@ -80,7 +87,7 @@
 -->
 
 <div class="player-wrapper" role="region" aria-label="Video Player">
-  <video id="video" crossorigin="anonymous" poster="https://via.placeholder.com/640x360.png?text=Video+Poster">
+  <video id="video" crossorigin="anonymous" poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='640' height='360'%3E%3Crect width='640' height='360' fill='%23111827'/%3E%3Ctext x='320' y='190' fill='%23ffffff' font-family='sans-serif' font-size='32' text-anchor='middle'%3EVideo poster%3C/text%3E%3C/svg%3E">
     <!-- Provide actual video source here -->
     <source src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/friday.mp4" type="video/mp4">
     <!-- Captions -->
@@ -108,6 +115,9 @@
 
     <button id="cc-btn" class="player-btn toggle-btn" aria-label="CC (closed captions)" aria-pressed="true">CC</button>
     <button id="ad-btn" class="player-btn toggle-btn" aria-label="AD (audio descriptions)" aria-pressed="false">AD</button>
+  </div>
+  <div id="ad-box" class="ad-box" hidden>
+    <strong>Audio description (text):</strong> <span id="ad-text"></span>
   </div>
 </div>
 
@@ -195,19 +205,37 @@
     announcer.textContent = !isShowing ? "Captions enabled" : "Captions disabled";
   });
 
-  // Toggling AD
+  // Toggling AD. Browsers do not voice or display <track kind="descriptions"> cues by default
+  // (not verified across all browsers; the HTML Standard only says they are intended for audio synthesis), so the AD button
+  // switches a TEXT alternative on: the active description cue is shown in a visible box and sent
+  // to the live region. It is not a narrated audio track (see the note in the page).
+  const adTrack = video.textTracks[1]; // Assuming AD is second track
+  const adText = document.getElementById('ad-text');
+  const adBox = document.getElementById('ad-box');
+  let adOn = false;
   adBtn.addEventListener('click', () => {
-    const track = video.textTracks[1]; // Assuming AD is second track
-    if (!track) return;
-    const isShowing = track.mode === 'showing';
-    track.mode = isShowing ? 'hidden' : 'showing';
-    adBtn.setAttribute('aria-pressed', !isShowing);
-    announcer.textContent = !isShowing ? "Audio descriptions enabled" : "Audio descriptions disabled";
+    adOn = !adOn;
+    adBtn.setAttribute('aria-pressed', String(adOn));
+    adBox.hidden = !adOn;
+    if (adOn) showAdCue();
+    else adText.textContent = '';
+    announcer.textContent = adOn ? "Audio descriptions enabled (text)" : "Audio descriptions disabled";
+  });
+  function showAdCue() {
+    const cue = adTrack && adTrack.activeCues && adTrack.activeCues[0];
+    adText.textContent = cue ? cue.text : 'Descriptions appear here during playback.';
+    return cue;
+  }
+  if (adTrack) adTrack.addEventListener('cuechange', () => {
+    if (!adOn) return;
+    const cue = showAdCue();
+    if (cue) announcer.textContent = 'Audio description: ' + cue.text;
   });
 
-  // Init text track states based on markup (Captions default to showing)
+  // Init text track states based on markup (Captions default to showing).
+  // 'hidden' keeps the descriptions track loaded and firing cuechange without browser rendering.
   if(video.textTracks[0]) video.textTracks[0].mode = 'showing';
-  if(video.textTracks[1]) video.textTracks[1].mode = 'hidden';
+  if(adTrack) adTrack.mode = 'hidden';
 
 })();
 </script>

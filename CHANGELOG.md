@@ -9,6 +9,18 @@ This project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Fixed
+- `examples/components/tree-view.html`: APG Tree View keyboard and focus model (no type-ahead). The `treeitem` is the only focus target (roving tabindex, no inner `<button>`), `aria-selected` starts coherent, Enter/Space select and the arrows open/close.
+- `examples/components/data-grid.html`: the scrolling container is a named, focusable `region` (`tabindex="0"`); removed the redundant `aria-checked` on the native select-all checkbox and `role="toolbar"` from a row with a single control.
+- `examples/components/carousel.html`: one live region only (on the slides container, off while rotating, polite when stopped, per the APG), and dots of 24×24 CSS px (WCAG 2.5.8).
+- `examples/components/media-player.html`: the AD button now shows the description cues as text (browsers do not voice or display `kind="descriptions"` cues by default; not verified across all browsers), with a truthful limitation note; the poster is an inline SVG instead of a third-party image.
+- `examples/components/toast-notifications.html`: comment no longer calls `role="status"` a landmark.
+- `SKILL.md` §5: the tab panel example sets `tabindex="0"` on `tabpanel`, as the APG Tabs pattern asks when the first content is not focusable.
+- `templates/site-audit-workbook.md`: «three AAA entries» is said to count dataset records, not WCAG 2.2 AAA criteria.
+
+### Added
+- `references/form-labels-and-names.md`: note that browser translation of `aria-label` is inconsistent (third-party dated tests, not vendor documentation), so prefer visible text or `aria-labelledby`.
+
 ## [2.3.0] - 2026-11-06
 
 ### Added

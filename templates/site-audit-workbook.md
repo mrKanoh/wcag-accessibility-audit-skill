@@ -33,7 +33,7 @@ Record discovered links separately from evaluated pages. For a pilot, select hom
 
 ## Criterion matrix
 
-Populate every criterion at the target version/level, including inherited A criteria for AA. For 2.2 AA, use the 55 A/AA entries, not the three AAA entries, from `wcag --wcag-version 2.2 --output json`. The table below is a schema, not a completed criterion list.
+Populate every criterion at the target version/level, including inherited A criteria for AA. For 2.2 AA, use the 55 A/AA entries, not the three AAA entries, from `wcag --wcag-version 2.2 --output json`. «Three AAA entries» counts records in this skill's dataset for that query; it is not the number of AAA success criteria in WCAG 2.2. The table below is a schema, not a completed criterion list.
 
 | Criterion | Page/state coverage | Evaluation method | Run/test/evidence IDs | Outcome | Rationale and remaining checks |
 |---|---|---|---|---|---|
