@@ -254,8 +254,8 @@ Prompts live in `prompts/` as Markdown files.
 
 When adding a new framework section:
 
-1. Add it as `## N. Framework Name` (next available number)
-2. Update the "Notes for the agent" bullet that lists stack examples
+1. Add it as a `## Framework Name` section (no number) in `references/framework-examples.md` (web) or `references/mobile.md` (native and React Native), and add it to that file's contents list
+2. Update the "Notes for the agent" bullet in `SKILL.md` that lists stack examples, and the topic table under "Where to read the detail" if the file's scope changes
 3. Update both `README.md` and `README-es.md` if the documented scope changes
 
 ---
