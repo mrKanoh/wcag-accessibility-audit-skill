@@ -15,7 +15,7 @@ assignees: ''
 - [ ] New accessible component (`examples/components/`)
 - [ ] New Claude prompt (`prompts/`)
 - [ ] New CSV data (specify database: `data/_____.csv`)
-- [ ] New framework example in SKILL.md (Vue 3, Remix, Qwik, etc.)
+- [ ] New framework example in `references/framework-examples.md` (Vue 3, Remix, Qwik, etc.; native and React Native in `references/mobile.md`)
 - [ ] New template (`templates/`)
 - [ ] `search.py` improvement
 - [ ] Other documentation

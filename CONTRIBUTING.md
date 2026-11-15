@@ -87,7 +87,7 @@ Use a branch name that describes your contribution. After making and reviewing y
 
 ```
 wcag-accessibility/
-├── SKILL.md                    ← Skill instructions (loaded when invoked)
+├── SKILL.md                    ← Skill instructions: task map (loaded when invoked)
 ├── README.md                   ← English project documentation
 ├── README-es.md                ← Spanish project documentation
 ├── CHANGELOG.md                ← Document your changes here
@@ -106,13 +106,21 @@ wcag-accessibility/
 │       ├── carousel.html
 │       └── tree-view.html
 │
+├── references/                 ← Topic files linked from SKILL.md (one level deep)
+│   ├── components.md
+│   ├── framework-examples.md
+│   ├── mobile.md
+│   └── ...
+│
 ├── prompts/                    ← 12 task prompts
 ├── templates/                  ← Audit report, CI pipeline, VPAT
 ├── scripts/
 │   ├── search.py               ← CLI search tool
 │   └── generate-resources-md.py
 └── tests/
-    └── test_search.py          ← pytest suite for search.py
+    ├── test_search.py          ← pytest suite for search.py
+    ├── test_skill_metadata.py  ← SKILL.md frontmatter limits
+    └── test_internal_links.py  ← relative links and anchors in SKILL.md, READMEs, references/
 ```
 
 ---
