@@ -71,7 +71,6 @@ jobs:
               http://localhost:3000/login \
               http://localhost:3000/dashboard \
               --tags wcag2a,wcag2aa,wcag21a,wcag21aa,wcag22aa \
-              --reporter json \
               --exit \
               --stdout > axe-report.json
         # --exit makes axe return 1 when a rule fails, so this step (and the job) fails on violations.
