@@ -51,6 +51,8 @@ Handoff artifacts a designer must include:
 
 > Full phase-by-phase checklist: `data/handoff-checklist.csv` (Research → Design → Dev → QA → Release).
 
+What each of these decisions requires and a wireframe/mockup review checklist: [design-phase.md](design-phase.md).
+
 ---
 
 ## AI-Assisted Accessible Development

@@ -48,7 +48,7 @@ Reading instructions and executing Python are separate capabilities; state which
 Pick the task, follow its steps, and open the linked file only when the step needs the detail. Tasks often combine (for example review code, then remediate).
 
 ### Design (visual design, design system, handoff)
-1. Set the target: WCAG 2.2 AA unless a law or contract names 2.1 AA ([legal-framework.md](references/legal-framework.md)).
+1. Set the target: WCAG 2.2 AA unless a law or contract names 2.1 AA ([legal-framework.md](references/legal-framework.md)). What the design decides (structure, focus order, states, focus indicator, target size, help placement) and a wireframe/mockup review checklist: [design-phase.md](references/design-phase.md).
 2. Typography and color: keep WCAG requirements apart from design guidance; audit every color pair and state, dark mode and forced colors ([typography-color-and-preferences.md](references/typography-color-and-preferences.md); `data/typography-rules.csv`, `data/color-palette-rules.csv`).
 3. Before designing a custom component, ask whether a simpler native pattern does the job ([components.md](references/components.md#before-you-build-a-custom-component)).
 4. Check the WCAG 2.2 additions that design decides: focus not obscured, target size, dragging alternatives, consistent help, redundant entry, accessible authentication ([wcag-criteria.md](references/wcag-criteria.md#wcag-22-additions-new-since-21)).
@@ -58,13 +58,13 @@ Pick the task, follow its steps, and open the linked file only when the step nee
 ### Build (HTML, components, frameworks, mobile)
 1. Semantic HTML first; ARIA only when no native element provides the semantics ([semantic-html-and-aria.md](references/semantic-html-and-aria.md); `data/semantic-html.csv`).
 2. Custom widgets: markup, focus and keys in [components.md](references/components.md), patterns in `data/aria-patterns.csv`, and the HTML examples in `examples/components/` (listed in [templates-prompts-and-resources.md](references/templates-prompts-and-resources.md#accessible-component-examples-examplescomponents)).
-3. Forms, labels and accessible names: [form-labels-and-names.md](references/form-labels-and-names.md). Authentication (3.3.8 / 3.3.9) and modal focus: [authentication-and-modal-focus.md](references/authentication-and-modal-focus.md).
+3. Forms, labels and accessible names: [form-labels-and-names.md](references/form-labels-and-names.md); building the form (groups, instructions, required fields, validation, error summary, multi-step): [forms.md](references/forms.md). Authentication (3.3.8 / 3.3.9) and modal focus: [authentication-and-modal-focus.md](references/authentication-and-modal-focus.md).
 4. Framework code: [framework-examples.md](references/framework-examples.md) (Next.js, Angular, Svelte, Astro, SolidJS, Vue 3). Native and React Native: [mobile.md](references/mobile.md).
 5. Respect user preferences (reduced motion, contrast, forced colors, transparency, text size): [typography-color-and-preferences.md](references/typography-color-and-preferences.md#user-preference-media-queries).
 6. Add automated checks to CI and plan keyboard and screen reader tests ([testing-and-screen-readers.md](references/testing-and-screen-readers.md); `templates/a11y-ci.yml`).
 
 ### Review code (a component, a fragment, a pull request)
-1. Read [form-labels-and-names.md](references/form-labels-and-names.md) first when the code has forms, controls, icon buttons or repeated names; read [authentication-and-modal-focus.md](references/authentication-and-modal-focus.md) for login steps or dialogs.
+1. Read [form-labels-and-names.md](references/form-labels-and-names.md) first when the code has forms, controls, icon buttons or repeated names; read [authentication-and-modal-focus.md](references/authentication-and-modal-focus.md) for login steps or dialogs. For how a form is built (groups, required fields, validation timing, errors), read [forms.md](references/forms.md).
 2. For each issue, name the element, the barrier, the criterion (ID, level, version) and why it applies; look criteria up with `python scripts/search.py wcag --id <id>` ([wcag-criteria.md](references/wcag-criteria.md)).
 3. Keep apart what the code demonstrates, what depends on context, what needs browser, keyboard, screen reader or server verification, and design recommendations.
 4. Propose the smallest fix; common fixes are in [audit-process-and-kpis.md](references/audit-process-and-kpis.md#common-issues--fixes) and component recipes in [components.md](references/components.md).
@@ -93,6 +93,8 @@ Pick the task, follow its steps, and open the linked file only when the step nee
 | Semantic HTML, rules of ARIA, roles, states and properties | [semantic-html-and-aria.md](references/semantic-html-and-aria.md) |
 | Custom components (modal, tabs, form validation, combobox, button vs link, drag and drop, tooltip/toggletip) and keyboard patterns | [components.md](references/components.md) |
 | Form labels, accessible names, input purpose | [form-labels-and-names.md](references/form-labels-and-names.md) |
+| Building forms: groups, instructions, required fields, validation, error summary, error prevention, redundant entry, multi-step | [forms.md](references/forms.md) |
+| Design phase: structure, focus order, states, focus indicator, target size, dragging, consistent help, design review checklist | [design-phase.md](references/design-phase.md) |
 | Accessible authentication (3.3.8 / 3.3.9) and modal focus | [authentication-and-modal-focus.md](references/authentication-and-modal-focus.md) |
 | Typography, color palettes, user preference media queries (incl. forced colors) | [typography-color-and-preferences.md](references/typography-color-and-preferences.md) |
 | Automated tests (axe, pa11y, Lighthouse, Jest, Playwright, Cypress, Storybook, CI) and screen reader quickstarts | [testing-and-screen-readers.md](references/testing-and-screen-readers.md) |
@@ -178,6 +180,8 @@ python scripts/search.py resources --keyword WCAG
 | `data/cognitive-accessibility.csv` | 20 cognitive accessibility (COGA) patterns |
 | `scripts/search.py` | CLI search across all databases |
 | `references/form-labels-and-names.md` | Reviewing form labels, accessible names and input purpose without over-claiming |
+| `references/forms.md` | Building forms: labels, groups, required fields, validation, error summary with focus, 3.3.4 and 3.3.7 |
+| `references/design-phase.md` | What design decides before code, handoff pointers and a wireframe/mockup review checklist |
 | `references/authentication-and-modal-focus.md` | What 3.3.8 / 3.3.9 require, and how to choose initial and return focus in modal dialogs |
 | `references/site-audit-procedure.md` | Scoped site-audit procedure: inventory, automatic checks, manual protocols, evidence status |
 | `templates/audit-report.md` | Complete audit report template (fill-in) |

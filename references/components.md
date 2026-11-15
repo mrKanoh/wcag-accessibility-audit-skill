@@ -66,6 +66,7 @@ Design guidance, not WCAG requirements (source: Heydon Pickering, *Inclusive Com
 <span id="email-help">We'll never share it.</span>
 <span id="email-error" role="alert">Enter a valid email address.</span>
 ```
+When to validate, when to use `role="alert"`, and an error summary with focus management: [forms.md](forms.md).
 
 ### Combobox (Autocomplete)
 ```html
