@@ -94,14 +94,14 @@ Fields that collect information about the user (name, email, address, phone, bir
 
 ## When to validate
 
-No success criterion says when to validate. The first three points are **guidance** from the WAI Forms tutorial ("User Notifications"):
+No success criterion says when to validate. These two points are **guidance** from the WAI Forms tutorial ("User Notifications"):
 
-- **On submit** is the baseline: check everything, show the errors, keep what the user entered.
 - **When the user leaves a field** suits fields with a required format, such as dates. The tutorial explains that checking while typing "would display error messages most of the time".
 - **While typing** can help (password rules, character counts), but "not all situations may be appropriate". If you do it, do not announce a new error on every keystroke: let the message update quietly and avoid `role="alert"` or `aria-live="assertive"` for it.
 
-Two more points are this skill's own guidance, not from that tutorial:
+Three more points are this skill's own guidance, not from that tutorial:
 
+- **On submit** is the baseline: check everything, show the errors, keep what the user entered.
 - Do not disable the submit button until the form is valid: users then get no explanation of what is wrong. Let them submit and identify the errors. (A disabled button is not itself a WCAG failure.)
 - Validate on the server too. Client-side checks are a convenience, not the only check.
 
