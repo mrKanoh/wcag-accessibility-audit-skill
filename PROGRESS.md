@@ -1,16 +1,7 @@
 # PROGRESS
 
-## Trabajo actual: WCAG-FIX-1 corrección de código roto  (rama tarea/wcag-fix-1)
-- Etapas: [x] 1 R1–R7 y R12 en SKILL.md (commit b620d15) · [x] 2 R8–R9 combobox y date-picker (commit de la etapa 2) · [ ] 3 R10–R11 y R13 CI, design tokens, CHANGELOG (+ alinear comentario del modal de Vue sobre devolución de foco, pedido del orquestador)
-- Ciclo: etapas aprobadas 1, auditoría pendiente, rondas 0
-- Línea base de pruebas: 90 passed (ver «Línea base de pruebas»); etiqueta `antes-de-wcag-fix-1` en main cd0f5cf
-- Pendiente / bloqueos: ninguno
-### Orden completa (resumida por el trabajador; el original lo tiene el orquestador)
-Tamaño normal. Autorizado: editar, commit local por etapa, push de `tarea/wcag-fix-1`, PR en borrador. No autorizado: fusionar, `gh pr ready`, fuera de alcance, reestructurar SKILL.md, versión WCAG por defecto, marco legal, referencias nuevas.
-Objetivo: todo fragmento de código de la lista correcto según documentación oficial vigente o rotulado «No compilado»; combobox y date-picker funcionan con ratón y teclado sin ARIA inválido.
-Alcance R1 Compose · R2 React Native · R3 SwiftUI · R4 Drag & Drop (2.5.7) · R5 Angular · R6 Vue modal con `<dialog>` · R7 SKILL.md 1.4.2 · R8 combobox.html · R9 date-picker.html (APG) · R10 a11y-ci.yml y `--testPathPattern` · R11 design-tokens-audit.md · R12 comentario «Verificado contra… (2026-11)» o «No compilado» · R13 CHANGELOG y PROGRESS.
-Etapas: 1 R1–R7+R12 (`fix(skill): correct mobile, framework and drag-and-drop snippets (etapa 1)`); 2 R8–R9 con prueba en navegador integrado (`fix(examples): combobox mouse selection and date-picker APG grid and focus (etapa 2)`); 3 R10–R11+R13 (`fix(templates): a11y CI fails on violations, design tokens criteria (etapa 3)`).
-Verificación rápida: pytest, `search.py wcag --level AA --output json`, `search.py all --keyword contrast --output json`, `git diff --check`.
+## Trabajo actual
+- Ninguno.
 
 ## Pendiente de Ariel
 - Crear el tag `v2.3.0` y la release en GitHub cuando decidas publicar (no existe ningún tag `v2.*`).
@@ -22,6 +13,7 @@ Verificación rápida: pytest, `search.py wcag --level AA --output json`, `searc
 - Verificar con lector de pantalla, Firefox y Safari los ejemplos corregidos en WCAG-MIN-1 (región viva única del carrusel con `aria-hidden`, anuncio de los cues de AD, foco del contenedor con scroll de `data-grid.html`, nombres de los `treeitem`). Solo se probó con teclado en el navegador integrado.
 
 ## Terminados
+- 2026-11-14 WCAG-FIX-1 — fragmentos de código corregidos o rotulados «No compilado»: `SKILL.md` (Compose, React Native, SwiftUI, drag and drop, Angular, Vue con `<dialog>`, fila 1.4.2, Jest 30), `combobox.html` (selección con ratón, error con `aria-describedby`), `date-picker.html` (rejilla APG, foco atrapado, Escape), `a11y-ci.yml` (falla ante violaciones, Playwright con servidor, Node 24), `design-tokens-audit.md` (1.4.11), `CHANGELOG.md` · commits b620d15 (etapa 1), 2d043eb (etapa 2) y el de la etapa 3 (HEAD de `tarea/wcag-fix-1`) · rondas 0 · auditor pendiente · pendiente: nada compilado ni probado en dispositivo; workflow de CI sin ejecutar; ejemplos HTML sin lector de pantalla, Firefox ni Safari
 - 2026-11-09 WCAG-MIN-1 — ejemplos conformes con el APG vigente: `tree-view.html` con roving tabindex en el `treeitem` sin `<button>` interno y `aria-selected` inicial coherente, `data-grid.html` con región de scroll enfocable y nombrada, sin `aria-checked` redundante ni `role="toolbar"`, `carousel.html` con una sola región viva y puntos de 24 px, `toast-notifications.html` sin llamar landmark a `role="status"`, `media-player.html` con AD como texto veraz y póster SVG en línea; `SKILL.md` §5 con `tabindex="0"` en el `tabpanel`; nota sobre traducción de `aria-label` en `references/form-labels-and-names.md` (evidencia de terceros citada, no documentación de navegadores); aclaración de «three AAA entries»; `CHANGELOG.md` · commits a886a92 (etapa 1), aa9c446 (etapa 2), de0062f (etapa 3) y la etapa 4 de corrección (HEAD de `tarea/wcag-min-1`; carrusel y AD como hipótesis, CHANGELOG sin «full APG», Tab de la región en data-grid, fuente de `descriptions` suavizada) · rondas 1 · auditor Opus 0/1/5, 1 pasada · pendiente: lectores de pantalla, Firefox y Safari sin verificar; aviso de jerarquía tipográfica de tree-view
 - 2026-11-06 WCAG-REL-1 — `.gitignore` ignora `.env.*` con excepción `!.env.example` (sin `.env.sample` en el repo); `CHANGELOG.md` pasa `[Unreleased]` a `[2.3.0] - 2026-11-06` y deja una `[Unreleased]` vacía (sin enlaces de versión 2.x que ajustar); `pyproject.toml` a 2.3.0 (única otra referencia a 2.2.0 era la entrada histórica del CHANGELOG) · commits beb363b (R1, `chore: ignore .env.* files`) y el de R2-R4 (`chore(release): prepare 2.3.0`, HEAD de `tarea/wcag-rel-1`) · rondas 0 · auditor no hubo · pendiente: tag `v2.3.0` y release en GitHub (decisión de Ariel)
 - 2026-11-06 WCAG-README-1 — comprobación de `README.md` y `README-es.md`: estructura, tablas, enlaces relativos (todos existen), cifras (59 registros del catálogo: 50 con etiqueta 2.1, 9 exactamente 2.2, 24 AA, 3 AAA; 8 ejemplos; 12 prompts; 15 recursos MCP; 14 bases), comandos de `search.py` del README ejecutados, y pruebas de CI · sin discrepancias, sin cambios en los README ni en `CHANGELOG.md` · commit único de esta tarea (ver PR) · rondas 0 · auditor no hubo · pendiente: nada

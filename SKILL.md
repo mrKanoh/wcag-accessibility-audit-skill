@@ -652,7 +652,7 @@ export default { addons: ['@storybook/addon-a11y'] };
 - name: a11y tests
   run: |
     npm ci
-    npm test -- --testPathPattern=a11y
+    npm test -- --testPathPatterns=a11y   # Jest 30 flag (plural); Jest 29 and older: --testPathPattern
     npx playwright test --grep @a11y
 ```
 
@@ -1450,7 +1450,7 @@ const emit  = defineEmits<{ (e: 'close'): void }>();
 const dialogEl = ref<HTMLDialogElement | null>(null);
 
 // showModal() makes the page behind inert and contains Tab; Escape fires `cancel` then `close`.
-// close() returns focus to the element focused before showModal(), if it is still in the document.
+// Browsers should restore focus to the previously focused element on close (not stated on MDN): verify in your targets.
 watch(() => props.open, (val) => {
   const el = dialogEl.value;
   if (!el) return;
