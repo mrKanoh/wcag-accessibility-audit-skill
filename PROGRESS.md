@@ -1,9 +1,9 @@
 # PROGRESS
 
 ## Trabajo actual: WCAG-NORM-1 marco normativo y WCAG 2.2 AA por defecto  (rama tarea/wcag-norm-1)
-- Etapas: [x] 1 DECISIONS.md y SKILL.md con 2.2 AA por defecto (commit en esta rama, ver `git log`) · [ ] 2 marco legal verificado, VPAT, pruebas · [ ] 3 evals, CHANGELOG, PROGRESS, PR
+- Etapas: [x] 1 DECISIONS.md y SKILL.md con 2.2 AA por defecto (commit en esta rama, ver `git log`) · [x] 2 marco legal verificado, VPAT, pruebas (commit en esta rama, ver `git log`) · [ ] 3 evals, CHANGELOG, PROGRESS, PR
 - Ciclo: etapas aprobadas 0, auditoría pendiente, rondas 0
-- Línea base de pruebas: 90 passed antes de empezar (etapa 1: 90 passed)
+- Línea base de pruebas: 90 passed antes de empezar (etapa 1: 90 passed; etapa 2: 92 passed, 2 pruebas nuevas de `verified_on`)
 - Pendiente / bloqueos: ninguno
 ### Orden completa
 Id WCAG-NORM-1, tamaño normal, etiqueta `antes-de-wcag-norm-1` sobre main actualizado. Objetivo: WCAG 2.2 AA por defecto (2.1 AA cuando una ley lo exija) y todo dato legal y normativo correcto a 2026-11 con fuente oficial y fecha de verificación; ningún plazo pasado redactado como futuro. Alcance: R1 `DECISIONS.md` (2026-11-06 fusionar publica; 2026-11-14 WCAG 2.2 AA por defecto); R2 `SKILL.md` Overview, nota 1 y «High-impact AA criteria»; R3 marco legal (§22, nota 12, `data/legal-framework.csv` con `verified_on` y fuente por fila; ADA Título II vs III, EAA en presente, EN 301 549 v3.2.1 y v4.1.1, México verificado); R4 `data/resources.csv`, `templates/vpat-2.5-template.md` (36 CFR; EN 301 549) y «Official VPAT 2.5» → plantilla no oficial; R5 eval 4 de `evals/evals.json` (B2C, presente); R6 `tests/test_search.py` (cifras que cambien, prueba de `verified_on`); R7 CHANGELOG y PROGRESS. No incluye: reestructurar o renumerar SKILL.md, contenido nuevo, README*.md, CONTRIBUTING.md, `codex/readme-docs`, jurisdicciones nuevas. Etapa 1: R1, R2 (commit `docs: WCAG 2.2 AA as default and DECISIONS.md (etapa 1)`). Etapa 2: R3, R4, R6 (commit `data: legal framework verified to 2026-11 (etapa 2)`). Etapa 3: R5, R7, push y PR en borrador con aviso de que fusionar publica (commit `docs: close WCAG-NORM-1 (etapa 3)`). Autorizado: editar, commits locales por etapa, push de la rama y `gh pr create --draft`. No autorizado: fusionar, `gh pr ready`. Fuentes oficiales; lo no verificado se dice; sin asesoría legal.

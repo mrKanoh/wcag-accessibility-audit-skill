@@ -1233,28 +1233,35 @@ Users with motor disabilities may use input methods beyond keyboard and mouse. D
 
 ## 22. Legal Framework
 
-Compliance is often mandatory. Key jurisdictions:
+Compliance is often mandatory. This is general information, not legal advice: confirm the current text with the official source or a lawyer. Rows marked "verified" were checked against official sources on 2026-11-15; the others are not re-verified (see `verified_on` in the CSV). Key jurisdictions:
 
-| Region | Law | Standard | Applies to | Effective |
-|--------|-----|----------|------------|-----------|
-| 🇺🇸 USA (federal) | Section 508 | WCAG 2.0 AA | Federal ICT | 2017 |
-| 🇺🇸 USA (private) | ADA Titles II & III | WCAG 2.1 AA (DOJ 2024 rule) | State/local govt + public accommodations | 2024+ |
-| 🇪🇺 EU | EAA (Directive 2019/882) | EN 301 549 / WCAG 2.1 AA | B2C products & services | **28 Jun 2025** |
-| 🇪🇺 EU | Web Accessibility Directive | EN 301 549 | Public sector websites & apps | In force |
-| 🇬🇧 UK | Equality Act + PSBAR 2018 | WCAG 2.1 AA | Public sector | In force |
-| 🇨🇦 Canada | ACA | WCAG 2.1 AA | Federal entities | In force |
-| 🇨🇦 Ontario | AODA | WCAG 2.0 AA | Public + large private | Full since 2021 |
-| 🇦🇺 Australia | DDA + Digital Service Standard | WCAG 2.1 AA | Government | Active |
-| 🇧🇷 Brazil | LBI (Lei 13.146) + eMAG | WCAG 2.1 AA | Public + private collective use | Active |
-| 🇨🇱 Chile | Ley 20.422 + Decreto 1 | WCAG 2.0 AA | Government | Active |
-| 🇲🇽 Mexico | NOM-034 / Ley GID | WCAG 2.1 AA | Public sector | Evolving |
-| 🇪🇸 Spain | RD 1112/2018 (WAD transposition) | EN 301 549 | Public sector | Active |
-| 🇫🇷 France | RGAA 4 + Loi 2005-102 | WCAG 2.1 AA via RGAA | Public + large companies | Active |
+| Region | Law | Standard | Applies to | Status |
+|--------|-----|----------|------------|--------|
+| 🇺🇸 USA (federal) | Section 508 (36 CFR part 1194) | WCAG 2.0 A and AA | Federal ICT | Compliance since 2018-01-18 (verified) |
+| 🇺🇸 USA (state/local govt) | ADA Title II, DOJ web rule (2024) | WCAG 2.1 AA | State and local government web content and mobile apps | **2027-04-26** (50,000+ people); **2028-04-26** (under 50,000 and special districts); dates extended by DOJ in April 2026 (verified) |
+| 🇺🇸 USA (private) | ADA Title III | No technical standard in DOJ rules; DOJ guidance cites WCAG as helpful guidance | Public accommodations | Case law and settlements; the Title II rule does not apply (verified) |
+| 🇪🇺 EU | EAA (Directive (EU) 2019/882) | EN 301 549 is the intended harmonised standard | B2C products & services | **Applies since 28 Jun 2025** (verified) |
+| 🇪🇺 EU | Web Accessibility Directive (2016/2102) | EN 301 549 v3.2.1 (cited by Decision (EU) 2021/1339) | Public sector websites & apps | In force |
+| 🇬🇧 UK | Equality Act + PSBAR 2018 | WCAG 2.2 AA (per GOV.UK guidance) | Public sector | In force (verified) |
+| 🇲🇽 Mexico | Acuerdo de Disposiciones generales de accesibilidad Web (DOF 2015-12-03) | WCAG, level AA minimum (version not named) | Federal public administration | In force from 2015-12-04; later reforms not confirmed (verified) |
+| 🇨🇦 Canada | ACA | WCAG 2.1 AA | Federal entities | Not re-verified |
+| 🇨🇦 Ontario | AODA | WCAG 2.0 AA | Public + large private | Not re-verified |
+| 🇦🇺 Australia | DDA + Digital Service Standard | WCAG 2.1 AA | Government | Not re-verified |
+| 🇧🇷 Brazil | LBI (Lei 13.146) + eMAG | WCAG 2.1 AA | Public + private collective use | Not re-verified |
+| 🇨🇱 Chile | Ley 20.422 + Decreto 1 | WCAG 2.0 AA | Government | Not re-verified |
+| 🇪🇸 Spain | RD 1112/2018 (WAD transposition) | EN 301 549 | Public sector | Not re-verified |
+| 🇫🇷 France | RGAA 4 + Loi 2005-102 | WCAG 2.1 AA via RGAA | Public + large companies | Not re-verified |
 
-> Full table with enforcement and notes: `data/legal-framework.csv`
+Mexico: NOM-034-STPS-2016 is a workplace safety norm for workers with disabilities, not a web standard.
+
+> Full table with enforcement, notes, `source_url` and `verified_on`: `data/legal-framework.csv`
 > Search: `python scripts/search.py legal --jurisdiction "Chile"`
 
-**EAA 2025 alert**: Private sector digital products and services (e-commerce, banking, transport, e-books, streaming) serving EU consumers must comply by **28 June 2025**.
+**EN 301 549 versions.** v3.2.1 (2021-03) points to WCAG 2.1 A and AA and is the version cited under the Web Accessibility Directive. ETSI published **v4.1.1 on 2026-09-02**, which moves the web requirements to WCAG 2.2 A and AA. A harmonised standard gives a presumption of conformity under the EAA only once its reference is published in the Official Journal of the EU; as of 2026-11-15 I could not confirm that for v4.1.1 (or for any version under Directive 2019/882). Do not say v4.1.1 already gives a presumption of conformity.
+
+**EAA**: the Directive **applies since 28 June 2025** to digital products and services for EU consumers (e-commerce, banking, transport, e-books, streaming), with a microenterprise exemption for services. Companies selling only to other businesses (B2B) are generally outside its consumer-facing scope; check the Directive and national law.
+
+**When a law fixes WCAG 2.1** (for example the US Title II rule), meet that version as the legal floor. Because WCAG 2.2 conforms to 2.1 (W3C), building to 2.2 AA satisfies it; the only criterion not carried over is 4.1.1 Parsing, which 2.2 removed. Say which version applies to each requirement.
 
 ---
 
@@ -1298,7 +1305,7 @@ Key terms for Spanish-speaking teams:
 | `templates/audit-report.md` | Complete audit report with finding blocks, severity scale, conformance table, retest plan |
 | `templates/site-audit-workbook.md` | Site-audit evidence workbook: scope, page/state inventory, criterion matrix, findings (see `references/site-audit-procedure.md`) |
 | `templates/a11y-ci.yml` | GitHub Actions pipeline: jest-axe + axe CLI + pa11y-ci + Playwright + Lighthouse |
-| `templates/vpat-2.5-template.md` | Official VPAT 2.5 Rev WCAG — covers WCAG 2.x (A/AA/AAA), Section 508, EN 301 549 |
+| `templates/vpat-2.5-template.md` | Unofficial template based on the VPAT 2.5 structure (not the official ITI VPAT) — covers WCAG 2.x (A/AA/AAA), Section 508, EN 301 549 |
 
 ### Prompts (copy & paste into your assistant)
 
@@ -1784,7 +1791,7 @@ Sources (check them for the current status; reviewed 2026-10-01 against the 10 S
 9. **When asked about KPIs, handoff, audit, inclusive research, typography, or color palettes**, use the relevant sections and CSVs — these are strong differentiators versus generic a11y advice.
 10. **Reply in the user's language** (English or Spanish) when they ask in Spanish; use `data/glossary-es.csv` for terminology. Terms like "lector de pantalla", "criterios de éxito", "tecnologías asistivas" are preferred.
 11. **Stack examples**: section 18 → Next.js, Angular, Svelte, Astro, SolidJS; section 19 → SwiftUI, Jetpack Compose; section 25 → Vue 3; section 26 → React Native.
-12. **Legal questions**: cite `data/legal-framework.csv`; always highlight the **EAA 28 June 2025** deadline for EU-facing products.
+12. **Legal questions**: cite `data/legal-framework.csv` and its `source_url` and `verified_on`; say when a row is "not re-verified"; this is not legal advice. The EAA **applies since 28 June 2025** to products and services for EU consumers (state it in the present tense, never as a future deadline). Keep ADA Title II (DOJ rule, WCAG 2.1 AA, compliance 2027-04-26 / 2028-04-26) apart from Title III (no technical standard), and do not claim EN 301 549 v4.1.1 gives a presumption of conformity until its Official Journal citation is confirmed.
 13. **Cognitive accessibility**: when ADHD, dyslexia, memory, or anxiety is mentioned, use section 27 and `data/cognitive-accessibility.csv`.
 14. **WCAG 3.0**: mention only as an incomplete W3C draft — WCAG 2.1/2.2 AA is still the standard. Do not cite WCAG 3 criteria IDs, APCA thresholds or dates as fact, and treat Bronze/Silver/Gold only as proposed reporting tiers; point to section 28 and the W3C draft.
 15. **User preference media queries**: recommend prefers-reduced-motion, prefers-contrast, forced-colors, prefers-reduced-transparency in every animation/color/theme discussion — see section 20.
