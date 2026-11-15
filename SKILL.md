@@ -374,7 +374,7 @@ SC 2.5.7 (AA, WCAG 2.2) requires that any function done by dragging can also be 
 </ul>
 <p role="status" class="visually-hidden"></p> <!-- after a move, write e.g. "Item A moved to position 2 of 3" -->
 ```
-Moving the `<li>` with `insertBefore()` removes it from the DOM and re-inserts it, which drops focus to `<body>` (reproduced in Chromium). After the move, call `.focus()` again on the button the user pressed; if it is now disabled or hidden at a list edge (first item's "Move up"), focus the other button of the pair instead of losing focus. `Node.moveBefore()` moves a node without resetting its state (including focus); it is newer, so feature-detect it (`if (list.moveBefore)`) and keep the explicit `.focus()` as the fallback. Not compiled or run; the focus loss on `insertBefore` was reported by the audit, not documented by MDN, and `moveBefore` support was not checked here.
+Moving the `<li>` with `insertBefore()` removes it from the DOM and re-inserts it, which drops focus to the document (in practice `<body>`): the HTML Standard's removing steps set the focused area to the viewport when the focused node is removed, and the focus fixup rule does the same when the focused element stops being a focusable area (html.spec.whatwg.org, checked 2026-11). After the move, call `.focus()` again on the button the user pressed; if it is now disabled or hidden at a list edge (first item's "Move up"), focus the other button of the pair instead of losing focus. `Node.moveBefore()` moves a node without resetting its state (including focus); it is newer, so feature-detect it (`if (list.moveBefore)`) and keep the explicit `.focus()` as the fallback. Not compiled or run; `moveBefore` support was not checked here.
 
 ### Tooltip and toggletip (last resort)
 Prefer visible text (see «Before you build a custom component»). The `title` attribute is not a substitute: it is not keyboard- or touch-accessible, and browser-controlled tooltips fall under the 1.4.13 exception, so they are not covered by its protections.
@@ -1570,7 +1570,9 @@ function CourseCard({ title, instructor, isCompleted }: Props) {
 // ── Accessible text input with error
 function EmailInput({ value, onChange, error }: InputProps) {
   // iOS has no live-region prop: announce the error when it first appears.
-  // Android already announces it through accessibilityLiveRegion below, so announcing there too would read it twice.
+  // On Android the live region below announces content changes of a view; it may not announce a view that is
+  // freshly mounted, as this conditional <Text> is. Keep the <Text> mounted (empty until there is an error) or test with
+  // TalkBack on a device. iOS has no live-region prop, hence the explicit announcement here (iOS only, to avoid double reads).
   useEffect(() => {
     if (error && Platform.OS === 'ios') AccessibilityInfo.announceForAccessibility(error);
   }, [error]);
