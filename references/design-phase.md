@@ -27,7 +27,7 @@ Each item says whether it is a **requirement** (a WCAG 2.2 success criterion, wi
 - **Requirement (1.3.2 Meaningful Sequence, A, 2.0).** When the order of content affects its meaning, a correct reading sequence must be programmatically determinable. Understanding 1.3.2 notes that the visual layout does not have to match the code order everywhere: "Providing a particular linear order is only required where it affects meaning." Annotate the intended reading order where a multi-column layout, a card or an overlay could be read in the wrong order.
 - **Requirement (2.4.6 Headings and Labels, AA, 2.0).** Headings and labels that exist describe topic or purpose. It does not require headings to exist; the content's structure does (1.3.1).
 - **Requirement (2.4.1 Bypass Blocks, A, 2.0).** A way to skip blocks repeated on many pages (a skip link, headings, regions). Show where the skip link appears when it receives focus.
-- **Guidance.** One `h1` per page and no skipped levels are common conventions, not WCAG requirements. Writing headings, link text and alternative text is covered in the content guidance.
+- **Guidance.** One `h1` per page and no skipped levels are common conventions, not WCAG requirements. Writing headings, link text and alternative text: [content.md](content.md).
 
 ## Focus order
 
@@ -87,7 +87,7 @@ Design decides labels, instructions, required-field marks, error messages, multi
 
 ## Responsive layout, reflow and zoom
 
-Design the narrow layout as part of the design, not as an afterthought: content must reflow at 320 CSS px width without scrolling in two directions (1.4.10 Reflow, AA, 2.1), text must resize to 200% (1.4.4 Resize Text, AA, 2.0), and content must not be locked to one orientation unless essential (1.3.4 Orientation, AA, 2.1). Sticky headers and footers that are acceptable at 100% can cover most of the screen when zoomed, and the focused element with them (2.4.11).
+Design the narrow layout as part of the design, not as an afterthought: content must reflow at 320 CSS px width without scrolling in two directions (1.4.10 Reflow, AA, 2.1), text must resize to 200% (1.4.4 Resize Text, AA, 2.0), and content must not be locked to one orientation unless essential (1.3.4 Orientation, AA, 2.1). Sticky headers and footers that are acceptable at 100% can cover most of the screen when zoomed, and the focused element with them (2.4.11). Criteria, exceptions, CSS patterns and a test procedure: [reflow-zoom-and-text-spacing.md](reflow-zoom-and-text-spacing.md).
 
 ## Motion and flashing
 
