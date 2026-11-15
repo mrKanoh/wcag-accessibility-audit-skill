@@ -158,10 +158,23 @@ class TestTableOutput:
         assert self._legal_jurisdictions("United States")
         assert self._legal_jurisdictions("European Union")
         assert self._legal_jurisdictions("Chile") == ["Chile"]
-        assert all(j.startswith("United Kingdom") for j in self._legal_jurisdictions("UK"))
+        assert self._legal_jurisdictions("UK") == ["United Kingdom"]
+
+    def test_legal_aliases_resolve_to_csv_names(self):
+        usa = self._legal_jurisdictions("USA")
+        assert len(usa) == 5
+        assert all(j.startswith("United States") for j in usa)
+        assert self._legal_jurisdictions("Spain") == ["España"]
+        assert self._legal_jurisdictions("Brazil") == ["Brasil"]
+        assert self._legal_jurisdictions("Peru") == ["Perú"]
 
     def test_legal_no_substring_match_inside_words(self):
         assert self._legal_jurisdictions("ustral") == []
+        assert self._legal_jurisdictions("Stat") == []
+        assert self._legal_jurisdictions("Calif") == []
+
+    def test_legal_blank_jurisdiction_matches_nothing(self):
+        assert self._legal_jurisdictions("  ") == []
 
     def test_cognitive_keyword(self):
         r = run("cognitive", "--keyword", "memory")

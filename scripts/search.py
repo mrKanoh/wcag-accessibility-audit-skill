@@ -389,6 +389,8 @@ def jurisdiction_matches(value: str, query: str) -> bool:
     Known short names ('US', 'UK', 'EU', ...) are first resolved to the name used in the CSV.
     """
     q = query.strip().lower()
+    if not q:
+        return False
     q = JURISDICTION_ALIASES.get(q, q)
     return re.search(r"(?<!\w)" + re.escape(q) + r"(?!\w)", value.lower()) is not None
 
