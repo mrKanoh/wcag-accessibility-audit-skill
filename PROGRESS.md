@@ -1,7 +1,65 @@
 # PROGRESS
 
-## Trabajo actual
-- Ninguno.
+## Trabajo actual: WCAG-STRUCT-1 SKILL.md como mapa por tarea  (rama tarea/wcag-struct-1)
+- Etapas: [x] 0 plan (aprobado) · [x] 1 contenido de SKILL.md movido a 13 archivos de `references/` (este commit) · [ ] 2 SKILL.md ≤ 500 líneas y prueba de enlaces · [ ] 3 README, `.gitignore`, CHANGELOG, PR en borrador
+- Ciclo: etapas aprobadas 0, auditoría pendiente, rondas 0
+- Línea base de pruebas: 97 passed en `main` (c6e510e), 2026-11-15.
+- Pendiente / bloqueos: ninguno. Decisiones del orquestador: D1 bloque único de forced-colors con la variante `CanvasText` como comentario; D2 se permite ajustar `CONTRIBUTING.md:255-257` en la etapa 3; D3 tabla de ejemplos completa con los 8; D4 las dos partes COGA juntas, sin fusionar, con remisión mutua. Cambios de Codex (`codex/readme-docs`): revisados, `main` ya los contiene y amplía; no se aprovecha nada.
+### Orden completa
+```
+Proyecto: wcag-accesibility-skill — D:\Proyectos\wcag-accesibility-skill
+Id: WCAG-STRUCT-1
+Tamaño: grande — más de 10 archivos (SKILL.md partido en references/, README en dos idiomas, pruebas)
+Etiqueta antes-de-*: sí (`antes-de-wcag-struct-1` sobre main actualizado)
+Tipo de solicitud: implementación
+Autorizado: editar, verificar, commit local por etapa en tarea/wcag-struct-1, push de tarea/wcag-struct-1 y abrir su PR en borrador (`gh pr create --draft`), borrar tarea/wcag-struct-1 una vez fusionada. Leer (solo leer) el worktree de Codex `C:\Users\Ariel\.codex\worktrees\wcag-readme-docs\wcag-accesibility-skill` (rama `codex/readme-docs`, cambios sin commit en README.md, README-es.md y CONTRIBUTING.md), p. ej. con `git -C <ruta> diff`.
+No autorizado: fusionar; `gh pr ready`; modificar, commitear, borrar o hacer stash en el worktree de Codex o su rama; contenido técnico nuevo (eso es WCAG-CONTENT-1); rehacer las evals (WCAG-EVALS-1).
+
+Objetivo
+SKILL.md queda en 500 líneas o menos y funciona como mapa: qué hacer según la tarea (diseñar, construir, revisar código, auditar un sitio, remediar) y dónde leer el detalle, con divulgación progresiva hacia references/. No se pierde contenido: todo lo que sale de SKILL.md vive en un archivo de references/ enlazado. README.md y README-es.md describen la skill tal como queda y dicen WCAG 2.2 AA por defecto.
+
+Contexto
+- Buenas prácticas de Agent Skills: SKILL.md de menos de 500 líneas, frontmatter `name`/`description` que diga qué hace y cuándo usarla, referencias a un nivel de profundidad desde SKILL.md, archivos largos de references/ con índice al inicio.
+- Problemas conocidos de SKILL.md a corregir aquí: secciones 25 y 26 numeradas dos veces; nota 10 («English or Spanish») contradice la regla multilingüe; cifras de la tabla de datos (filas por CSV) incorrectas; forced-colors tratado dos veces.
+- `README.md:133` dice «WCAG 2.1 AA by default»: contradice DECISIONS.md.
+- `tests/test_skill_metadata.py` y otras pruebas pueden leer SKILL.md: si dependen de secciones que se mueven, ajústalas sin debilitarlas.
+- Hay una carpeta sin seguimiento `.impeccable/` (caché de un plugin de diseño de Ariel): añádela a `.gitignore`; no la borres.
+
+Alcance
+- Incluye:
+  R1. Plan antes de editar (ver Tarea): inventario de las secciones actuales de SKILL.md con su número de líneas y destino (se queda / va a `references/<archivo>.md`), y resumen de lo que traen los cambios de Codex en los README y CONTRIBUTING, con qué aprovechar y qué no.
+  R2. SKILL.md ≤ 500 líneas: frontmatter vigente o mejorado (description con disparadores reales, en inglés, que mencione 2.2 AA); flujos por tarea (diseñar, construir, revisar código, auditar, remediar), cada uno con pasos breves y enlaces a references/; lista de comprobación de «terminado» (qué verificar antes de dar por buena una respuesta: criterio citado con su razón, observado vs. supuesto, sin afirmar pruebas no ejecutadas, aviso no legal cuando aplica); conserva las notas para el agente que siguen vigentes, deduplicadas.
+  R3. references/: el contenido movido, agrupado por tema en archivos con nombre claro y un índice al inicio de cada archivo de más de ~100 líneas; enlaces desde SKILL.md a un solo nivel. Sin pérdida de contenido: el informe incluye una comprobación de que cada sección original está en algún archivo (p. ej. tabla sección → archivo).
+  R4. Corregir los problemas conocidos: numeración duplicada, nota 10 (la skill responde en el idioma del usuario), cifras de filas por CSV (calcúlalas con `search.py` o contando), forced-colors una sola vez.
+  R5. README.md y README-es.md: estructura nueva, WCAG 2.2 AA por defecto (2.1 AA solo si una ley lo exige), cómo instalar y usar; ambos idiomas equivalentes. Incorpora lo que sirva de los cambios de Codex (sin copiar archivos del worktree tal cual sin revisar). CONTRIBUTING.md solo si los cambios de Codex aportan algo correcto y vigente; si no, no lo toques.
+  R6. Enlaces internos: todos los enlaces relativos de SKILL.md, README*.md y references/ apuntan a archivos y anclas que existen (escribe una comprobación reproducible; si es una prueba pytest útil para el futuro, agrégala en tests/).
+  R7. `.gitignore` con `.impeccable/`; CHANGELOG.md bajo [Unreleased]; PROGRESS.md (quitar de «Para la próxima orden» lo resuelto: reestructurar, README:133 y la decisión de Codex en «Pendiente de Ariel» → resuelta «revisarlos primero»; fila en «Terminados»).
+- No incluye: contenido técnico nuevo, cambiar criterios o datos, rehacer evals, tocar examples/ salvo enlaces rotos.
+
+Antes de empezar (preflight)
+1. Lee AGENTS.md, DECISIONS.md, PROGRESS.md, CHANGELOG.md y SKILL.md completo.
+2. `git status --short --branch`; trata los cambios existentes como ajenos (`.impeccable/` incluida).
+3. Resume objetivo, estado, restricciones y siguiente paso.
+
+Tarea
+Rama `tarea/wcag-struct-1` desde main actualizado; etiqueta `antes-de-wcag-struct-1`. Línea base: hoy 97 passed.
+Etapa 0 (plan, sin editar): entrega R1. DETENTE y espera «Plan aprobado».
+Etapa 1: R3 y R4 en el contenido movido (crear references/ nuevos con el contenido de SKILL.md). Commit `refactor: move SKILL.md detail into references (etapa 1)`. DETENTE e informa.
+Etapa 2: R2 (SKILL.md nuevo ≤ 500 líneas) y R6. Commit `refactor: SKILL.md as task map under 500 lines (etapa 2)`. DETENTE e informa.
+Etapa 3: R5 y R7. Push y PR en borrador con aviso al inicio de que fusionar publica en producción. Commit `docs: README for the restructured skill (etapa 3)`. DETENTE e informa.
+
+Restricciones
+- Rutas explícitas en `git add` (nunca `-A` ni `.`).
+- Mover no es reescribir: conserva el texto técnico; solo cambia lo necesario para encabezados, enlaces y las correcciones de R4.
+- Nada de refactors fuera del alcance.
+
+Verificación
+Rápidas, en cada etapa: `python -m pytest tests/ -v`, `python scripts/search.py wcag --level AA --output json`, `python scripts/search.py all --keyword contrast --output json`, `git diff --check`, `wc -l SKILL.md`, y la comprobación de enlaces de R6 (desde la etapa 2).
+Lenta al cierre: la corre el orquestador. Excepción: ninguna.
+
+Cierre
+Informa: resultado, archivos modificados, verificaciones con su resultado real, problemas (separa los preexistentes) y siguiente paso.
+```
 
 ## Pendiente de Ariel
 - Crear el tag `v2.3.0` y la release en GitHub cuando decidas publicar (no existe ningún tag `v2.*`).
