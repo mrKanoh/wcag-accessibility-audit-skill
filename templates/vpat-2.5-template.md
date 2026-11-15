@@ -1,7 +1,7 @@
-# Voluntary Product Accessibility Template® (VPAT®) Version 2.5
+# Accessibility Conformance Report template (based on VPAT® 2.5)
 
-> **Template** — delete this line before publishing. Fill every `[PLACEHOLDER]`.
-> For usage guidance see: https://www.itic.org/policy/accessibility/vpat
+> **Unofficial template** — delete this line before publishing. Fill every `[PLACEHOLDER]`.
+> This is not the official VPAT®. The VPAT® name and form belong to the Information Technology Industry Council (ITI); this file only follows the VPAT 2.5 structure. For an official ACR, download the current form from https://www.itic.org/policy/accessibility/vpat
 
 ---
 
@@ -23,10 +23,10 @@
 This report covers conformance with the following accessibility standards/guidelines:
 
 - [ ] Web Content Accessibility Guidelines 2.0 — Levels A, AA, AAA
-- [ ] Web Content Accessibility Guidelines 2.1 — Levels A, AA, AAA ✅ **(primary)**
-- [ ] Web Content Accessibility Guidelines 2.2 — Levels A, AA, AAA
-- [ ] Revised Section 508 standards (29 CFR Part 1194)
-- [ ] EN 301 549 Accessibility requirements for ICT products and services (v3.2.1, 2021-03)
+- [ ] Web Content Accessibility Guidelines 2.1 — Levels A, AA, AAA (choose when the buyer or a law requires 2.1)
+- [ ] Web Content Accessibility Guidelines 2.2 — Levels A, AA, AAA ✅ **(primary)**
+- [ ] Revised Section 508 standards (36 CFR Part 1194; incorporates WCAG 2.0 A and AA)
+- [ ] EN 301 549 Accessibility requirements for ICT products and services: v3.2.1 (2021-03, WCAG 2.1; the version cited under the Web Accessibility Directive) or v4.1.1 (2026-09, WCAG 2.2; Official Journal citation not confirmed as of 2026-11-15)
 
 ---
 
@@ -80,7 +80,7 @@ The following are the terms used for conformance levels in this report:
 | **3.3.1 Error Identification** (Level A) | | |
 | **3.3.2 Labels or Instructions** (Level A) | | |
 | **3.3.7 Redundant Entry** (Level A — WCAG 2.2) | | |
-| **4.1.1 Parsing** (Level A — Obsolete in WCAG 2.2) | Not Applicable | Criterion removed in WCAG 2.2 |
+| **4.1.1 Parsing** (Level A — Obsolete in WCAG 2.2) | | Guidance: for web content in HTML/XML, "Supports" (always satisfied per the [WCAG 2.0 Editorial Erratum](https://www.w3.org/WAI/WCAG20/errata/) and the note in WCAG 2.1); for other formats (documents, non-web software) evaluate or mark Not Applicable; removed in WCAG 2.2 |
 | **4.1.2 Name, Role, Value** (Level A) | | |
 
 ---
@@ -203,7 +203,7 @@ The following are the terms used for conformance levels in this report:
 
 ## EN 301 549 Report (EU)
 
-> EN 301 549 incorporates WCAG 2.1 Level AA by reference (Clause 9). Complete the WCAG 2.x sections above. Additional clauses:
+> EN 301 549 v3.2.1 incorporates WCAG 2.1 Level A and AA by reference (Clause 9); v4.1.1 moves this to WCAG 2.2. State which version you report against. Complete the WCAG 2.x sections above. Additional clauses:
 
 | Criteria | Conformance Level | Remarks and Explanations |
 |----------|------------------|--------------------------|
@@ -235,5 +235,5 @@ The following are the terms used for conformance levels in this report:
 
 ---
 
-*VPAT® is a registered trademark of the Information Technology Industry Council (ITI). Template based on VPAT 2.5 Rev WCAG (February 2023).*
+*VPAT® is a registered trademark of the Information Technology Industry Council (ITI). This unofficial template follows the VPAT 2.5 structure; it is not published or endorsed by ITI.*
 *Reference: https://www.itic.org/policy/accessibility/vpat*

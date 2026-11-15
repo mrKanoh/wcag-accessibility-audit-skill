@@ -72,6 +72,33 @@ class TestCSVIntegrity:
             )
 
 
+class TestLegalFrameworkVerification:
+    """Cada fila legal debe declarar cuándo se verificó (o dejarla vacía con la nota «not re-verified»)."""
+
+    @staticmethod
+    def _rows():
+        with open(DATA / "legal-framework.csv", newline="", encoding="utf-8") as f:
+            reader = csv.DictReader(f)
+            cols = set(reader.fieldnames or [])
+            return cols, list(reader)
+
+    def test_verified_on_and_source_url_columns_exist(self):
+        cols, rows = self._rows()
+        assert {"verified_on", "source_url"} <= cols
+        assert rows
+
+    def test_every_row_has_verified_on_or_not_reverified_note(self):
+        import re
+        _, rows = self._rows()
+        for row in rows:
+            verified = (row["verified_on"] or "").strip()
+            if verified:
+                assert re.fullmatch(r"\d{4}-\d{2}-\d{2}", verified), (row["jurisdiction"], verified)
+                assert row["source_url"].startswith("https://"), row["jurisdiction"]
+            else:
+                assert "not re-verified" in row["notes"].lower(), row["jurisdiction"]
+
+
 # ── Table output ──────────────────────────────────────────────────────────────
 
 class TestTableOutput:
@@ -430,8 +457,11 @@ class TestKeywordIgnoresVersions:
     @pytest.mark.parametrize(
         "keyword,expected",
         [
-            ("2.1", {"wcag": 7, "aria": 4, "tools": 1, "glossary": 1, "legal": 17, "resources": 3, "cognitive": 3}),
-            ("2.2", {"wcag": 5, "aria": 1, "handoff": 1, "glossary": 1, "legal": 1, "resources": 7, "cognitive": 7}),
+            # legal-framework.csv y la fila EAA de resources.csv se reescribieron en WCAG-NORM-1:
+            # "2.1" ya no aparece en la fila EAA de resources (3 -> 2), y legal pasa de 17 a 16 filas con "2.1" y de 1 a 4 con "2.2"
+            # (filas del Reino Unido, EN 301 549 v4.1.1 y la regla del Título II mencionan 2.2).
+            ("2.1", {"wcag": 7, "aria": 4, "tools": 1, "glossary": 1, "legal": 16, "resources": 2, "cognitive": 3}),
+            ("2.2", {"wcag": 5, "aria": 1, "handoff": 1, "glossary": 1, "legal": 4, "resources": 7, "cognitive": 7}),
         ],
     )
     def test_all_conserva_los_resultados_por_base(self, keyword, expected):

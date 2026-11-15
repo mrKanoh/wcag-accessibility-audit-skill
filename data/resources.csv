@@ -28,7 +28,7 @@ Research,Large-Scale Study of Web Accessibility Metrics,Research,https://link.sp
 Research,Evaluating Digital Maps Using WCAG,Research,https://pmc.ncbi.nlm.nih.gov/articles/PMC12094671/,Accessibility evaluation methodology for geospatial tools,EN,2024,PMC
 Standards,Section 508 (U.S. Federal),Legal,https://www.section508.gov/,U.S. federal accessibility standards; references WCAG 2.0 AA,EN,Ongoing,U.S. GSA
 Standards,EN 301 549 (EU),Legal,https://www.etsi.org/deliver/etsi_en/301500_301599/301549/03.02.01_60/en_301549v030201p.pdf,EU standard for ICT accessibility; aligns with WCAG 2.1 AA,EN,2021,ETSI
-Standards,EAA (European Accessibility Act),Legal,https://digital-strategy.ec.europa.eu/en/policies/accessibility-act,EU directive requiring WCAG 2.1 AA by June 28 2025 for digital products,EN,2025,EU
+Standards,EAA (European Accessibility Act),Legal,https://digital-strategy.ec.europa.eu/en/policies/accessibility-act,EU directive that has applied since 28 June 2025 to digital products and services for consumers; technical detail via EN 301 549 (see data/legal-framework.csv),EN,2025,EU
 Standards,UN CRPD (Convention on Rights of Persons with Disabilities),Treaty,https://www.un.org/development/desa/disabilities/convention-on-the-rights-of-persons-with-disabilities.html,International human rights treaty; emphasizes accessibility as a right,EN,2006,United Nations
 Blogs,WebAIM Blog,Blog,https://webaim.org/blog/feed/,Regular articles on accessibility best practices; research; tools,EN,Ongoing,WebAIM
 Blogs,Deque Blog,Blog,https://www.deque.com/blog/,Industry insights; accessibility trends; case studies,EN,Ongoing,Deque
