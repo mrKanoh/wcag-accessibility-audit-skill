@@ -1,7 +1,7 @@
 ---
 name: wcag-accessibility
 description: >
-  WCAG 2.1/2.2 AA accessibility skill: audits, remediation, ARIA roles and patterns, keyboard
+  WCAG 2.2 AA accessibility skill (2.1 AA when a law requires it): audits, remediation, ARIA roles and patterns, keyboard
   navigation, focus management, screen reader behavior (NVDA, JAWS, VoiceOver, TalkBack), color
   contrast, accessible components (modals, menus, tabs, forms, tables, comboboxes), React, Vue,
   Angular, Svelte and Next.js, mobile a11y (React Native, SwiftUI, Compose), cognitive accessibility,
@@ -15,7 +15,7 @@ description: >
 
 ## Overview
 
-Comprehensive accessibility knowledge grounded in **WCAG 2.1 AA by default** (the criteria added in **WCAG 2.2** are surfaced where relevant; the searchable catalog lists the Level A and AA criteria of 2.1 plus the 9 added in 2.2, not the 2.1 AAA criteria), WAI-ARIA 1.2, and real-world audit, remediation, and handoff practice. Spans standards, semantic HTML, ARIA patterns, keyboard, screen readers, mobile (iOS/Android), typography, color, CI testing, KPIs, organizational processes, and disability theory.
+Comprehensive accessibility knowledge grounded in **WCAG 2.2 AA by default** when designing and building (use **WCAG 2.1 AA** only when a law or contract requires it, e.g. the US DOJ Title II rule; 2.2 is backward compatible, so meeting 2.2 AA also meets 2.1 AA; the searchable catalog lists the Level A and AA criteria of 2.1 plus the 9 added in 2.2, not the 2.1 AAA criteria), WAI-ARIA 1.2, and real-world audit, remediation, and handoff practice. Spans standards, semantic HTML, ARIA patterns, keyboard, screen readers, mobile (iOS/Android), typography, color, CI testing, KPIs, organizational processes, and disability theory.
 
 ### 🌍 Multilingual Behavior (CRITICAL)
 You are a **polyglot accessibility expert**. While your underlying databases and CSV files are in English, you must **ALWAYS respond in the exact language the user is speaking**. 
@@ -164,23 +164,23 @@ Design decisions depend on which model of disability you implicitly assume. Pref
 | **Understandable** | Page language, consistent nav, error identification and recovery |
 | **Robust** | Valid HTML, ARIA name/role/value, status messages programmatically exposed |
 
-### High-impact AA criteria (most commonly failed)
+### High-impact criteria, Levels A and AA (most commonly failed)
 
-| ID | Criterion | Requirement |
-|----|-----------|-------------|
-| 1.1.1 | Non-text Content | `alt` for informative; `alt=""` for decorative |
-| 1.3.1 | Info and Relationships | Semantic structure preserved programmatically |
-| 1.4.3 | Contrast (Minimum) | 4.5:1 text / 3:1 large (18pt or 14pt bold) |
-| 1.4.10 | Reflow | Usable at 320 CSS px with no horizontal scroll |
-| 1.4.11 | Non-text Contrast | 3:1 vs adjacent colors for visual info needed to identify UI components and states (e.g. an author-styled focus indicator) and graphics needed to understand content; exceptions: inactive components, user-agent default appearance not modified by the author, essential graphics |
-| 1.4.12 | Text Spacing | Supports line-height 1.5, paragraph 2×, letter 0.12×, word 0.16× |
-| 2.1.1 | Keyboard | All functionality operable by keyboard |
-| 2.1.2 | No Keyboard Trap | Focus must never get stuck |
-| 2.4.3 | Focus Order | Logical focus sequence |
-| 2.4.7 | Focus Visible | A keyboard focus indicator must be visible (sets no contrast ratio; see 1.4.11 / 2.4.13) |
-| 3.3.1 | Error Identification | Errors described in text |
-| 4.1.2 | Name, Role, Value | Interactive elements expose name/role/state |
-| 4.1.3 | Status Messages | Dynamic updates announced without focus move |
+| ID | Level | Criterion | Requirement |
+|----|-------|-----------|-------------|
+| 1.1.1 | A | Non-text Content | `alt` for informative; `alt=""` for decorative |
+| 1.3.1 | A | Info and Relationships | Semantic structure preserved programmatically |
+| 1.4.3 | AA | Contrast (Minimum) | 4.5:1 text / 3:1 large (18pt or 14pt bold) |
+| 1.4.10 | AA | Reflow | Usable at 320 CSS px with no horizontal scroll |
+| 1.4.11 | AA | Non-text Contrast | 3:1 vs adjacent colors for visual info needed to identify UI components and states (e.g. an author-styled focus indicator) and graphics needed to understand content; exceptions: inactive components, user-agent default appearance not modified by the author, essential graphics |
+| 1.4.12 | AA | Text Spacing | Supports line-height 1.5, paragraph 2×, letter 0.12×, word 0.16× |
+| 2.1.1 | A | Keyboard | All functionality operable by keyboard |
+| 2.1.2 | A | No Keyboard Trap | Focus must never get stuck |
+| 2.4.3 | A | Focus Order | Logical focus sequence |
+| 2.4.7 | AA | Focus Visible | A keyboard focus indicator must be visible (sets no contrast ratio; see 1.4.11 / 2.4.13) |
+| 3.3.1 | A | Error Identification | Errors described in text |
+| 4.1.2 | A | Name, Role, Value | Interactive elements expose name/role/state |
+| 4.1.3 | AA | Status Messages | Dynamic updates announced without focus move |
 
 ### WCAG 2.2 additions (new since 2.1)
 
@@ -1763,7 +1763,7 @@ Sources (check them for the current status; reviewed 2026-10-01 against the 10 S
 - No finalization date.
 
 ### How to prepare now
-1. **Keep targeting WCAG 2.1/2.2 AA.** Contrast compliance is measured with the WCAG 2.x ratios (1.4.3, 1.4.6, 1.4.11).
+1. **Keep targeting WCAG 2.2 AA** (2.1 AA where a law requires it). Contrast compliance is measured with the WCAG 2.x ratios (1.4.3, 1.4.6, 1.4.11).
 2. **Follow the draft** at the links above before answering any WCAG 3 question, and label anything from it as draft.
 3. If a user asks about APCA, explain that it is a separate contrast model that is not part of WCAG 2.x conformance and not confirmed for WCAG 3.
 
@@ -1773,7 +1773,7 @@ Sources (check them for the current status; reviewed 2026-10-01 against the 10 S
 
 ## Notes for the agent
 
-1. **Default to WCAG 2.1 AA** and surface **WCAG 2.2 additions** when relevant (focus obscured, target size, drag alternatives, accessible auth, redundant entry, consistent help).
+1. **Default to WCAG 2.2 AA** when designing and building, including the **2.2 additions** (focus not obscured, target size, drag alternatives, accessible auth, redundant entry, consistent help). Use **WCAG 2.1 AA** as the target only when the user's jurisdiction or contract requires it (see section 22), and say which version a finding or requirement comes from. Decision recorded in `DECISIONS.md`.
 2. **Semantic HTML first**; reach for ARIA only when native semantics are insufficient (Rule #1 of ARIA).
 3. **Recommend real AT testing** — automated tools catch ~20–40%.
 4. **Include mobile** whenever responsive or native is in scope; cite 44pt (iOS) / 48dp (Android).
