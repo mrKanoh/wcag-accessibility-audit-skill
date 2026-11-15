@@ -56,6 +56,7 @@
 
     /* ── Status ── */
     .combo-status { margin-top: .5rem; font-size: .875rem; color: #374151; }
+    .combo-error { margin-top: .25rem; font-size: .875rem; color: #b91c1c; }
     .sr-only { position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0; }
   </style>
 </head>
@@ -127,6 +128,9 @@
 
   <!-- Status (selected value) -->
   <div id="combo-status" class="combo-status" aria-live="polite"></div>
+
+  <!-- Validation error: text (not color alone); input points to it with aria-describedby only while invalid -->
+  <div id="country-error" class="combo-error" aria-live="polite"></div>
 </div>
 
 <script>
@@ -151,6 +155,7 @@
   const toggle   = document.getElementById('country-toggle');
   const live     = document.getElementById('combo-live');
   const status   = document.getElementById('combo-status');
+  const error    = document.getElementById('country-error');
 
   let focusedIndex = -1;
   let selectedValue = '';
@@ -242,14 +247,22 @@
     selectedValue = value;
     input.value = value;
     status.textContent = `Selected: ${value}`;
+    clearError();
     closeList();
     input.focus();
+  }
+
+  function clearError() {
+    input.removeAttribute('aria-invalid');
+    input.removeAttribute('aria-describedby');
+    error.textContent = '';
   }
 
   /* ── Events ── */
   input.addEventListener('input', () => {
     selectedValue = ''; // Clear selection on manual edit
     status.textContent = '';
+    clearError();
     if (!isOpen) openList();
     else {
       const q = input.value.trim().toLowerCase();
@@ -331,17 +344,22 @@
     }
   });
 
+  // Keep focus in the input while the pointer is pressed on the list (or its scrollbar).
+  // Without this, mousedown on an option blurs the input, the blur handler closes the list,
+  // and the click that selects the option never lands. This also covers touch, which
+  // synthesizes mousedown before click.
+  listbox.addEventListener('mousedown', e => e.preventDefault());
+
   // Validate on blur: if typed text doesn't match a country, show error
   input.addEventListener('blur', e => {
     if (document.getElementById('country-combo').contains(e.relatedTarget)) return;
     const typed = input.value.trim();
     if (typed && !OPTIONS.includes(typed)) {
       input.setAttribute('aria-invalid', 'true');
-      status.style.color = '#dc2626';
-      status.textContent = `"${typed}" is not a valid country. Please select from the list.`;
+      input.setAttribute('aria-describedby', 'country-error'); // error is read with the field
+      error.textContent = `"${typed}" is not a valid country. Please select from the list.`;
     } else {
-      input.removeAttribute('aria-invalid');
-      status.style.color = '#374151';
+      clearError();
     }
     closeList();
   });

@@ -25,12 +25,12 @@ calculate the contrast ratio and report:
 - Normal text AA: 4.5:1 (SC 1.4.3)
 - Large text AA (18pt / 14pt bold): 3:1 (SC 1.4.3)
 - UI components, icons, borders: 3:1 (SC 1.4.11)
-- Focus indicators vs adjacent: 3:1 (SC 2.4.11 / 2.4.13)
+- Focus indicators vs adjacent colors: 3:1 (SC 1.4.11, AA). SC 2.4.13 (AAA, WCAG 2.2) is optional and adds size and focused-vs-unfocused contrast
 - Text AAA: 7:1 | Large text AAA: 4.5:1
 
 **Also check:**
 - Are all states defined? (default, hover, active, focus, disabled, error, selected)
-  — Disabled elements are exempt from contrast, but non-text disabled indicators are not
+  — Inactive (disabled) components are exempt from contrast, for text (1.4.3) and for non-text indicators (1.4.11)
 - Is meaning conveyed through color alone anywhere?
   (e.g., "red = error" without icon or text label — fails SC 1.4.1)
 - Do the tokens include a forced-colors / high contrast mode variant?
