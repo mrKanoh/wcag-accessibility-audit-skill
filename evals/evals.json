@@ -109,8 +109,8 @@
     },
     {
       "id": 4,
-      "prompt": "My company sells software to EU companies. Do we need to be WCAG compliant? What standard applies and by when?",
-      "expected_output": "Should mention: European Accessibility Act (EAA), EN 301 549, WCAG 2.1 AA, deadline of 28 June 2025 for private sector. Should clarify it applies to B2C digital products and services.",
+      "prompt": "My company runs an online shop that sells to consumers in the EU. Do we need to be WCAG compliant? What standard applies and since when?",
+      "expected_output": "Should mention: European Accessibility Act (EAA), EN 301 549, that the EAA already applies since 28 June 2025 (present tense, not a future deadline), that it covers B2C digital products and services such as e-commerce, and that EN 301 549 v3.2.1 refers to WCAG 2.1 AA while v4.1.1 (WCAG 2.2) is not confirmed as cited in the Official Journal. Should recommend building to WCAG 2.2 AA and note it is not legal advice.",
       "assertions": [
         {
           "name": "mentions_eaa",
@@ -120,7 +120,7 @@
         },
         {
           "name": "mentions_deadline",
-          "description": "Mentions the 2025 deadline",
+          "description": "Mentions the 28 June 2025 application date",
           "type": "contains_any",
           "value": ["2025", "June 2025", "28 June"]
         },

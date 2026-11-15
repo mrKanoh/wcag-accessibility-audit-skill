@@ -1257,7 +1257,7 @@ Mexico: NOM-034-STPS-2016 is a workplace safety norm for workers with disabiliti
 > Full table with enforcement, notes, `source_url` and `verified_on`: `data/legal-framework.csv`
 > Search: `python scripts/search.py legal --jurisdiction "Chile"`
 
-**EN 301 549 versions.** v3.2.1 (2021-03) points to WCAG 2.1 A and AA and is the version cited under the Web Accessibility Directive. ETSI published **v4.1.1 on 2026-09-02**, which moves the web requirements to WCAG 2.2 A and AA. A harmonised standard gives a presumption of conformity under the EAA only once its reference is published in the Official Journal of the EU; as of 2026-11-15 I could not confirm that for v4.1.1 (or for any version under Directive 2019/882). Do not say v4.1.1 already gives a presumption of conformity.
+**EN 301 549 versions.** v3.2.1 (2021-03) points to WCAG 2.1 A and AA and is the version cited under the Web Accessibility Directive. ETSI published **v4.1.1 on 2026-09-02**, which moves the web requirements to WCAG 2.2 A and AA. A harmonised standard gives a presumption of conformity under the EAA only once its reference is published in the Official Journal of the EU; as of 2026-11-15 that is not confirmed for v4.1.1 (or for any version under Directive 2019/882). Do not say v4.1.1 already gives a presumption of conformity.
 
 **EAA**: the Directive **applies since 28 June 2025** to digital products and services for EU consumers (e-commerce, banking, transport, e-books, streaming), with a microenterprise exemption for services. Companies selling only to other businesses (B2B) are generally outside its consumer-facing scope; check the Directive and national law.
 
