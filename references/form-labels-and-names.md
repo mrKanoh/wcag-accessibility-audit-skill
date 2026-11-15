@@ -4,6 +4,8 @@ Read this when a review covers a form control, an icon-only button or a code fra
 what the supplied code demonstrates apart from what depends on context. Sources are listed at the
 end; they have different authority (see "Source types").
 
+To build a form (groups, instructions, required fields, validation, error summary), read [forms.md](forms.md).
+
 ## 1. Report findings in four categories
 
 | Category | Use when |
