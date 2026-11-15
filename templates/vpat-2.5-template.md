@@ -80,7 +80,7 @@ The following are the terms used for conformance levels in this report:
 | **3.3.1 Error Identification** (Level A) | | |
 | **3.3.2 Labels or Instructions** (Level A) | | |
 | **3.3.7 Redundant Entry** (Level A — WCAG 2.2) | | |
-| **4.1.1 Parsing** (Level A — Obsolete in WCAG 2.2) | Supports | Always satisfied for HTML/XML content in WCAG 2.0/2.1 per the W3C erratum; removed in WCAG 2.2 |
+| **4.1.1 Parsing** (Level A — Obsolete in WCAG 2.2) | | Guidance: for web content in HTML/XML, "Supports" (always satisfied per the [WCAG 2.0 Editorial Erratum](https://www.w3.org/WAI/WCAG20/errata/) and the note in WCAG 2.1); for other formats (documents, non-web software) evaluate or mark Not Applicable; removed in WCAG 2.2 |
 | **4.1.2 Name, Role, Value** (Level A) | | |
 
 ---
