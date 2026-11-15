@@ -28,7 +28,18 @@
     }
     .node-row:hover { background: #f3f4f6; }
     [role="treeitem"]:focus-visible > .node-row { outline: 3px solid #1d4ed8; outline-offset: 1px; }
-    [role="treeitem"][aria-selected="true"] > .node-row { background: #dbeafe; color: #1e40af; }
+    /* Selected state is not conveyed by color alone (1.4.1): a 4px left bar, bold text
+       and a tinted background. The bar (#1e40af) has 7.15:1 against the row (#dbeafe)
+       and 8.72:1 against the white wrapper (≥ 3:1, 1.4.11). padding-left is reduced by the
+       bar width so the row content does not shift. */
+    [role="treeitem"][aria-selected="true"] > .node-row {
+      background: #dbeafe; color: #1e40af; font-weight: 700;
+      border-left: 4px solid #1e40af; padding-left: calc(.6rem - 4px);
+    }
+    @media (forced-colors: active) {
+      /* Backgrounds are removed in forced-colors mode; the border and bold text remain. */
+      [role="treeitem"][aria-selected="true"] > .node-row { border-left-color: Highlight; }
+    }
 
     /* Expand icon */
     .expand-icon { width: 1.1rem; font-size: .75rem; display: inline-block; text-align: center; flex-shrink: 0; color: #6b7280; }

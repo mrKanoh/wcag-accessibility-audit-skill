@@ -143,6 +143,39 @@ class TestTableOutput:
         assert r.returncode == 0
         assert "European Union" in r.stdout
 
+    def _legal_jurisdictions(self, query):
+        r = run("legal", "--jurisdiction", query, "--output", "json")
+        assert r.returncode == 0
+        return [row["jurisdiction"] for row in json.loads(r.stdout)]
+
+    def test_legal_us_alias_matches_united_states_not_australia(self):
+        found = self._legal_jurisdictions("US")
+        assert found
+        assert all(j.startswith("United States") for j in found)
+        assert not any("Australia" in j for j in found)
+
+    def test_legal_full_names_still_match(self):
+        assert self._legal_jurisdictions("United States")
+        assert self._legal_jurisdictions("European Union")
+        assert self._legal_jurisdictions("Chile") == ["Chile"]
+        assert self._legal_jurisdictions("UK") == ["United Kingdom"]
+
+    def test_legal_aliases_resolve_to_csv_names(self):
+        usa = self._legal_jurisdictions("USA")
+        assert len(usa) == 5
+        assert all(j.startswith("United States") for j in usa)
+        assert self._legal_jurisdictions("Spain") == ["España"]
+        assert self._legal_jurisdictions("Brazil") == ["Brasil"]
+        assert self._legal_jurisdictions("Peru") == ["Perú"]
+
+    def test_legal_no_substring_match_inside_words(self):
+        assert self._legal_jurisdictions("ustral") == []
+        assert self._legal_jurisdictions("Stat") == []
+        assert self._legal_jurisdictions("Calif") == []
+
+    def test_legal_blank_jurisdiction_matches_nothing(self):
+        assert self._legal_jurisdictions("  ") == []
+
     def test_cognitive_keyword(self):
         r = run("cognitive", "--keyword", "memory")
         assert r.returncode == 0
