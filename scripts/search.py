@@ -25,6 +25,7 @@ import json
 import argparse
 import os
 import io
+import re
 from pathlib import Path
 
 # Force UTF-8 output on Windows (cp1252 can't encode many a11y symbols)
@@ -371,10 +372,31 @@ def cmd_glossary(args: argparse.Namespace) -> None:
 
 # ── LEGAL FRAMEWORK ────────────────────────────────────────────────────────────
 
+JURISDICTION_ALIASES = {
+    "us": "united states",
+    "usa": "united states",
+    "uk": "united kingdom",
+    "eu": "european union",
+    "spain": "españa",
+    "brazil": "brasil",
+    "peru": "perú",
+}
+
+
+def jurisdiction_matches(value: str, query: str) -> bool:
+    """Match a jurisdiction by whole words (not substrings, so 'us' != 'Australia').
+
+    Known short names ('US', 'UK', 'EU', ...) are first resolved to the name used in the CSV.
+    """
+    q = query.strip().lower()
+    q = JURISDICTION_ALIASES.get(q, q)
+    return re.search(r"(?<!\w)" + re.escape(q) + r"(?!\w)", value.lower()) is not None
+
+
 def cmd_legal(args: argparse.Namespace) -> None:
     rows = load_csv(LEGAL_CSV)
     if args.jurisdiction:
-        rows = [r for r in rows if args.jurisdiction.lower() in r["jurisdiction"].lower()]
+        rows = [r for r in rows if jurisdiction_matches(r["jurisdiction"], args.jurisdiction)]
     if args.keyword:
         rows = [r for r in rows if matches(r, args.keyword)]
     cols = ["jurisdiction", "law", "standard_referenced", "effective", "scope"]

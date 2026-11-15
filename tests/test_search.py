@@ -143,6 +143,26 @@ class TestTableOutput:
         assert r.returncode == 0
         assert "European Union" in r.stdout
 
+    def _legal_jurisdictions(self, query):
+        r = run("legal", "--jurisdiction", query, "--output", "json")
+        assert r.returncode == 0
+        return [row["jurisdiction"] for row in json.loads(r.stdout)]
+
+    def test_legal_us_alias_matches_united_states_not_australia(self):
+        found = self._legal_jurisdictions("US")
+        assert found
+        assert all(j.startswith("United States") for j in found)
+        assert not any("Australia" in j for j in found)
+
+    def test_legal_full_names_still_match(self):
+        assert self._legal_jurisdictions("United States")
+        assert self._legal_jurisdictions("European Union")
+        assert self._legal_jurisdictions("Chile") == ["Chile"]
+        assert all(j.startswith("United Kingdom") for j in self._legal_jurisdictions("UK"))
+
+    def test_legal_no_substring_match_inside_words(self):
+        assert self._legal_jurisdictions("ustral") == []
+
     def test_cognitive_keyword(self):
         r = run("cognitive", "--keyword", "memory")
         assert r.returncode == 0
