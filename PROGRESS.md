@@ -1,8 +1,8 @@
 # PROGRESS
 
 ## Trabajo actual: WCAG-FIX-1 corrección de código roto  (rama tarea/wcag-fix-1)
-- Etapas: [x] 1 R1–R7 y R12 en SKILL.md (commit de la etapa 1) · [ ] 2 R8–R9 combobox y date-picker · [ ] 3 R10–R11 y R13 CI, design tokens, CHANGELOG
-- Ciclo: etapas aprobadas 0, auditoría pendiente, rondas 0
+- Etapas: [x] 1 R1–R7 y R12 en SKILL.md (commit b620d15) · [x] 2 R8–R9 combobox y date-picker (commit de la etapa 2) · [ ] 3 R10–R11 y R13 CI, design tokens, CHANGELOG (+ alinear comentario del modal de Vue sobre devolución de foco, pedido del orquestador)
+- Ciclo: etapas aprobadas 1, auditoría pendiente, rondas 0
 - Línea base de pruebas: 90 passed (ver «Línea base de pruebas»); etiqueta `antes-de-wcag-fix-1` en main cd0f5cf
 - Pendiente / bloqueos: ninguno
 ### Orden completa (resumida por el trabajador; el original lo tiene el orquestador)
