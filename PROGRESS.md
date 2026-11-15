@@ -1,7 +1,16 @@
 # PROGRESS
 
-## Trabajo actual
-- Ninguno.
+## Trabajo actual: WCAG-FIX-1 corrección de código roto  (rama tarea/wcag-fix-1)
+- Etapas: [x] 1 R1–R7 y R12 en SKILL.md (commit de la etapa 1) · [ ] 2 R8–R9 combobox y date-picker · [ ] 3 R10–R11 y R13 CI, design tokens, CHANGELOG
+- Ciclo: etapas aprobadas 0, auditoría pendiente, rondas 0
+- Línea base de pruebas: 90 passed (ver «Línea base de pruebas»); etiqueta `antes-de-wcag-fix-1` en main cd0f5cf
+- Pendiente / bloqueos: ninguno
+### Orden completa (resumida por el trabajador; el original lo tiene el orquestador)
+Tamaño normal. Autorizado: editar, commit local por etapa, push de `tarea/wcag-fix-1`, PR en borrador. No autorizado: fusionar, `gh pr ready`, fuera de alcance, reestructurar SKILL.md, versión WCAG por defecto, marco legal, referencias nuevas.
+Objetivo: todo fragmento de código de la lista correcto según documentación oficial vigente o rotulado «No compilado»; combobox y date-picker funcionan con ratón y teclado sin ARIA inválido.
+Alcance R1 Compose · R2 React Native · R3 SwiftUI · R4 Drag & Drop (2.5.7) · R5 Angular · R6 Vue modal con `<dialog>` · R7 SKILL.md 1.4.2 · R8 combobox.html · R9 date-picker.html (APG) · R10 a11y-ci.yml y `--testPathPattern` · R11 design-tokens-audit.md · R12 comentario «Verificado contra… (2026-11)» o «No compilado» · R13 CHANGELOG y PROGRESS.
+Etapas: 1 R1–R7+R12 (`fix(skill): correct mobile, framework and drag-and-drop snippets (etapa 1)`); 2 R8–R9 con prueba en navegador integrado (`fix(examples): combobox mouse selection and date-picker APG grid and focus (etapa 2)`); 3 R10–R11+R13 (`fix(templates): a11y CI fails on violations, design tokens criteria (etapa 3)`).
+Verificación rápida: pytest, `search.py wcag --level AA --output json`, `search.py all --keyword contrast --output json`, `git diff --check`.
 
 ## Pendiente de Ariel
 - Crear el tag `v2.3.0` y la release en GitHub cuando decidas publicar (no existe ningún tag `v2.*`).

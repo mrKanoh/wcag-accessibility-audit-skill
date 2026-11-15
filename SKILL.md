@@ -358,15 +358,23 @@ Design guidance, not WCAG requirements (source: Heydon Pickering, *Inclusive Com
 - Never rely on color alone for state (e.g., disabled, selected).
 
 ### Accessible Drag & Drop (WCAG 2.5.7)
-Always provide a non-drag alternative:
+SC 2.5.7 (AA, WCAG 2.2) requires that any function done by dragging can also be done with a single pointer without dragging, unless dragging is essential. Reordering with plain buttons is enough. Keep a normal list (not a `listbox`, whose children must be `option`s and cannot contain buttons) and announce the result in a status region:
 ```html
-<ul role="listbox" aria-label="Reorder items">
-  <li>Item A
-    <button aria-label="Move up">↑</button>
-    <button aria-label="Move down">↓</button>
+<ul aria-label="Reorder items">
+  <li>
+    <span>Item A</span>
+    <button type="button" data-move="up" aria-label="Move up: Item A">↑</button>
+    <button type="button" data-move="down" aria-label="Move down: Item A">↓</button>
+  </li>
+  <li>
+    <span>Item B</span>
+    <button type="button" data-move="up" aria-label="Move up: Item B">↑</button>
+    <button type="button" data-move="down" aria-label="Move down: Item B">↓</button>
   </li>
 </ul>
+<p role="status" class="visually-hidden"></p> <!-- after a move, write e.g. "Item A moved to position 2 of 3" -->
 ```
+After a move, keep focus on the button the user pressed (it travels with the `<li>`); if it becomes disabled at the list edge (first item's "Move up"), move focus to the other button instead of losing it.
 
 ### Tooltip and toggletip (last resort)
 Prefer visible text (see «Before you build a custom component»). The `title` attribute is not a substitute: it is not keyboard- or touch-accessible, and browser-controlled tooltips fall under the 1.4.13 exception, so they are not covered by its protections.
@@ -743,7 +751,7 @@ export default { addons: ['@storybook/addon-a11y'] };
 | ARIA misuse | Semantic HTML first |
 | Focus trapped in modal | Tab wraps inside; Escape closes; focus returns to the trigger (or a logical element if it is gone) |
 | Unlabeled icon button | `aria-label` on `<button>` + `aria-hidden="true"` on SVG |
-| Auto-playing media | Pause/stop control within 3s |
+| Auto-playing audio (1.4.2) | Audio that plays automatically for more than 3 seconds needs a mechanism to pause or stop it, or a volume control independent of the system volume. Prefer no autoplay. Moving or auto-updating visuals are a separate rule (2.2.2) |
 | AJAX content not announced | `aria-live="polite"` region; inject content into it |
 | Color as sole conveyor | Add text, icon, or pattern |
 | Sticky header hides focus (2.4.11) | `scroll-padding-top: <header-height>` |
@@ -815,15 +823,13 @@ import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
           [attr.aria-describedby]="email.invalid && email.touched ? 'email-error' : null"
           aria-required="true"
         />
-        <span
-          id="email-error"
-          role="alert"
-          *ngIf="email.invalid && email.touched"
-        >
-          {{ email.hasError('required') ? 'Email is required' : 'Enter a valid email' }}
-        </span>
+        @if (email.invalid && email.touched) {
+          <span id="email-error" role="alert">
+            {{ email.hasError('required') ? 'Email is required' : 'Enter a valid email' }}
+          </span>
+        }
       </div>
-      <button type="submit" [disabled]="form.invalid">Log in</button>
+      <button type="submit">Log in</button>
     </form>
   `
 })
@@ -831,9 +837,17 @@ export class LoginComponent {
   form = this.fb.group({ email: ['', [Validators.required, Validators.email]] });
   get email() { return this.form.controls.email; }
   constructor(private fb: FormBuilder) {}
-  submit() { /* … */ }
+  submit() {
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();                 // reveal every error on submit
+      document.getElementById('email')?.focus();    // with several fields, focus the first invalid one
+      return;
+    }
+    /* … */
+  }
 }
 ```
+Do not disable the submit button while the form is invalid: a disabled button hides why the form cannot be sent. Let the user submit and show the errors. `@if` is Angular's built-in template control flow and needs no import; if your Angular version predates it, add `NgIf` to `imports` and use `*ngIf`. Not compiled; control flow documented at angular.dev/guide/templates/control-flow (the minimum version was not confirmed from that page, 2026-11).
 
 ### Svelte 5 — Modal dialog with native `<dialog>`
 ```svelte
@@ -928,8 +942,9 @@ struct CourseCard: View {
         }
         .accessibilityElement(children: .combine)
         .accessibilityLabel("\(title), by \(instructor), \(duration)")
-        .accessibilityHint(isCompleted ? "Completed" : "Double tap to open course")
-        .accessibilityAddTraits(isCompleted ? .isSelected : [])
+        .accessibilityAddTraits(.isButton)
+        // State belongs in the value, not the hint (hints describe the result of the action and users can turn them off).
+        .accessibilityValue(isCompleted ? "Completed" : "")
     }
 }
 
@@ -943,30 +958,38 @@ struct EmailField: View {
             TextField("Email", text: $email)
                 .textContentType(.emailAddress)
                 .keyboardType(.emailAddress)
-                .autocapitalization(.none)
+                .textInputAutocapitalization(.never)   // replaces autocapitalization(_:), deprecated
                 .accessibilityLabel("Email address")
-                .accessibilityHint("Enter your email address")
-                .accessibilityValue(isInvalid ? "Invalid email format" : "")
+                // Do not overwrite the field's value (the typed text) with an error string.
+                // Show the error as visible text (not colour alone) and announce it when it appears.
             if isInvalid {
                 Text("Enter a valid email address")
                     .foregroundColor(.red)
-                    .accessibilityLiveRegion(.assertive)
+            }
+        }
+        .onChange(of: isInvalid) { _, nowInvalid in   // two-parameter form: iOS 17+
+            if nowInvalid {
+                AccessibilityNotification.Announcement("Enter a valid email address").post()   // iOS 17+
             }
         }
     }
 }
 
-// Respect system accessibility settings
-@main
-struct MyApp: App {
+// Respect system accessibility settings (read them inside a View)
+struct SettingsAwareView: View {
     @Environment(\.accessibilityReduceMotion) var reduceMotion
     @Environment(\.accessibilityInvertColors) var invertColors
-    @Environment(\.sizeCategory) var sizeCategory  // Dynamic Type
+    @Environment(\.dynamicTypeSize) var dynamicTypeSize  // Dynamic Type; sizeCategory is deprecated
 
-    var body: some Scene {
-        WindowGroup { ContentView() }
+    var body: some View {
+        Text("Hello")
+            .animation(reduceMotion ? nil : .easeInOut, value: dynamicTypeSize)
     }
 }
+// Verified against Apple's documentation data (developer.apple.com, 2026-11): AccessibilityNotification.Announcement
+// (iOS 17+), textInputAutocapitalization(_:) (iOS 15+), autocapitalization(_:) and sizeCategory deprecated with
+// dynamicTypeSize as replacement. accessibilityLiveRegion(_:) has no page in SwiftUI's documentation, so it was removed.
+// Not compiled.
 ```
 
 ### Jetpack Compose (Android)
@@ -984,7 +1007,10 @@ fun CourseCard(
     Card(
         modifier = Modifier
             .clickable(onClick = onClick)
-            .semantics {
+            // mergeDescendants = true: one focus target for the whole card instead of three Text nodes.
+            // Prefer clickable(role = Role.Button) and let the merged Text children be the label;
+            // contentDescription replaces them, so keep it only if you need different wording.
+            .semantics(mergeDescendants = true) {
                 contentDescription = "$title, by $instructor, $duration" +
                     if (isCompleted) ", completed" else ""
                 role = Role.Button
@@ -1024,12 +1050,19 @@ fun EmailField(email: String, onValueChange: (String) -> Unit, isError: Boolean)
 }
 
 // Reduce motion
+// Compose has no reduce-motion flag: androidx.compose.ui.platform.AccessibilityManager only offers
+// calculateRecommendedTimeoutMillis(). Android's signal is "animators disabled system-wide"
+// (Developer Options animator duration scale 0, or Battery Saver): ValueAnimator.areAnimatorsEnabled().
 @Composable
 fun AnimatedContent() {
-    val reduceMotion = LocalAccessibilityManager.current?.isReduceMotionEnabled ?: false
-    val animationSpec = if (reduceMotion) snap() else tween(300)
+    // API 26+. Read once per composition; it is not observable state, so it does not
+    // recompose when the setting changes while the screen is open.
+    val reduceMotion = remember { !ValueAnimator.areAnimatorsEnabled() }
+    val animationSpec = if (reduceMotion) snap<Float>() else tween<Float>(300)
     // use animationSpec in animations
 }
+// Verified against developer.android.com/reference/android/animation/ValueAnimator#areAnimatorsEnabled() and
+// developer.android.com/reference/kotlin/androidx/compose/ui/platform/AccessibilityManager (2026-11). Not compiled.
 ```
 
 ---
@@ -1408,48 +1441,47 @@ const hintId  = 'email-hint';
 </template>
 ```
 
-### Accessible modal (Vue 3 + Teleport)
+### Accessible modal (Vue 3 + native `<dialog>`)
 ```vue
 <script setup lang="ts">
-import { ref, watch, nextTick } from 'vue';
+import { ref, watch } from 'vue';
 const props = defineProps<{ open: boolean }>();
 const emit  = defineEmits<{ (e: 'close'): void }>();
-const closeBtn = ref<HTMLButtonElement | null>(null);
+const dialogEl = ref<HTMLDialogElement | null>(null);
 
-watch(() => props.open, async (val) => {
-  if (val) {
-    await nextTick();
-    closeBtn.value?.focus(); // Initial focus: Cancel, the least destructive action, because this cannot be undone (choose per task)
-  }
+// showModal() makes the page behind inert and contains Tab; Escape fires `cancel` then `close`.
+// close() returns focus to the element focused before showModal(), if it is still in the document.
+watch(() => props.open, (val) => {
+  const el = dialogEl.value;
+  if (!el) return;
+  if (val && !el.open) el.showModal();
+  else if (!val && el.open) el.close();
 });
 
-function handleKeydown(e: KeyboardEvent) {
-  if (e.key === 'Escape') emit('close');
+// Click on the backdrop targets the <dialog> itself (the content lives in the inner div)
+function onBackdropClick(e: MouseEvent) {
+  if (e.target === dialogEl.value) emit('close');
 }
 </script>
 
 <template>
-  <!-- Teleport to body so the dialog is not inside a hidden or inert ancestor -->
-  <Teleport to="body">
-    <div
-      v-if="open"
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="modal-title"
-      aria-describedby="modal-desc"
-      @keydown="handleKeydown"
-    >
+  <dialog
+    ref="dialogEl"
+    aria-labelledby="modal-title"
+    aria-describedby="modal-desc"
+    @close="emit('close')"
+    @click="onBackdropClick"
+  >
+    <div>
       <h2 id="modal-title">Confirm action</h2>
       <p id="modal-desc">This cannot be undone.</p>
-      <button ref="closeBtn" @click="emit('close')">Cancel</button>
-      <button class="primary">Confirm</button>
+      <button type="button" autofocus @click="emit('close')">Cancel</button>
+      <button type="button" class="primary">Confirm</button>
     </div>
-    <!-- Backdrop -->
-    <div v-if="open" aria-hidden="true" @click="emit('close')" />
-  </Teleport>
+  </dialog>
 </template>
 ```
-This sketch moves focus and handles Escape only. It does not make the page behind inert, contain Tab or return focus: add those (or use native `<dialog>.showModal()` and check it in your browsers), returning focus to the opener or, if it is gone, to a logical element.
+Same pattern as the Svelte example above: no Teleport or hand-written focus trap is needed because `showModal()` puts the dialog in the top layer. `autofocus` on Cancel (the least destructive action, because this cannot be undone) is a choice per task. Inert background, Escape and the `close` event are documented on MDN; focus return on close is not on that page, so verify Tab, Escape and focus return in your target browsers, and if the opener is removed from the DOM while the dialog is open, move focus to a logical element yourself. The backdrop click handler is ours: `showModal()` does not close on outside clicks by default (`closedby="any"` is the native alternative). Not compiled; verified against developer.mozilla.org/docs/Web/HTML/Reference/Elements/dialog (2026-11).
 
 ### Accessible toggle button (Vue 3)
 ```vue
@@ -1502,9 +1534,10 @@ React Native accessibility maps to the same WCAG principles but uses platform-sp
 
 ### Core props
 ```tsx
+import { useEffect } from 'react';
 import {
   View, Text, TouchableOpacity, TextInput,
-  AccessibilityInfo, findNodeHandle
+  AccessibilityInfo
 } from 'react-native';
 
 // ── Accessible card (combines children into one focus target)
@@ -1525,30 +1558,36 @@ function CourseCard({ title, instructor, isCompleted }: Props) {
 
 // ── Accessible text input with error
 function EmailInput({ value, onChange, error }: InputProps) {
+  // iOS has no live-region prop: announce the error when it first appears.
+  useEffect(() => {
+    if (error) AccessibilityInfo.announceForAccessibility(error);
+  }, [error]);
+
   return (
     <View>
       <Text nativeID="email-label">Email address</Text>
       <TextInput
         value={value}
         onChangeText={onChange}
-        accessibilityLabelledBy="email-label"
-        accessibilityInvalidated={!!error}        // maps to aria-invalid
-        accessibilityErrorMessage={error}          // RN 0.74+
+        accessibilityLabelledBy="email-label"      // Android only
         keyboardType="email-address"
         autoComplete="email"
         textContentType="emailAddress"            // iOS autofill
       />
       {error && (
-        <Text
-          accessibilityLiveRegion="assertive"     // announce immediately
-          accessibilityRole="alert"
-        >
+        // React Native documents no aria-invalid / error-message prop. Show the error as visible text
+        // next to the field (not colour alone). accessibilityLiveRegion is Android-only; announce on iOS.
+        <Text accessibilityLiveRegion="assertive" accessibilityRole="alert">
           {error}
         </Text>
       )}
     </View>
   );
 }
+
+// Verified against reactnative.dev/docs/accessibility and /docs/accessibilityinfo (2026-11). Not compiled.
+// Removed: accessibilityInvalidated and accessibilityErrorMessage, which are not documented there.
+// On Android, announcing in addition to the live region can read the error twice: test and keep one.
 ```
 
 ### Touch targets (WCAG 2.5.8 equivalent)
@@ -1579,13 +1618,13 @@ const styles = StyleSheet.create({
 ```tsx
 import { Text } from 'react-native';
 
-// ❌ Never: fixed font sizes block Dynamic Type
-<Text style={{ fontSize: 16 }}>Static text</Text>
+// allowFontScaling defaults to true, so a fixed fontSize still scales with the user's text size setting
+<Text style={{ fontSize: 16 }}>Scales by default</Text>
 
-// ✅ Allow: system font that scales with user preference
-<Text>Default text</Text>  // inherits system font size
+// ❌ Only this blocks scaling: opting out explicitly
+<Text allowFontScaling={false} style={{ fontSize: 16 }}>Does not scale</Text>
 
-// ✅ If you must set size, allow scaling
+// ✅ Be explicit if you like (same as the default)
 <Text allowFontScaling={true} style={{ fontSize: 16 }}>Scalable text</Text>
 
 // ✅ maxFontSizeMultiplier: prevent runaway scaling in tight UIs
@@ -1621,15 +1660,17 @@ function AnimatedCard() {
 ### Focus management (screen transition)
 ```tsx
 import { useRef, useEffect } from 'react';
-import { View, AccessibilityInfo, findNodeHandle } from 'react-native';
+import { View, Text, AccessibilityInfo } from 'react-native';
+// Verified against reactnative.dev/docs/accessibilityinfo (2026-11): sendAccessibilityEvent(ref, 'focus') replaces
+// the deprecated setAccessibilityFocus(reactTag); the view needs accessible={true}. Not compiled or run on a device.
 
 function NewScreen() {
   const headingRef = useRef<View>(null);
 
   useEffect(() => {
-    // Move VoiceOver/TalkBack focus to screen heading on mount
-    const node = findNodeHandle(headingRef.current);
-    if (node) AccessibilityInfo.setAccessibilityFocus(node);
+    // Move VoiceOver/TalkBack focus to the screen heading on mount.
+    // setAccessibilityFocus(findNodeHandle(...)) is deprecated; pass the ref instead.
+    if (headingRef.current) AccessibilityInfo.sendAccessibilityEvent(headingRef.current, 'focus');
   }, []);
 
   return (
