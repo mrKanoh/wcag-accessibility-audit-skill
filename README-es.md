@@ -38,7 +38,7 @@ La skill indica al agente que responda en el idioma del usuario. Los datos de re
 
 | Carpeta | Contenido |
 |---|---|
-| [`references/`](./references/) | Archivos por tema a un enlace de `SKILL.md`: criterios y versiones de WCAG, HTML semántico y ARIA, componentes y patrones de teclado, tipografía, color y preferencias del usuario, pruebas y lectores de pantalla, proceso de auditoría y KPI, procedimiento de auditoría de sitios, etiquetas y nombres de formularios, autenticación y foco en modales, práctica inclusiva, ejemplos para frameworks, móvil, entrada alternativa y accesibilidad cognitiva, marco legal, glosario, plantillas y recursos |
+| [`references/`](./references/) | Archivos por tema a un enlace de `SKILL.md`: criterios y versiones de WCAG, HTML semántico y ARIA, componentes y patrones de teclado, tipografía, color y preferencias del usuario, pruebas y lectores de pantalla, proceso de auditoría y KPI, procedimiento de auditoría de sitios, etiquetas y nombres de formularios, construcción de formularios, fase de diseño, reflow, zoom y espaciado de texto, contenido (títulos, idioma, encabezados, enlaces, texto alternativo, multimedia), contenido dinámico y regiones vivas, interfaces de chat y asistentes de IA, autenticación y foco en modales, práctica inclusiva, ejemplos para frameworks, móvil, entrada alternativa y accesibilidad cognitiva, marco legal, glosario, plantillas y recursos |
 | [`data/`](./data/) y [`scripts/search.py`](./scripts/search.py) | 14 bases CSV y la CLI de búsqueda |
 | [`templates/`](./templates/) | Informe de auditoría, libro de evidencia de auditoría de sitios, pipeline de integración continua y plantilla de informe basada en VPAT |
 | [`prompts/`](./prompts/) | Doce instrucciones por tarea |

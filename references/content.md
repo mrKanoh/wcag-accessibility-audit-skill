@@ -138,7 +138,7 @@ Plain language helps everyone, and especially people with cognitive, language an
 | Prerecorded video with audio | Audio description or a text alternative (A); audio description (AA) | 1.2.3 A, 1.2.5 AA |
 | Live video with audio | Captions | 1.2.4 AA |
 
-- At AA, prerecorded video in synchronized media needs **audio description** (1.2.5): a text alternative for time-based media can satisfy 1.2.3 (A), but not 1.2.5 (AA). Understanding 1.2.3 says that under 1.2.5 "authors must provide an audio description".
+- At AA, prerecorded video in synchronized media needs **audio description** (1.2.5): a text alternative for time-based media can satisfy 1.2.3 (A), but not 1.2.5 (AA). Understanding 1.2.3 says that under 1.2.5 "authors must provide an audio description". Understanding 1.2.5 adds that if all of the important information in the video track is already conveyed in the audio track, "no additional audio description is necessary".
 - Auto-playing audio is a separate requirement (1.4.2 Audio Control, A); see [common issues and fixes](audit-process-and-kpis.md#common-issues--fixes).
 - A player with captions and description controls: `examples/components/media-player.html`.
 
@@ -161,6 +161,7 @@ Consulted on 2026-11-15:
 - Understanding 1.3.3 Sensory Characteristics: https://www.w3.org/WAI/WCAG22/Understanding/sensory-characteristics.html
 - Understanding 1.4.5 Images of Text: https://www.w3.org/WAI/WCAG22/Understanding/images-of-text.html
 - Understanding 1.2.3 Audio Description or Media Alternative (Prerecorded): https://www.w3.org/WAI/WCAG22/Understanding/audio-description-or-media-alternative-prerecorded.html
+- Understanding 1.2.5 Audio Description (Prerecorded): https://www.w3.org/WAI/WCAG22/Understanding/audio-description-prerecorded.html
 - Understanding 3.1.5 Reading Level (AAA): https://www.w3.org/WAI/WCAG22/Understanding/reading-level.html
 - WAI Images tutorial, alt decision tree: https://www.w3.org/WAI/tutorials/images/decision-tree/
 - WAI Tables tutorial: https://www.w3.org/WAI/tutorials/tables/

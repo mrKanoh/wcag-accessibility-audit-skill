@@ -38,7 +38,7 @@ The skill instructs the agent to answer in the user's language. Its reference da
 
 | Folder | Contents |
 |---|---|
-| [`references/`](./references/) | Topic files one link away from `SKILL.md`: WCAG criteria and versions, semantic HTML and ARIA, components and keyboard patterns, typography, color and user preferences, testing and screen readers, audit process and KPIs, site-audit procedure, form labels and names, authentication and modal focus, inclusive practice, framework examples, mobile, alternative input and cognitive accessibility, legal framework, glossary, templates and resources |
+| [`references/`](./references/) | Topic files one link away from `SKILL.md`: WCAG criteria and versions, semantic HTML and ARIA, components and keyboard patterns, typography, color and user preferences, testing and screen readers, audit process and KPIs, site-audit procedure, form labels and names, building forms, design phase, reflow, zoom and text spacing, content (titles, language, headings, links, alternative text, media), dynamic content and live regions, chat and AI assistant interfaces, authentication and modal focus, inclusive practice, framework examples, mobile, alternative input and cognitive accessibility, legal framework, glossary, templates and resources |
 | [`data/`](./data/) and [`scripts/search.py`](./scripts/search.py) | 14 CSV databases and the search CLI |
 | [`templates/`](./templates/) | Audit report, site-audit workbook, CI pipeline, VPAT-based reporting template |
 | [`prompts/`](./prompts/) | Twelve task prompts |

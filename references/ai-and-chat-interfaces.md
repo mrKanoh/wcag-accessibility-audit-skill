@@ -117,7 +117,7 @@ Generated text is content published on the page, and the same criteria apply to 
 
 ## Minimal example
 
-A history as a non-live list with an author heading per message, a polite status region for "responding / replied / stopped / failed", Enter to send, Shift+Enter for a new line, focus kept in the box, and a Stop button. `streamReply` is a stand-in for a real streaming API.
+A history as a non-live list with an author heading per message, a polite status region for "responding / replied / stopped / failed", Enter to send, Shift+Enter for a new line, focus kept in the box, and a Stop button. `streamReply` is a stand-in for a real streaming API. To stay short, the example omits the Retry button and does not restore the user's text when a reply fails; a real chat should do both ([Errors, retries and time limits](#errors-retries-and-time-limits)).
 
 ```html
 <!-- Tested with keyboard in a Chromium browser (2026-11-15): Enter sends, Shift+Enter adds a line,
