@@ -47,7 +47,7 @@ AAA criteria mentioned below, not part of an AA target: 2.4.9 Link Purpose (Link
 
 - **Requirement (2.4.2 Page Titled, A, 2.0).** Web pages have titles that describe topic or purpose. Failure F25: a title that does not identify the contents.
 - **Technique.** A descriptive title (G88) in the `<title>` element (H25). Identifying where the page sits in the site, such as "Shipping – Help – Example Store", is advisory (G127).
-- **Single-page apps.** Understanding 2.4.2: "the title of the page should also be changed dynamically to reflect the content or topic of the current view." How a framework announces the title on route change: [framework-examples.md](framework-examples.md#nextjs-app-router--focus-management-on-navigation).
+- **Single-page apps.** Understanding 2.4.2: "the title of the page should also be changed dynamically to reflect the content or topic of the current view." How a framework announces the title on route change: [framework-examples.md](framework-examples.md#nextjs-app-router--focus-management-on-navigation); announcing or moving focus on route change: [dynamic-content.md](dynamic-content.md#route-changes-in-single-page-apps).
 - **Guidance.** Put the specific part first ("Order 1234 – My account – Example Store"). After a form submission with errors, the WAI Forms tutorial suggests adding the error count to the title ([forms.md](forms.md#error-summary-and-focus)).
 
 ## Language of the page and of parts

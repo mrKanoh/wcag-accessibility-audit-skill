@@ -40,7 +40,7 @@ Each item says whether it is a **requirement** (a WCAG 2.2 success criterion, wi
 | 4.1.2 | Name, Role, Value | A | 2.0 | Every control exposes name, role, state and value |
 | 4.1.3 | Status Messages | AA | 2.1 | Status messages (for example "Saved", "3 results") can be presented by assistive technology without receiving focus |
 
-Look any of them up with `python scripts/search.py wcag --id <id>`.
+Look any of them up with `python scripts/search.py wcag --id <id>`. Status messages after submitting or saving (4.1.3) and live regions: [dynamic-content.md](dynamic-content.md#status-messages-413).
 
 ## Visible, associated labels
 

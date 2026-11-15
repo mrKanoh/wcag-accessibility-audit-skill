@@ -62,7 +62,7 @@ Measure what you ship, not only what you scan.
 | Focus trapped in modal | Tab wraps inside; Escape closes; focus returns to the trigger (or a logical element if it is gone) |
 | Unlabeled icon button | `aria-label` on `<button>` + `aria-hidden="true"` on SVG |
 | Auto-playing audio (1.4.2) | Audio that plays automatically for more than 3 seconds needs a mechanism to pause or stop it, or a volume control independent of the system volume. Prefer no autoplay. Moving or auto-updating visuals are a separate rule (2.2.2) |
-| AJAX content not announced | `aria-live="polite"` region; inject content into it |
+| AJAX content not announced | `aria-live="polite"` region; inject content into it ([dynamic-content.md](dynamic-content.md)) |
 | Color as sole conveyor | Add text, icon, or pattern |
 | Sticky header hides focus (2.4.11) | `scroll-padding-top: <header-height>` |
 | Small tap targets (2.5.8) | ≥ 24×24 CSS px; spacing can satisfy |

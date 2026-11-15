@@ -63,3 +63,5 @@ What each of these decisions requires and a wireframe/mockup review checklist: [
 - **Summarize audit findings** into exec-friendly language while preserving SC IDs.
 - **Accessibility code review**: use LLMs to flag likely issues (missing labels, `div`-as-button, color-only meaning) as a *supplement*, not a replacement, for real testing.
 - **Caution**: LLMs often suggest ARIA where semantic HTML would be correct. Apply Rule #1 of ARIA.
+
+Building an accessible chat or assistant interface is a different topic: [ai-and-chat-interfaces.md](ai-and-chat-interfaces.md).

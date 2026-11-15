@@ -1,10 +1,10 @@
 # PROGRESS
 
 ## Trabajo actual: WCAG-CONTENT-1 contenido nuevo en references/  (rama tarea/wcag-content-1)
-- Etapas: [x] 1 forms y design-phase (commit f061cd4) · [x] 2 reflow y content (este commit) · [ ] 3 dynamic content y AI/chat · [ ] 4 cierre (README, CHANGELOG, coherencia, PR)
-- Ciclo: etapas aprobadas 1, auditoría pendiente, rondas 0
+- Etapas: [x] 1 forms y design-phase (commit f061cd4) · [x] 2 reflow y content (commit e558b47) · [x] 3 dynamic content y AI/chat (este commit) · [ ] 4 cierre (README, CHANGELOG, coherencia, PR)
+- Ciclo: etapas aprobadas 2, auditoría pendiente, rondas 0
 - Línea base de pruebas: en `main` (f1926ed) 118 passed según el cierre de WCAG-STRUCT-1; los dos comandos de CI con salida 0.
-- Pendiente / bloqueos: enlaces de vuelta a archivos de etapas posteriores se añaden en la etapa en que nace el destino (aprobado por el orquestador): design-phase → reflow y content hechos en la etapa 2; forms → dynamic-content queda para la etapa 3.
+- Pendiente / bloqueos: enlaces de vuelta a archivos de etapas posteriores se añaden en la etapa en que nace el destino (aprobado por el orquestador): design-phase → reflow y content hechos en la etapa 2; forms → dynamic-content y content → dynamic-content hechos en la etapa 3. Para la etapa 4: observación del orquestador sobre content.md «Media in brief» (abrir Understanding 1.2.5 y, si lo confirma, añadir el caso de la banda sonora principal).
 ### Orden completa
 ```
 Proyecto: wcag-accesibility-skill — D:\Proyectos\wcag-accesibility-skill
