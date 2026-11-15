@@ -189,7 +189,7 @@ python scripts/search.py resources --keyword WCAG
 | `references/reflow-zoom-and-text-spacing.md` | 1.4.4, 1.4.10, 1.4.12 and 1.3.4: requirements, exceptions, CSS techniques, manual test steps |
 | `references/content.md` | Titles, language, headings, link purpose, alt text decision tree, tables, sensory instructions, media |
 | `references/dynamic-content.md` | 4.1.3 status messages, ARIA live regions, route changes, loading, focus after inserting/removing content, 2.2.1, 2.2.2 |
-| `references/ai-and-chat-interfaces.md` | Chat/assistant UI: general WCAG criteria applied, streamed replies, generated content, a tested minimal example |
+| `references/ai-and-chat-interfaces.md` | Chat/assistant UI: general WCAG criteria applied, streamed replies, generated content, a keyboard-tested minimal example |
 | `references/authentication-and-modal-focus.md` | What 3.3.8 / 3.3.9 require, and how to choose initial and return focus in modal dialogs |
 | `references/site-audit-procedure.md` | Scoped site-audit procedure: inventory, automatic checks, manual protocols, evidence status |
 | `templates/audit-report.md` | Complete audit report template (fill-in) |

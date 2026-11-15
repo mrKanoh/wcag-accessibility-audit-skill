@@ -73,9 +73,11 @@ Look any of them up with `python scripts/search.py wcag --id <id>`. Status messa
 - **Guidance.** Place the instruction before the field in reading order (between label and field, or in the label), not only after it or in a tooltip. Instructions must not rely only on shape, position or color, for example "the field on the right" or "the fields in red" (1.3.3 Sensory Characteristics, A, 2.0; see also 1.4.1).
 
 ```html
+<!-- autocomplete="bday" autofills a valid date string such as 1955-06-08 (HTML autofill table),
+     so the instruction asks for that same format. -->
 <label for="dob">Date of birth</label>
-<p id="dob-hint">Use the format DD/MM/YYYY, for example 07/03/1990.</p>
-<input id="dob" name="dob" type="text" inputmode="numeric" autocomplete="bday"
+<p id="dob-hint">Use the format YYYY-MM-DD, for example 1990-03-07.</p>
+<input id="dob" name="dob" type="text" autocomplete="bday"
        aria-describedby="dob-hint">
 ```
 
@@ -92,12 +94,15 @@ Fields that collect information about the user (name, email, address, phone, bir
 
 ## When to validate
 
-No success criterion says when to validate; these are **guidance** from the WAI Forms tutorial ("User Notifications"):
+No success criterion says when to validate. The first three points are **guidance** from the WAI Forms tutorial ("User Notifications"):
 
 - **On submit** is the baseline: check everything, show the errors, keep what the user entered.
 - **When the user leaves a field** suits fields with a required format, such as dates. The tutorial explains that checking while typing "would display error messages most of the time".
 - **While typing** can help (password rules, character counts), but "not all situations may be appropriate". If you do it, do not announce a new error on every keystroke: let the message update quietly and avoid `role="alert"` or `aria-live="assertive"` for it.
-- Do not disable the submit button until the form is valid: users then get no explanation of what is wrong. Let them submit and identify the errors. (This is guidance; a disabled button is not itself a WCAG failure.)
+
+Two more points are this skill's own guidance, not from that tutorial:
+
+- Do not disable the submit button until the form is valid: users then get no explanation of what is wrong. Let them submit and identify the errors. (A disabled button is not itself a WCAG failure.)
 - Validate on the server too. Client-side checks are a convenience, not the only check.
 
 ## Identifying errors and suggesting fixes
@@ -120,10 +125,11 @@ The fragment below validates on submit, fills the summary with links, gives the 
 ```html
 <!-- Tested with keyboard in a Chromium browser (2026-11-15): empty, partly valid and valid
      submissions; focus moves to the summary and each link focuses its field; aria-invalid and
-     aria-describedby checked by script, names in the accessibility tree. Not tested with a
-     screen reader, Firefox or Safari. -->
+     aria-describedby checked by script, names in the accessibility tree. Retested after adding
+     role="group": the summary appears as a group in the accessibility tree (the tool used does
+     not show the group's name). Not tested with a screen reader, Firefox or Safari. -->
 <form id="signup" novalidate>
-  <div id="error-summary" tabindex="-1" hidden aria-labelledby="error-summary-title">
+  <div id="error-summary" role="group" tabindex="-1" hidden aria-labelledby="error-summary-title">
     <h2 id="error-summary-title">There is a problem</h2>
     <ul id="error-list"></ul>
   </div>
@@ -202,7 +208,8 @@ The fragment below validates on submit, fills the summary with links, gives the 
 ```
 
 Notes on the fragment:
-- The summary is a plain container that receives focus (`tabindex="-1"`), so it does not need `role="alert"` (see [When to use `role="alert"`](#identifying-errors-and-suggesting-fixes)).
+- The summary is a container that receives focus (`tabindex="-1"`), so it does not need `role="alert"` (see [When to use `role="alert"`](#identifying-errors-and-suggesting-fixes)).
+- It has `role="group"` so that its heading can name it. A `<div>` without a role is `generic`, and ARIA in HTML marks it "Naming Prohibited" (WAI-ARIA 1.2: name from "prohibited" for `generic`), so `aria-labelledby` on a bare `<div>` is not allowed. ARIA in HTML allows any role on a `div`, and `group` takes its name from the author. `region` would also allow a name but would add a landmark, which a temporary message does not need.
 - Error elements are referenced by `aria-describedby` only while they are shown: under Accessible Name and Description Computation 1.2 (step 2A), an element referenced directly by `aria-describedby` is used for the description even when it is hidden, so leaving the reference in place could describe a field with a stale error.
 - The summary heading level (`h2`) depends on the page's outline.
 
@@ -228,7 +235,7 @@ Understanding 3.3.4 says it is "not the intent to require a confirmation for eac
 
 - **Guidance.** Show where the user is ("Step 2 of 4: Delivery") in text, not only as a colored progress bar (if the bar conveys information, 1.4.1 and 1.4.11 apply to it). Give each step a unique page title or main heading. Let users go back without losing what they entered.
 - **Requirement.** Data already entered in the process must not have to be typed again (3.3.7, above). A final review step is one way to meet 3.3.4 when it applies.
-- **Requirement (2.2.1 Timing Adjustable, A, 2.0).** If the session or the step has a time limit set by the content, the user can turn it off, adjust it to at least ten times the default, or is warned and given at least 20 seconds to extend it with a simple action, unless the limit is real-time, essential, or longer than 20 hours. Session techniques: G133 (offer a longer or no session limit on the first page of a multi-part form), G198 (turn the limit off); script techniques: SCR16 (warn before it expires) with SCR1 (allow extending it). For the cognitive side of time limits, see [alternative-input-and-cognitive.md](alternative-input-and-cognitive.md#cognitive-accessibility-coga-1).
+- **Requirement (2.2.1 Timing Adjustable, A, 2.0).** If the session or the step has a time limit set by the content, the user can turn it off, adjust it to at least ten times the default, or is warned and given at least 20 seconds to extend it with a simple action (at least ten times), unless the limit is real-time, essential, or longer than 20 hours. Session techniques: G133 (offer a longer or no session limit on the first page of a multi-part form), G198 (turn the limit off); script techniques: SCR16 (warn before it expires) with SCR1 (allow extending it). For the cognitive side of time limits, see [alternative-input-and-cognitive.md](alternative-input-and-cognitive.md#cognitive-accessibility-coga-1).
 
 ## Changing a control must not change the context
 
@@ -260,3 +267,5 @@ Consulted on 2026-11-15:
 - WAI Forms tutorial, User Notifications: https://www.w3.org/WAI/tutorials/forms/notifications/
 - ARIA in HTML (`aria-required` with `required`): https://www.w3.org/TR/html-aria/
 - Accessible Name and Description Computation 1.2 (hidden nodes referenced by `aria-describedby`): https://www.w3.org/TR/accname-1.2/
+- WAI-ARIA 1.2 (`generic` and `group` roles, name from): https://www.w3.org/TR/wai-aria-1.2/
+- HTML Living Standard, autofill (`bday` expects a valid date string): https://html.spec.whatwg.org/multipage/form-control-infrastructure.html

@@ -79,7 +79,8 @@ Replies that appear token by token are the main chat-specific barrier.
 ## Structure of generated content
 
 - **Requirement (1.3.1).** Render Markdown or rich output to semantic HTML: real headings, lists, tables with header cells, `<code>`/`<pre>` for code, `<a>` for links. Do not show raw Markdown symbols or fake structure with bold text only. Heading levels inside a reply should fit under the message's own heading. Tables follow [content.md](content.md#lists-and-data-tables).
-- **Requirement (4.1.2, 2.5.3).** A "Copy" button per code block has an accessible name that starts with its visible text and says what it copies when there are several ("Copy code", "Copy code: Python example"). Confirm the copy with a status message ("Copied").
+- **Requirement (4.1.2, 2.5.3).** A "Copy" button per code block has an accessible name (4.1.2), and that name contains its visible text (2.5.3).
+- **Guidance.** Start the name with the visible text and say what it copies when there are several ("Copy code", "Copy code: Python example"). Confirm the copy with a status message ("Copied", 4.1.3).
 - **Requirement (1.4.10).** Long code lines may scroll inside their block (two-dimensional exception); prose in the reply must wrap ([reflow-zoom-and-text-spacing.md](reflow-zoom-and-text-spacing.md#content-allowed-to-scroll-in-two-dimensions)).
 - **Requirement (3.1.2, AA).** A reply in another language than the page should carry `lang` when the language is known ([content.md](content.md#language-of-the-page-and-of-parts)).
 
@@ -87,7 +88,7 @@ Replies that appear token by token are the main chat-specific barrier.
 
 - **Requirement (3.3.1).** An input error (empty message, text too long, unsupported attachment) is identified in text and connected to the input ([forms.md](forms.md#identifying-errors-and-suggesting-fixes)).
 - **Requirement (4.1.3).** A failed reply or a lost connection is a status message: show it in text in the conversation and announce it (`role="status"`, or `role="alert"` when the user must act now). Provide a Retry button with an accessible name; keep the user's message.
-- **Requirement (2.2.1).** If the chat session expires or the widget closes after inactivity, the user can turn the limit off, adjust it, or is warned and can extend it with at least 20 seconds to respond ([dynamic-content.md](dynamic-content.md#time-limits)).
+- **Requirement (2.2.1).** If the chat session expires or the widget closes after inactivity, the user can turn the limit off, adjust it, or is warned and can extend it with a simple action, with at least 20 seconds to respond and at least ten times ([dynamic-content.md](dynamic-content.md#time-limits)).
 
 ## Attachments and voice input
 
@@ -97,7 +98,7 @@ Replies that appear token by token are the main chat-specific barrier.
 
 ## Panel layout: contrast, reflow and target size
 
-- **Requirements.** Message text 4.5:1 (1.4.3); bubble borders when they are the only way to identify a message, the input border, and icon buttons 3:1 (1.4.11); the panel reflows at 320 CSS px and works at 200% text (1.4.10, 1.4.4); send, stop, copy and close targets at least 24 × 24 CSS px or meeting an exception (2.5.8). Detail: [design-phase.md](design-phase.md#target-size) and [reflow-zoom-and-text-spacing.md](reflow-zoom-and-text-spacing.md).
+- **Requirements.** Message text 4.5:1, or 3:1 for large text (1.4.3); bubble borders when they are the only way to identify a message, the input border, and icon buttons 3:1 (1.4.11); the panel reflows at 320 CSS px and works at 200% text (1.4.10, 1.4.4); send, stop, copy and close targets at least 24 × 24 CSS px or meeting an exception (2.5.8). Detail: [design-phase.md](design-phase.md#target-size) and [reflow-zoom-and-text-spacing.md](reflow-zoom-and-text-spacing.md).
 
 ## Floating chat widgets
 
@@ -117,7 +118,7 @@ Generated text is content published on the page, and the same criteria apply to 
 
 ## Minimal example
 
-A history as a non-live list with an author heading per message, a polite status region for "responding / replied / stopped / failed", Enter to send, Shift+Enter for a new line, focus kept in the box, and a Stop button. `streamReply` is a stand-in for a real streaming API. To stay short, the example omits the Retry button and does not restore the user's text when a reply fails; a real chat should do both ([Errors, retries and time limits](#errors-retries-and-time-limits)).
+A history as a non-live list with an author heading per message, a polite status region for "responding / replied / stopped / failed", Enter to send, Shift+Enter for a new line, focus kept in the box, and a Stop button. `streamReply` is a stand-in for a real streaming API. To stay short, the example omits the Retry button, does not restore the user's text when a reply fails, and silently ignores an empty message or Enter while a reply is generating (`if (!text || controller) return;`); a real chat should add Retry, restore the text and tell the user why nothing was sent ([Errors, retries and time limits](#errors-retries-and-time-limits)).
 
 ```html
 <!-- Tested with keyboard in a Chromium browser (2026-11-15): Enter sends, Shift+Enter adds a line,

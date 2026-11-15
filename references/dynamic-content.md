@@ -98,7 +98,7 @@ When a client-side route change replaces the view without a page load:
 ## Loading states and skeletons
 
 - **Guidance.** Announce the start of a long load and its end in a status region ("Loading results…", "18 results returned"), not every intermediate step. Give skeleton placeholders no text content for assistive technology (for example `aria-hidden="true"` on the skeleton), so users do not hear empty shapes.
-- **`aria-busy`.** ARIA 1.2 says assistive technologies *may* ignore changes while it is `true`; it is not a promise that anything is announced or withheld. The APG Feed pattern uses `aria-busy="true"` while articles are added in several DOM operations and stresses setting it back to `false` when done, or "some assistive technology users may not see the changes". Support differs between screen readers: do not rely on `aria-busy` alone to announce loading, and test it.
+- **`aria-busy`.** ARIA 1.2 says assistive technologies *may* ignore changes while it is `true`; it is not a promise that anything is announced or withheld. The APG Feed pattern uses `aria-busy="true"` while articles are added in several DOM operations and stresses that "it is extremely important that `aria-busy` is set to `false` when the operation is complete", or the changes may not become visible to some assistive technology users. Support may differ between screen readers: do not rely on `aria-busy` alone to announce loading, and test it.
 - A loading indicator that animates for more than five seconds alongside other content is moving content under 2.2.2 (see [below](#content-that-updates-itself)).
 
 ## Infinite scroll, pagination and "load more"
