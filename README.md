@@ -2,43 +2,57 @@
 
 # ♿ WCAG Accessibility Audit Skill
 
-**An open-source accessibility skill for AI agents and people working with WCAG 2.1/2.2 AA.**
+**An open-source accessibility skill for AI agents and people working with WCAG 2.2 AA (2.1 AA when a law requires it).**
 
-Review web UI code, plan keyboard and screen reader tests, and prepare accessibility
-findings in English or Spanish. Includes WAI-ARIA patterns, mobile guidance,
-searchable reference data, and report templates. AI reviews and automated checks
-require manual validation.
+Design and build accessible web UI, review code, audit sites, plan remediation, and
+prepare accessibility findings in the user's language. Includes WAI-ARIA patterns,
+mobile guidance, searchable reference data, and report templates. AI reviews and
+automated checks require manual validation.
 
-[![Scope: WCAG 2.1/2.2 AA](https://img.shields.io/badge/Scope-WCAG_2.1%2F2.2_AA-blueviolet)](https://www.w3.org/WAI/standards-guidelines/wcag/)
+[![Scope: WCAG 2.2 AA](https://img.shields.io/badge/Scope-WCAG_2.2_AA-blueviolet)](https://www.w3.org/WAI/standards-guidelines/wcag/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green)](./LICENSE)
 [![Tests](https://img.shields.io/github/actions/workflow/status/mrKanoh/wcag-accessibility-audit-skill/test.yml?branch=main&label=tests)](https://github.com/mrKanoh/wcag-accessibility-audit-skill/actions/workflows/test.yml)
 
 [Leer en español](./README-es.md)
 
-[What it does](#what-it-does) · [Installation](#installation) · [Compatibility](#compatibility-matrix-from-official-documentation) · [First use](#first-use) · [Scope and limitations](#scope-and-limitations) · [Searchable databases](#searchable-databases)
+[What it does](#what-it-does) · [How it is organized](#how-the-skill-is-organized) · [Installation](#installation) · [Compatibility](#compatibility-matrix-from-official-documentation) · [First use](#first-use) · [Scope and limitations](#scope-and-limitations) · [Searchable databases](#searchable-databases)
 
 </div>
 
 ## What it does
 
-For developers, designers, and people reviewing accessibility, this skill provides reusable instructions and references for AI-assisted work:
+For developers, designers, and people reviewing accessibility, this skill provides reusable instructions and references for AI-assisted work, organized by task:
 
-- Review UI code and suggest corrections for semantics, forms, keyboard behavior, focus, contrast, and WAI-ARIA (roles, states, and properties for assistive technologies).
-- Plan manual keyboard and screen reader tests, including NVDA, JAWS, VoiceOver, and TalkBack.
-- Prepare findings, acceptance criteria, design handoffs, and audit reports.
+- **Design:** typography and color pairs, component states, target size, motion, and the annotations a design handoff needs.
+- **Build:** semantic HTML first, WAI-ARIA patterns (roles, states, and properties for assistive technologies), keyboard and focus, and framework and mobile examples.
+- **Review code:** suggest corrections for semantics, forms, keyboard behavior, focus, contrast, and WAI-ARIA, citing the criterion and what still needs testing.
+- **Audit a site:** a scoped procedure, an evidence workbook, and report templates; plan manual keyboard and screen reader tests, including NVDA, JAWS, VoiceOver, and TalkBack.
+- **Remediate:** common fixes, acceptance criteria, and retesting.
 - Consult reference data and adapt examples of automated accessibility checks to a project.
 
 The skill instructs the agent to answer in the user's language. Its reference data is primarily in English; the included [English–Spanish glossary](./data/glossary-es.csv) supports Spanish terminology.
 
+## How the skill is organized
+
+`SKILL.md` is short (under 500 lines) and works as a map: it gives a workflow for each task (design, build, review code, audit a site, remediate), a "done" checklist the agent goes through before answering, and links to the detail in `references/`. The agent reads a reference file only when a step needs it.
+
+| Folder | Contents |
+|---|---|
+| [`references/`](./references/) | Topic files one link away from `SKILL.md`: WCAG criteria and versions, semantic HTML and ARIA, components and keyboard patterns, typography, color and user preferences, testing and screen readers, audit process and KPIs, site-audit procedure, form labels and names, authentication and modal focus, inclusive practice, framework examples, mobile, alternative input and cognitive accessibility, legal framework, glossary, templates and resources |
+| [`data/`](./data/) and [`scripts/search.py`](./scripts/search.py) | 14 CSV databases and the search CLI |
+| [`templates/`](./templates/) | Audit report, site-audit workbook, CI pipeline, VPAT-based reporting template |
+| [`prompts/`](./prompts/) | Twelve task prompts |
+| [`examples/components/`](./examples/components/) | Eight HTML component examples |
+
 ## Installation
 
-This project is intended for people using different AI agents, not just Claude Code. Its data, prompts, and templates can also be consulted directly without AI. The repository follows the open [Agent Skills format](https://agentskills.io/specification): a directory with a `SKILL.md` plus `scripts/` and `data/`. A single `SKILL.md` is the core for every product; there are no per-vendor copies.
+This project is intended for people using different AI agents, not just Claude Code. Its data, prompts, and templates can also be consulted directly without AI. The repository follows the open [Agent Skills format](https://agentskills.io/specification): a directory with a `SKILL.md` plus `references/`, `scripts/` and `data/`. A single `SKILL.md` is the core for every product; there are no per-vendor copies.
 
 ### Three ways to use it
 
 1. **Native skill** — in an agent that supports Agent Skills, install the **full directory** under the name `wcag-accessibility` (the specification requires `name` to match the directory name).
 2. **Search with Python** — if the agent can read the files and run commands, it can query the databases with `python scripts/search.py …` from the skill root. This needs **Python 3.10 or newer** (`requires-python = ">=3.10"` in `pyproject.toml`); loading the instructions does not.
-3. **Manual context** — give the assistant `SKILL.md` and the relevant `data/*.csv` files or [`prompts/`](./prompts) as context, where the product allows it. This mode has no automatic discovery and no execution. If the assistant cannot run a query, it should say so, ask you for the data, or give you the command to run yourself. It must not invent results.
+3. **Manual context** — give the assistant `SKILL.md` and the relevant `references/` files, `data/*.csv` files or [`prompts/`](./prompts) as context, where the product allows it. This mode has no automatic discovery and no execution. If the assistant cannot run a query, it should say so, ask you for the data, or give you the command to run yourself. It must not invent results.
 
 Reading instructions and executing Python are different capabilities: an agent can have the first without the second.
 
@@ -97,7 +111,7 @@ If the target directory already exists, `git clone` fails and nothing is overwri
 - If it is a clone of this repository, run `git status` inside it first. Commit or stash local changes you want to keep, then update with `git pull`.
 - If it is another installation, keep it: rename or move it outside the skills folders, so two copies are not loaded side by side, or clone into another directory outside them to compare both before deciding which to install.
 
-Copying only `SKILL.md` is **not** equivalent: the instructions would load, but the searchable databases and `scripts/search.py` would be missing.
+Copying only `SKILL.md` is **not** equivalent: the map would load, but the reference files in `references/`, the searchable databases and `scripts/search.py` would be missing.
 
 ### MCP server (optional, separate from the skill format)
 
@@ -130,7 +144,7 @@ You can also ask naturally, such as “How do I test this form with NVDA?” In 
 
 ## Scope and limitations
 
-- **WCAG target:** the skill instructions use WCAG 2.1 AA by default and discuss additions in 2.2. State the version and level you need in your request. The scope badge above describes the subject matter, not a certification.
+- **WCAG target:** the skill targets WCAG 2.2 AA by default and uses WCAG 2.1 AA only when a law or contract requires it (for example the US DOJ rule for ADA Title II); meeting 2.2 AA also meets 2.1 AA ([decision record](./DECISIONS.md)). State the version and level you need in your request. The scope badge above describes the subject matter, not a certification.
 - **Catalog coverage:** [wcag-criteria.csv](./data/wcag-criteria.csv) contains 59 records: all 50 A/AA criteria of 2.1 plus the nine additions in 2.2, including three AAA additions. The 28 AAA criteria inherited from 2.1 are absent. Criterion 4.1.1 is retained for historical 2.1 use; it was removed in 2.2.
 - **Version metadata:** each catalog record has a `versions` field (`2.1`, `2.2`, or `2.1;2.2`), visible in JSON. Use `--wcag-version 2.1` or `--wcag-version 2.2` on the `wcag` subcommand to keep only records tagged with that version (exact match on the field; 2.1 gives 50 records including 4.1.1, 2.2 gives 58 including 2.5.8). Without it nothing is filtered. The filter selects the criteria that belong to a version, not only those it added: every AA record belongs to 2.2, so `--wcag-version 2.2 --level AA` returns the same 24 records as `--level AA`. To list only the nine 2.2 additions, use `--output json` and keep the records whose `versions` is exactly `2.2`; the table and CSV outputs do not show `versions`. The catalog has no 2.1 AAA criteria, so a version filter combined with `--level AAA` is not a complete list.
 - **Review evidence:** AI suggestions and automated scans do not establish conformance. Test relevant pages, states, complete user flows, keyboard behavior, and assistive technologies in the target environment. Record what was actually tested.
@@ -234,7 +248,8 @@ Treat these as learning and adaptation examples. Before using them in a product,
 
 | Resource | Purpose |
 |---|---|
-| [SKILL.md](./SKILL.md) | Agent instructions and entry point for hosts with skill support |
+| [SKILL.md](./SKILL.md) | Agent instructions and entry point for hosts with skill support: workflows by task, done checklist, and links to `references/` |
+| [References](./references/) | Topic files with the detail behind each workflow (see [How the skill is organized](#how-the-skill-is-organized)) |
 | [Prompts](./prompts/) | Twelve task prompts for reviews, remediation, content, design handoffs, and test planning |
 | [Audit report](./templates/audit-report.md) | Starting point for documenting scope, findings, and evidence |
 | [Site audit procedure](./references/site-audit-procedure.md) and [workbook](./templates/site-audit-workbook.md) | Instructions and evidence template for a scoped site audit; they do not include a crawler or run any tests |
@@ -260,7 +275,7 @@ To run the existing Python tests from a development checkout with pytest install
 python -m pytest tests/ -v
 ```
 
-These tests exercise the search utility and data checks; they do not establish accessibility conformance or screen reader compatibility.
+These tests exercise the search utility, data checks, the `SKILL.md` frontmatter, and internal links; they do not establish accessibility conformance or screen reader compatibility.
 
 ## License
 

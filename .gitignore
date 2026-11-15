@@ -53,6 +53,9 @@ desktop.ini
 *-workspace/
 evals/results/
 
+# Local design-plugin cache
+.impeccable/
+
 # Temporary files
 *.tmp
 *.bak

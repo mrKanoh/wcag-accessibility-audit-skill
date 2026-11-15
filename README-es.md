@@ -2,43 +2,57 @@
 
 # ♿ WCAG Accessibility Audit Skill
 
-**Skill gratuita y de código abierto para agentes de IA y personas que trabajan con accesibilidad WCAG 2.1/2.2 AA.**
+**Skill gratuita y de código abierto para agentes de IA y personas que trabajan con accesibilidad WCAG 2.2 AA (2.1 AA cuando una ley lo exige).**
 
-Revisa código de interfaces web, prepara pruebas de teclado y lectores de pantalla
-y organiza hallazgos de accesibilidad en español o inglés. Incluye patrones WAI-ARIA,
-guías para móvil, bases consultables y plantillas de informes. Las revisiones de IA
-y los análisis automáticos necesitan validación manual.
+Diseña y construye interfaces web accesibles, revisa código, audita sitios, planifica
+correcciones y organiza hallazgos de accesibilidad en el idioma del usuario. Incluye
+patrones WAI-ARIA, guías para móvil, bases consultables y plantillas de informes. Las
+revisiones de IA y los análisis automáticos necesitan validación manual.
 
-[![Alcance: WCAG 2.1/2.2 AA](https://img.shields.io/badge/Alcance-WCAG_2.1%2F2.2_AA-blueviolet)](https://www.w3.org/WAI/standards-guidelines/wcag/)
+[![Alcance: WCAG 2.2 AA](https://img.shields.io/badge/Alcance-WCAG_2.2_AA-blueviolet)](https://www.w3.org/WAI/standards-guidelines/wcag/)
 [![Licencia: MIT](https://img.shields.io/badge/Licencia-MIT-green)](./LICENSE)
 [![Pruebas](https://img.shields.io/github/actions/workflow/status/mrKanoh/wcag-accessibility-audit-skill/test.yml?branch=main&label=tests)](https://github.com/mrKanoh/wcag-accessibility-audit-skill/actions/workflows/test.yml)
 
 [Read in English](./README.md)
 
-[Qué hace](#qué-hace) · [Instalación](#instalación) · [Compatibilidad](#matriz-de-compatibilidad-según-documentación-oficial) · [Primer uso](#primer-uso) · [Alcance y límites](#alcance-y-límites) · [Bases consultables](#bases-consultables)
+[Qué hace](#qué-hace) · [Cómo está organizada](#cómo-está-organizada-la-skill) · [Instalación](#instalación) · [Compatibilidad](#matriz-de-compatibilidad-según-documentación-oficial) · [Primer uso](#primer-uso) · [Alcance y límites](#alcance-y-límites) · [Bases consultables](#bases-consultables)
 
 </div>
 
 ## Qué hace
 
-Esta skill ofrece instrucciones y referencias reutilizables para desarrolladores, diseñadores y personas que revisan accesibilidad con ayuda de IA:
+Esta skill ofrece instrucciones y referencias reutilizables para desarrolladores, diseñadores y personas que revisan accesibilidad con ayuda de IA, organizadas por tarea:
 
-- Revisar código de interfaces y proponer correcciones de semántica, formularios, teclado, foco, contraste y WAI-ARIA (roles, estados y propiedades para tecnologías de asistencia).
-- Preparar pruebas manuales con teclado y lectores de pantalla, incluidos NVDA, JAWS, VoiceOver y TalkBack.
-- Organizar hallazgos, criterios de aceptación, entregas de diseño e informes de auditoría.
+- **Diseñar:** pares de color y tipografía, estados de los componentes, tamaño de los objetivos, movimiento y las anotaciones que necesita una entrega de diseño.
+- **Construir:** HTML semántico primero, patrones WAI-ARIA (roles, estados y propiedades para tecnologías de asistencia), teclado y foco, y ejemplos para frameworks y móvil.
+- **Revisar código:** proponer correcciones de semántica, formularios, teclado, foco, contraste y WAI-ARIA, citando el criterio y lo que aún falta probar.
+- **Auditar un sitio:** un procedimiento acotado, un libro de evidencia y plantillas de informe; preparar pruebas manuales con teclado y lectores de pantalla, incluidos NVDA, JAWS, VoiceOver y TalkBack.
+- **Remediar:** correcciones frecuentes, criterios de aceptación y nueva prueba.
 - Consultar datos de referencia y adaptar ejemplos de comprobaciones automáticas al proyecto.
 
 La skill indica al agente que responda en el idioma del usuario. Los datos de referencia están principalmente en inglés; el [glosario inglés–español incluido](./data/glossary-es.csv) sirve de apoyo para la terminología en español.
 
+## Cómo está organizada la skill
+
+`SKILL.md` es breve (menos de 500 líneas) y funciona como mapa: da un flujo para cada tarea (diseñar, construir, revisar código, auditar un sitio, remediar), una lista de «terminado» que el agente repasa antes de responder y enlaces al detalle en `references/`. El agente lee un archivo de referencia solo cuando un paso lo necesita.
+
+| Carpeta | Contenido |
+|---|---|
+| [`references/`](./references/) | Archivos por tema a un enlace de `SKILL.md`: criterios y versiones de WCAG, HTML semántico y ARIA, componentes y patrones de teclado, tipografía, color y preferencias del usuario, pruebas y lectores de pantalla, proceso de auditoría y KPI, procedimiento de auditoría de sitios, etiquetas y nombres de formularios, autenticación y foco en modales, práctica inclusiva, ejemplos para frameworks, móvil, entrada alternativa y accesibilidad cognitiva, marco legal, glosario, plantillas y recursos |
+| [`data/`](./data/) y [`scripts/search.py`](./scripts/search.py) | 14 bases CSV y la CLI de búsqueda |
+| [`templates/`](./templates/) | Informe de auditoría, libro de evidencia de auditoría de sitios, pipeline de integración continua y plantilla de informe basada en VPAT |
+| [`prompts/`](./prompts/) | Doce instrucciones por tarea |
+| [`examples/components/`](./examples/components/) | Ocho ejemplos HTML de componentes |
+
 ## Instalación
 
-El proyecto está pensado para personas que usan distintos agentes de IA, no solo Claude Code. Sus datos, prompts y plantillas también pueden consultarse directamente sin IA. El repositorio sigue el [formato abierto Agent Skills](https://agentskills.io/specification): un directorio con un `SKILL.md` más `scripts/` y `data/`. Un único `SKILL.md` es el núcleo para todos los productos; no hay copias por proveedor.
+El proyecto está pensado para personas que usan distintos agentes de IA, no solo Claude Code. Sus datos, prompts y plantillas también pueden consultarse directamente sin IA. El repositorio sigue el [formato abierto Agent Skills](https://agentskills.io/specification): un directorio con un `SKILL.md` más `references/`, `scripts/` y `data/`. Un único `SKILL.md` es el núcleo para todos los productos; no hay copias por proveedor.
 
 ### Tres formas de usarla
 
 1. **Skill nativa**: en un agente que admita Agent Skills, instala el **directorio completo** con el nombre `wcag-accessibility` (la especificación exige que `name` coincida con el nombre del directorio).
 2. **Búsqueda con Python**: si el agente puede leer los archivos y ejecutar comandos, puede consultar las bases con `python scripts/search.py …` desde la raíz de la skill. Esto requiere **Python 3.10 o superior** (`requires-python = ">=3.10"` en `pyproject.toml`); cargar las instrucciones no lo requiere.
-3. **Contexto manual**: entrega al asistente `SKILL.md` y los `data/*.csv` pertinentes o los [`prompts/`](./prompts) como contexto, donde el producto lo permita. Este modo no tiene descubrimiento automático ni ejecución. Si el asistente no puede ejecutar una consulta, debe indicarlo, pedirte los datos o darte el comando para que lo ejecutes tú. No debe inventar resultados.
+3. **Contexto manual**: entrega al asistente `SKILL.md` y los archivos de `references/`, los `data/*.csv` pertinentes o los [`prompts/`](./prompts) como contexto, donde el producto lo permita. Este modo no tiene descubrimiento automático ni ejecución. Si el asistente no puede ejecutar una consulta, debe indicarlo, pedirte los datos o darte el comando para que lo ejecutes tú. No debe inventar resultados.
 
 Leer instrucciones y ejecutar Python son capacidades distintas: un agente puede tener la primera sin la segunda.
 
@@ -97,7 +111,7 @@ Si el directorio de destino ya existe, `git clone` falla y no se sobrescribe nad
 - Si es un clon de este repositorio, ejecuta antes `git status` dentro de él. Confirma con commit o guarda con stash los cambios locales que quieras conservar y luego actualiza con `git pull`.
 - Si es otra instalación, consérvala: renómbrala o muévela fuera de las carpetas de skills, para que dos copias no se carguen a la vez, o clona en otro directorio fuera de ellas para compararlas antes de decidir cuál instalar.
 
-Copiar solo `SKILL.md` **no** equivale a la instalación completa: las instrucciones se cargarían, pero faltarían las bases consultables y `scripts/search.py`.
+Copiar solo `SKILL.md` **no** equivale a la instalación completa: el mapa se cargaría, pero faltarían los archivos de referencia de `references/`, las bases consultables y `scripts/search.py`.
 
 ### Servidor MCP (opcional, ajeno al formato de skill)
 
@@ -130,7 +144,7 @@ También puedes preguntar de forma natural, por ejemplo: «¿Cómo pruebo este f
 
 ## Alcance y límites
 
-- **Objetivo WCAG:** las instrucciones usan WCAG 2.1 AA de forma predeterminada y explican incorporaciones de 2.2. Indica la versión y el nivel que necesitas. La insignia de alcance describe el contenido; no es una certificación.
+- **Objetivo WCAG:** la skill usa WCAG 2.2 AA de forma predeterminada y WCAG 2.1 AA solo cuando una ley o un contrato lo exige (por ejemplo, la norma del DOJ para el Título II de la ADA en EE. UU.); cumplir 2.2 AA también cumple 2.1 AA ([registro de la decisión](./DECISIONS.md)). Indica la versión y el nivel que necesitas. La insignia de alcance describe el contenido; no es una certificación.
 - **Cobertura del catálogo:** [wcag-criteria.csv](./data/wcag-criteria.csv) contiene 59 registros: los 50 criterios A/AA de 2.1 más los nueve añadidos en 2.2, incluidos tres de nivel AAA. Faltan los 28 criterios AAA heredados de 2.1. El criterio 4.1.1 se conserva para consultas históricas de 2.1; fue eliminado en 2.2.
 - **Metadatos de versión:** cada registro tiene un campo `versions` (`2.1`, `2.2` o `2.1;2.2`), visible en JSON. Usa `--wcag-version 2.1` o `--wcag-version 2.2` en el subcomando `wcag` para conservar solo los registros etiquetados con esa versión (coincidencia exacta con el campo; 2.1 devuelve 50 registros e incluye 4.1.1, 2.2 devuelve 58 e incluye 2.5.8). Sin ese argumento no se filtra. El filtro selecciona los criterios que pertenecen a una versión, no solo los que esa versión añadió: todos los registros AA pertenecen a 2.2, así que `--wcag-version 2.2 --level AA` devuelve los mismos 24 registros que `--level AA`. Para listar solo las nueve adiciones de 2.2, usa `--output json` y conserva los registros cuyo `versions` sea exactamente `2.2`; la tabla y la salida CSV no muestran `versions`. El catálogo no incluye criterios AAA de 2.1, por lo que combinar el filtro de versión con `--level AAA` no da una lista completa.
 - **Evidencia de revisión:** las sugerencias de IA y los análisis automáticos no demuestran conformidad. Prueba las páginas, estados, flujos completos, teclado y tecnologías de asistencia relevantes en el entorno de destino. Registra qué se comprobó realmente.
@@ -234,7 +248,8 @@ El repositorio incluye ocho ejemplos HTML: [calendario](./examples/components/da
 
 | Recurso | Para qué sirve |
 |---|---|
-| [SKILL.md](./SKILL.md) | Instrucciones para el agente y entrada para aplicaciones con soporte de skills |
+| [SKILL.md](./SKILL.md) | Instrucciones para el agente y entrada para aplicaciones con soporte de skills: flujos por tarea, lista de «terminado» y enlaces a `references/` |
+| [Referencias](./references/) | Archivos por tema con el detalle de cada flujo (ver [Cómo está organizada la skill](#cómo-está-organizada-la-skill)) |
 | [Prompts](./prompts/) | Doce instrucciones para revisión, corrección, contenido, entregas de diseño y planificación de pruebas |
 | [Informe de auditoría](./templates/audit-report.md) | Punto de partida para documentar alcance, hallazgos y evidencia |
 | [Procedimiento de auditoría de sitios](./references/site-audit-procedure.md) y [libro de evidencia](./templates/site-audit-workbook.md) | Instrucciones y plantilla de evidencia para una auditoría de sitio acotada; no incluyen un rastreador ni ejecutan pruebas |
@@ -260,7 +275,7 @@ Para ejecutar las pruebas Python existentes desde una copia de desarrollo con py
 python -m pytest tests/ -v
 ```
 
-Estas pruebas verifican la herramienta de búsqueda y comprobaciones de datos; no demuestran conformidad de accesibilidad ni compatibilidad con lectores de pantalla.
+Estas pruebas verifican la herramienta de búsqueda, comprobaciones de datos, el frontmatter de `SKILL.md` y los enlaces internos; no demuestran conformidad de accesibilidad ni compatibilidad con lectores de pantalla.
 
 ## Licencia
 
