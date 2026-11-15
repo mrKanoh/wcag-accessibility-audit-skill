@@ -1,8 +1,8 @@
 # PROGRESS
 
 ## Trabajo actual: WCAG-STRUCT-1 SKILL.md como mapa por tarea  (rama tarea/wcag-struct-1)
-- Etapas: [x] 0 plan (aprobado) · [x] 1 contenido de SKILL.md movido a 13 archivos de `references/` (este commit) · [ ] 2 SKILL.md ≤ 500 líneas y prueba de enlaces · [ ] 3 README, `.gitignore`, CHANGELOG, PR en borrador
-- Ciclo: etapas aprobadas 0, auditoría pendiente, rondas 0
+- Etapas: [x] 0 plan (aprobado) · [x] 1 contenido de SKILL.md movido a 13 archivos de `references/` (commit 4a513df) · [x] 2 SKILL.md de 244 líneas como mapa por tarea y `tests/test_internal_links.py` (este commit) · [ ] 3 README, `.gitignore`, CHANGELOG, PR en borrador
+- Ciclo: etapas aprobadas 1, auditoría pendiente, rondas 0
 - Línea base de pruebas: 97 passed en `main` (c6e510e), 2026-11-15.
 - Pendiente / bloqueos: ninguno. Decisiones del orquestador: D1 bloque único de forced-colors con la variante `CanvasText` como comentario; D2 se permite ajustar `CONTRIBUTING.md:255-257` en la etapa 3; D3 tabla de ejemplos completa con los 8; D4 las dos partes COGA juntas, sin fusionar, con remisión mutua. Cambios de Codex (`codex/readme-docs`): revisados, `main` ya los contiene y amplía; no se aprovecha nada.
 ### Orden completa
