@@ -23,7 +23,7 @@
       "prompt": "What's the minimum color contrast ratio required for normal body text under WCAG 2.1 AA? My text is #6b7280 on #ffffff background. Does it pass?",
       "expected_output": "Should state 4.5:1 as the AA minimum for normal text (SC 1.4.3). Should calculate the contrast of #6b7280 on #ffffff with the WCAG 2.x relative luminance formula: approximately 4.83:1 (4.8345 unrounded; rounding to 4.8 or 4.83 is fine). Should conclude that it passes AA for normal text, with a margin of about 0.33 above the threshold, and may note that it is close to the boundary and would not meet AAA (7:1). Must not report the 4.61:1 figure.",
       "expectations": [
-        "States that the minimum contrast ratio for normal-size text at Level AA is 4.5:1 and cites Success Criterion 1.4.3 (Contrast (Minimum)).",
+        "States that the minimum contrast ratio for normal-size text at Level AA is 4.5:1 and cites Success Criterion 1.4.3 or names it (Contrast (Minimum)).",
         "Gives a computed contrast ratio for #6b7280 on #ffffff of about 4.83:1 (4.8 or 4.83 is fine).",
         "Concludes that the pair passes AA for normal text.",
         "If it mentions AAA, says the pair does not reach the 7:1 AAA ratio for normal text.",
@@ -55,12 +55,13 @@
     {
       "id": 4,
       "prompt": "My company runs an online shop that sells to consumers in the EU. Do we need to be WCAG compliant? What standard applies and since when?",
-      "expected_output": "Should mention: European Accessibility Act (EAA, Directive (EU) 2019/882) and EN 301 549; that the EAA already applies since 28 June 2025 (present or past tense, not a future deadline); that it covers B2C digital products and services such as e-commerce; that EN 301 549 v3.2.1 refers to WCAG 2.1 AA, while v4.1.1 (WCAG 2.2) is not confirmed as cited in the Official Journal of the EU and so should not be presented as giving a presumption of conformity yet. Should recommend building to WCAG 2.2 AA (which also meets 2.1 AA, except that 4.1.1 Parsing is no longer in 2.2) and say this is general information, not legal advice. May mention the microenterprise exemption for services and the Art. 32 transitional measures.",
+      "expected_output": "Should mention: European Accessibility Act (EAA, Directive (EU) 2019/882) and EN 301 549; that the EAA already applies since 28 June 2025 (present or past tense, not a future deadline); that it covers B2C digital products and services such as e-commerce; that EN 301 549 is the intended harmonised standard under the EAA, that v3.2.1 refers to WCAG 2.1 AA and is the version cited under the Web Accessibility Directive (2016/2102, Decision (EU) 2021/1339), and that no version of EN 301 549 (neither v3.2.1 nor v4.1.1, which refers to WCAG 2.2) is confirmed as cited in the Official Journal of the EU under the EAA, so none should be presented as giving a presumption of conformity under it. Should recommend building to WCAG 2.2 AA (which also meets 2.1 AA, except that 4.1.1 Parsing is no longer in 2.2) and say this is general information, not legal advice. May mention the microenterprise exemption for services and the Art. 32 transitional measures.",
       "expectations": [
         "States that the European Accessibility Act (Directive (EU) 2019/882) already applies, since 28 June 2025, in the present or past tense. It does not present 28 June 2025 as an upcoming deadline or say the shop \"will need\" to comply by then.",
         "Says the EAA covers consumer-facing (B2C) digital products and services such as e-commerce, so an online shop selling to EU consumers is in scope (it may add that micro-enterprises have an exemption for services).",
-        "Says EN 301 549 is the standard associated with the EAA and that version 3.2.1 refers to WCAG 2.1 Level A and AA for web content.",
+        "Says EN 301 549 is the harmonised standard intended for the EAA, that version 3.2.1 refers to WCAG 2.1 Level A and AA for web content, and that v3.2.1 is the version cited under the Web Accessibility Directive.",
         "Does not state that EN 301 549 v4.1.1 is already cited in the Official Journal of the EU or already gives a presumption of conformity; if it mentions v4.1.1, it says that citation is not confirmed.",
+        "Does not state that any version of EN 301 549 (neither v3.2.1 nor v4.1.1) is confirmed as cited in the Official Journal under the EAA or gives a presumption of conformity under it.",
         "Recommends building to WCAG 2.2 AA (not only 2.1 AA), explaining that meeting 2.2 AA also covers 2.1 AA requirements.",
         "States that this is general information and not legal advice, or tells the user to confirm with a lawyer or the official text.",
         "Does not present the EAA as applying only to public-sector bodies, and does not present WCAG 2.2 AA as the legally mandated version in the EU today."
@@ -95,9 +96,9 @@
       "expectations": [
         "Groups the image, title and price into one focusable element for TalkBack (accessible on the container or a touchable component) instead of leaving three separate stops.",
         "Gives the grouped element a combined accessibilityLabel (title and price) or explains how the label is derived from the children.",
-        "Sets accessibilityRole to match the behavior (for example button or link if the card is tappable).",
+        "Sets the role to match the behavior (accessibilityRole or the equivalent role prop, for example button or link if the card is tappable).",
         "Treats accessibilityHint as optional and for non-obvious results, not as a replacement for the label.",
-        "Mentions a minimum touch target of 48x48 dp as Android guidance and, if it cites WCAG, uses 2.5.8 Target Size (Minimum, AA, 24x24 CSS px); it does not present 48dp as a WCAG requirement.",
+        "If it mentions touch target size, gives 48x48 dp as Android guidance and, if it cites WCAG, uses 2.5.8 Target Size (Minimum, AA, 24x24 CSS px); it does not present 48 dp as a WCAG requirement.",
         "Provides a React Native code example and recommends testing with TalkBack."
       ],
       "sources": [
@@ -130,7 +131,8 @@
       "expectations": [
         "Associates the error message text with its input through aria-describedby (or aria-errormessage with a caveat) and sets aria-invalid=\"true\" on the invalid field.",
         "Explains that the error must be identified in text and not only by red color, citing 1.4.1 Use of Color and/or 3.3.1 Error Identification.",
-        "For errors that appear dynamically without a focus change, announces them with role=\"alert\" or an aria-live region, and for submit-time errors moves focus to an error summary or the first invalid field.",
+        "If it covers errors that appear dynamically without a focus change (for example when the user leaves a field), announces them with role=\"alert\" or an aria-live region.",
+        "If it covers errors found on submit, moves focus to an error summary or the first invalid field. The answer covers the case it assumes, or both.",
         "Does not recommend putting role=\"alert\" on error text that is already in the page at load as the way to announce it.",
         "Provides a code example that includes the input, the linked error element and aria-invalid."
       ],
@@ -207,11 +209,12 @@
     {
       "id": 13,
       "prompt": "What is an accessible name and how is it calculated?",
-      "expected_output": "Should explain that the accessible name is the text a control or element is announced by, computed by the browser using the Accessible Name and Description Computation (accname). In broad order: aria-labelledby first (referenced elements' text), then aria-label, then the native label of the host language (for example a <label> for an input, alt for an image, <caption> for a table), then name from content for roles that allow it (button, link, heading, tab...), and finally title as a last-resort tooltip fallback. Hidden or empty sources are skipped. Should say it is not the same as the visible text (2.5.3 Label in Name asks that the name contain the visible label) and that it can be checked in the browser accessibility tree. Should not claim that visible text always wins over aria-label, or that aria-label is a substitute for a visible label.",
+      "expected_output": "Should explain that the accessible name is the text a control or element is announced by, computed by the browser using the Accessible Name and Description Computation (accname). In broad order: aria-labelledby first (referenced elements' text), then aria-label, then the native label of the host language (for example a <label> for an input, alt for an image, <caption> for a table), then name from content for roles that allow it (button, link, heading, tab...), and finally title as a last-resort tooltip fallback. Empty sources are skipped, and hidden content is normally left out, except when it is reached through aria-labelledby (or aria-describedby), where hidden referenced content does count. Should say it is not the same as the visible text (2.5.3 Label in Name asks that the name contain the visible label) and that it can be checked in the browser accessibility tree. Should not claim that visible text always wins over aria-label, or that aria-label is a substitute for a visible label.",
       "expectations": [
         "Defines the accessible name as the name assistive technology exposes for an element, computed by the browser from several sources.",
         "Gives an order of precedence in which aria-labelledby comes before aria-label, which comes before native sources such as a <label> or alt, and then name from content, with title only as a fallback.",
-        "Notes that name from content applies only to roles that allow it (for example button, link, heading) and that empty or hidden sources are skipped.",
+        "Notes that name from content applies only to roles that allow it (for example button, link, heading).",
+        "Says empty sources are skipped and hidden content is normally left out of the name, except when the hidden element is referenced through aria-labelledby, where it still contributes.",
         "Mentions that the name should contain the visible label text (2.5.3 Label in Name) or that it can be inspected in the browser accessibility tree.",
         "Does not claim that aria-label always overrides aria-labelledby, or that visible text content always wins over aria-label."
       ],
@@ -244,7 +247,7 @@
       "expectations": [
         "Provides a link that is the first focusable element and points to the id of the main content.",
         "Hides it visually by off-screen or clipping techniques and shows it on :focus (or :focus-visible), and does not hide it with display:none or visibility:hidden.",
-        "Says the link target must exist, and mentions tabindex=\"-1\" on the target when needed so that focus moves there.",
+        "Says the link target must exist; if it discusses moving focus to the target, mentions tabindex=\"-1\" on the target when needed.",
         "Cites 2.4.1 Bypass Blocks (Level A) or says that it is a way to bypass repeated blocks."
       ],
       "sources": [
@@ -315,7 +318,7 @@
       ],
       "sources": [
         "https://www.itic.org/policy/accessibility/vpat",
-        "templates/vpat-2.5-template.md (unofficial template based on the VPAT 2.5 structure)"
+        "templates/vpat-2.5-template.md (unofficial template based on the VPAT 2.5 structure; source for the «Not Evaluated» term, which the ITI page does not show)"
       ]
     },
     {
@@ -326,7 +329,7 @@
         "Says carousels can be made accessible but have several risks, and does not answer with a flat yes or no.",
         "For auto-rotating carousels, says there must be a way to pause, stop or hide the movement (2.2.2), and notes that a carousel that does not move on its own does not trigger that criterion.",
         "Says the previous, next and pause controls must be real, keyboard-operable controls with accessible names.",
-        "Says rotation should stop when keyboard focus enters or the mouse hovers over the carousel (APG), and not restart unless the user asks.",
+        "Says rotation should stop when keyboard focus enters the carousel and not restart unless the user asks (APG), and that it should also stop while the mouse is over it.",
         "If it covers live regions, says they should be off while the carousel rotates automatically and polite when the user moves between slides, and does not say live regions must always be present."
       ],
       "sources": [
