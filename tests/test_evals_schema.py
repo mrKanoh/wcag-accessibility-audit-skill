@@ -11,6 +11,7 @@ import pytest
 
 EVALS_DIR = Path(__file__).resolve().parent.parent / "evals"
 EVALS_JSON = EVALS_DIR / "evals.json"
+TRIGGER_JSON = EVALS_DIR / "trigger-evals.json"
 
 
 def _load(path):
@@ -60,3 +61,15 @@ def test_no_keyword_assertions_left():
 def test_evals_json_description_says_meaning_not_keywords():
     # Catches removal of the note that evals are judged by meaning.
     assert "meaning" in _load(EVALS_JSON)["description"].lower()
+
+
+def test_trigger_evals_shape():
+    # Catches a missing query, a non-boolean should_trigger (e.g. "true"),
+    # or a set that has only positives or only negatives.
+    data = _load(TRIGGER_JSON)
+    assert isinstance(data, list) and data
+    for i, item in enumerate(data):
+        assert isinstance(item.get("query"), str) and item["query"].strip(), f"item {i}: bad query"
+        assert isinstance(item.get("should_trigger"), bool), f"item {i}: should_trigger not bool"
+    values = {item["should_trigger"] for item in data}
+    assert values == {True, False}, "need both should_trigger true and false"

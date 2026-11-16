@@ -1,8 +1,9 @@
 # PROGRESS
 
 ## Trabajo actual: WCAG-EVALS-1 evals rehechas y medición de activación  (rama tarea/wcag-evals-1)
-- Etapas: [x] 1 R1, R2, R3, R5, R6 (commit en `tarea/wcag-evals-1`, mensaje `test: rebuild evals by meaning (etapa 1)`) · [ ] 2 R4 activación · [ ] 3 R7 y cierre
-- Ciclo: etapas aprobadas 0, auditoría pendiente, rondas 0
+- Etapas: [x] 1 R1, R2, R3, R5, R6 (commit en `tarea/wcag-evals-1`, mensaje `test: rebuild evals by meaning (etapa 1)`) (05cd286) · [x] 2 R4: `evals/trigger-evals.json` (20 consultas, 10 true / 10 false) y prueba de forma; la MEDICIÓN NO CORRIÓ (ver abajo) · [ ] 3 R7 y cierre
+- Ciclo: etapas aprobadas 1, auditoría pendiente, rondas 0
+- R4 medición (2026-11-16): comando `cd .claude/skills/skill-creator` y `python -m scripts.run_eval --eval-set ../../../evals/trigger-evals.json --skill-path ../../.. --runs-per-query 3 --timeout 180 --model claude-sonnet-5-5 --verbose`. Corrida 1: `UnicodeDecodeError: 'charmap' codec can't decode byte 0x8d in position 1827` en `utils.py:9` (`read_text()` de `SKILL.md` con cp1252). Corrida 2 con `PYTHONUTF8=1` (mismo script, sin tocarlo): las 60 ejecuciones lanzan `[WinError 10038] Se intentó realizar una operación en un elemento que no es un socket` en `run_eval.py` (`select.select` sobre una tubería no funciona en Windows); el script cuenta el error como «no activó», así que su resumen «10/20» NO es una medición (los 10 positivos dan 0/3 por el error). No se rodeó con otro método. Salida cruda en `evals/results/`. No quedaron archivos en `.claude/commands/`.
 - Línea base de pruebas: 124 passed en `main` (WCAG-CONTENT-1); etiqueta `antes-de-wcag-evals-1` en `81453f6`.
 - Pendiente / bloqueos: ninguno.
 ### Orden completa

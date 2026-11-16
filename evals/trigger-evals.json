@@ -1,0 +1,22 @@
+[
+  {"query": "I just finished the checkout page of our React shop and I want to know if it would pass a WCAG 2.2 AA review before we ship. The code is in src/pages/Checkout.tsx, can you go through it and tell me what would fail?", "should_trigger": true},
+  {"query": "Estoy armando un modal de confirmación en Vue con un botón de cancelar y otro de eliminar. Al abrirlo el foco se queda en la página de atrás y con el teclado me pierdo. ¿Cómo lo arreglo bien?", "should_trigger": true},
+  {"query": "my designer gave me a gray (#8a8f98) label on a white card background for form hints, is that readable enough or will an audit flag it? what contrast do I need?", "should_trigger": true},
+  {"query": "Necesito auditar el sitio web de mi cliente (unas 40 páginas, WordPress) y entregar un informe de accesibilidad con evidencias y prioridades. ¿Por dónde empiezo y qué plantilla uso?", "should_trigger": true},
+  {"query": "We sell subscriptions to consumers in Germany and France through our web app. Does the European Accessibility Act apply to us and which technical standard should our devs build against?", "should_trigger": true},
+  {"query": "A government customer asked us for a VPAT / ACR for our SaaS dashboard. How do I fill it out and which edition should I use?", "should_trigger": true},
+  {"query": "I'm adding a tab component and a dropdown that opens a list of options to our design system in Svelte. What keyboard behavior and roles should they have so they work with screen readers?", "should_trigger": true},
+  {"query": "Mi carrusel de la home cambia de diapositiva solo cada 5 segundos y un usuario con lector de pantalla se queja de que le interrumpe. ¿Qué debo cambiar en el HTML y el JavaScript?", "should_trigger": true},
+  {"query": "How do I run axe-core in our GitHub Actions pipeline with Playwright so the build fails when someone introduces a new accessibility violation?", "should_trigger": true},
+  {"query": "Review this form markup for me: inputs have placeholders but I don't see labels, and the error messages appear in red under the field after submit. Anything a keyboard or screen reader user would struggle with?", "should_trigger": true},
+  {"query": "Escribe el CSS para un layout de tres columnas con CSS grid que pase a una columna por debajo de 600px, y que el header quede fijo arriba al hacer scroll.", "should_trigger": false},
+  {"query": "How can I improve the SEO of my blog? I want better rankings for long-tail keywords, meta descriptions and structured data for articles.", "should_trigger": false},
+  {"query": "Our Lighthouse performance score is 54 on mobile. LCP is 4.8s because of a huge hero image and render-blocking scripts. How do I get this under 2.5s?", "should_trigger": false},
+  {"query": "Necesito traducir mi aplicación Next.js al inglés, portugués y español, con rutas por idioma, formato de fechas y monedas y detección del idioma del navegador. ¿Qué librería de i18n me recomiendas?", "should_trigger": false},
+  {"query": "Write the cookie consent banner for our site and the privacy policy text so we comply with the GDPR: which categories of cookies need opt-in and how do I store the user's choice?", "should_trigger": false},
+  {"query": "Estamos diseñando la entrada de un edificio de oficinas de tres plantas. ¿Qué anchura mínima de puertas y qué pendiente de rampa exige la normativa para que sea accesible a personas en silla de ruedas?", "should_trigger": false},
+  {"query": "Write a Python function that merges two sorted lists into one sorted list and add unit tests with pytest.", "should_trigger": false},
+  {"query": "Help me write unit tests with Jest and React Testing Library for a login form: validate empty fields, wrong password and successful submit with a mocked API.", "should_trigger": false},
+  {"query": "Quiero que el botón principal de mi landing se vea más llamativo: ¿qué colores, sombras y animación de hover me recomiendas para subir la tasa de clics?", "should_trigger": false},
+  {"query": "Explain how to set up OAuth 2.0 login with Google in an Express app, including the callback route and storing the session securely.", "should_trigger": false}
+]
