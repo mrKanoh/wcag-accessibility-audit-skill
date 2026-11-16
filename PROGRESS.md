@@ -1,7 +1,17 @@
 # PROGRESS
 
-## Trabajo actual
-- Ninguno.
+## Trabajo actual: WCAG-EVALS-1 evals rehechas y medición de activación  (rama tarea/wcag-evals-1)
+- Etapas: [x] 1 R1, R2, R3, R5, R6 (commit en `tarea/wcag-evals-1`, mensaje `test: rebuild evals by meaning (etapa 1)`) · [ ] 2 R4 activación · [ ] 3 R7 y cierre
+- Ciclo: etapas aprobadas 0, auditoría pendiente, rondas 0
+- Línea base de pruebas: 124 passed en `main` (WCAG-CONTENT-1); etiqueta `antes-de-wcag-evals-1` en `81453f6`.
+- Pendiente / bloqueos: ninguno.
+### Orden completa
+Proyecto: wcag-accesibility-skill — D:\Proyectos\wcag-accesibility-skill. Id: WCAG-EVALS-1. Tamaño normal. Etiqueta antes-de-*: sí. Tipo: implementación.
+Autorizado: editar, verificar, commit local por etapa en tarea/wcag-evals-1, push y PR en borrador, borrar ramas fusionadas; ejecutar `claude -p` vía `run_eval.py` de skill-creator (R4). No autorizado: fusionar, `gh pr ready`; cambiar description o cuerpo de `SKILL.md`; tocar `references/`, `data/`, `examples/`, `scripts/search.py`, ramas fix/*, claude/* ni el worktree de Codex.
+Objetivo: `evals/evals.json` sin palabras clave (expectativas por significado, correctas según norma y referencias); eval 4 comprueba EAA en presente, recomendación WCAG 2.2 AA y aviso de no asesoría legal; conjunto de evals de activación y medición real de la description actual de `SKILL.md`.
+R1 revisar las 20 evals (mantener/corregir/quitar, tabla id → decisión → razón; `sources` si hay fuente externa). R2 `assertions` → `expectations` (incluye negativas); description del archivo dice que se juzga por significado. R3 eval 4 rehecha (EAA en presente desde 2025-06-28; B2C; EN 301 549 v3.2.1 → WCAG 2.1 AA, sin afirmar v4.1.1 en el DOUE; recomienda 2.2 AA; no es asesoría legal; negativas), contrastada con `data/legal-framework.csv`, `DECISIONS.md` y la referencia legal. R4 `evals/trigger-evals.json` (~20 consultas, mitad true/false, inglés y español, casos límite) y medición con `run_eval.py` (3 ejecuciones, `--verbose`), salida cruda en `evals/results/`; registrar comando, modelo, fecha, aciertos y falsos positivos/negativos; si no corre, error exacto sin rodearlo. R5 `tests/test_evals_schema.py`. R6 revisar `auth-modal-focus.json` y `form-labels-accuracy.json` solo por errores de hecho demostrados. R7 `CHANGELOG.md` `[Unreleased]` y PROGRESS.md (fila en Terminados; vaciar los dos puntos resueltos de «Para la próxima orden»).
+No incluye: cambiar la description o el cuerpo de `SKILL.md` (si la medición sale mala, proponerlo y anotarlo en «Para la próxima orden»); benchmark completo con/sin skill; los demás pendientes.
+Etapas: 1 = R1, R2, R3, R5, R6; 2 = R4; 3 = R7 y cierre. Verificación rápida en cada etapa: pytest, los dos comandos de `search.py`, `git diff --check`, `python -m json.tool`. Restricciones: rutas explícitas en `git add`; no commitear `evals/results/`, `*-workspace/` ni archivos generados por `run_eval.py`.
 
 ## Pendiente de Ariel
 - Crear el tag `v2.3.0` y la release en GitHub cuando decidas publicar (no existe ningún tag `v2.*`).
